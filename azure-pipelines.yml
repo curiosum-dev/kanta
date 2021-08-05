@@ -1,0 +1,14 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- bash: |
+          set -euo pipefail
+          sudo mkdir /nix && sudo chown $USER /nix
+          curl -L https://nixos.org/nix/install | sh
+          source /home/vsts/.nix-profile/etc/profile.d/nix.sh
+          nix-shell --run 'ci'
+  displayName: 'Run quality checks'
