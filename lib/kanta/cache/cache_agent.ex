@@ -74,13 +74,4 @@ defmodule Kanta.Cache.Agent do
 
     {cache_adapter, cache_adapter.init()}
   end
-
-  # defp populate_cache_adapter_with_stored_translations({cache_adapter, init_value}) do
-  #   Storage.get_all_stored_translations()
-  #   |> Enum.each(fn {locale, domain, msgctxt, msgid, translated} ->
-  #     cache_adapter.cache_translation(locale, domain, msgctxt, msgid, translated, init_value)
-  #   end)
-
-  #   {cache_adapter, init_value}
-  # end
 end
