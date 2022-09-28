@@ -1,0 +1,24 @@
+<h1 class="my-3">Found languages</h1>
+<div class="mb-4">
+  <%= for language <- @languages do %>
+    <div class="card mb-3">
+      <div class="card-header">
+        Language: <%= language %>
+      </div>
+      <div class="card-body">
+        <%= link "Update translations for #{language}", to: Routes.translations_path(@conn, :show, language), class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<h2 class="mb-3">Administrator tools</h2>
+<div class="card mb-3">
+  <div class="card-header">
+    Insights
+  </div>
+  <div class="card-body">
+    <%= link "Translations in DB and cache", to: Routes.storage_path(@conn, :index), class: "btn btn-primary" %>
+    <%= link "Data from .po files", to: Routes.gettext_path(@conn, :index), class: "btn btn-primary" %>
+  </div>
+</div>

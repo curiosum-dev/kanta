@@ -1,0 +1,42 @@
+<div class="mb-3">
+  <%= if @consistency do %>
+    <div class="alert alert-success" role="alert">
+      Cache and DB storage contain the same translations data.
+    </div>
+  <%= else %>
+    <div class="alert alert-danger" role="alert">
+      Cache and DB storage contain various translations data.
+    </div>
+  <% end %>
+</div>
+
+<%= if @consistency do %>
+  <h2>Translations in DB and cache</h2>
+<%= else %>
+  <h2>Translations in cache</h2>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Locale</th>
+      <th scope="col">Domain</th>
+      <th scope="col">Context</th>
+      <th scope="col">ID</th>
+      <th scope="col">Translated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for {{locale, domain, msgctxt, msgid, translated}, index} <- Enum.with_index(@translations) do %>
+      <tr>
+        <th scope="row"><%= index + 1 %></th>
+        <td><%= locale %></td>
+        <td><%= domain %></td>
+        <td><%= msgctxt %></td>
+        <td><%= msgid %></td>
+        <td><%= translated %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

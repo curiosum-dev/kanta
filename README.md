@@ -1,6 +1,6 @@
 # Kanta
 
-**TODO: Add description**
+Translations editor.
 
 ## Installation
 
@@ -28,7 +28,8 @@ Add to `config/config.exs` file:
 ```elixir
 # config/config.exs
 config :kanta,
-  ecto_repo: BetterGettext.Repo
+  ecto_repo: MyApp.Repo,
+  project_root: File.cwd!()
 ```
 
 Ecto repo is used for translations persistency.
@@ -65,26 +66,21 @@ mix ecto.migrate
 
 ### Add caching process to supervision tree
 
-Add `Kanta.Cache` to your apps supervision tree:
+Add `Kanta.CacheAgent` to your apps supervision tree:
 
 ```elixir
 # lib/my_app/application.ex
 children = [
   # ... rest ...
-  Kanta.Cache
+  Kanta.CacheAgent
 ]
 
 opts = [strategy: :one_for_one, name: MyApp.Supervisor]
 Supervisor.start_link(children, opts)
 ```
 
-### Set up Kanta gettext repo
+## Roadmap
 
-The last step is to set up Kanta's gettext repo:
-
-```elixir
-# lib/my_app_web/gettext.ex
-use Gettext,
-  otp_app: :my_app,
-  repo: Kanta.GettextRepo
-```
+- [ ] Support plural translations
+- [ ] Normalize database
+- [ ] Add documentation and typespecs
