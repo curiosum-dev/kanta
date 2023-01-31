@@ -7,6 +7,7 @@ defmodule Kanta.MixProject do
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -27,8 +28,20 @@ defmodule Kanta.MixProject do
       {:ecto, "~> 3.9"},
       {:ecto_sql, "~> 3.9"},
       {:phoenix, "~> 1.6"},
+      {:jason, "~> 1.0"},
       {:phoenix_live_view, "~> 0.17"},
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      "assets.build": [
+        "tailwind default --minify",
+        "cmd --cd assets node build.js --deploy"
+      ],
+      "assets.watch": ["esbuild module --watch"]
     ]
   end
 end
