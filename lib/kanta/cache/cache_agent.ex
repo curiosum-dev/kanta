@@ -2,9 +2,11 @@ defmodule Kanta.Cache.Agent do
   use GenServer
   alias Kanta.Cache.Adapters.ETS
   alias Kanta.EmbeddedSchemas.SingularTranslation
+  alias Kanta.Services.PopulateCacheWithStoredDataService
 
   def start_link(state) do
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    {:ok, _pid} = GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    PopulateCacheWithStoredDataService.run()
   end
 
   def get_cached_translation_text(%SingularTranslation{} = translation) do

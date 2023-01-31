@@ -8,7 +8,7 @@ defmodule Kanta.Translations.SingularTranslations do
           locale: locale,
           domain: domain,
           msgid: msgid,
-          original_text: original_text,
+          previous_text: previous_text,
           text: text
         } = translation
       ) do
@@ -22,7 +22,7 @@ defmodule Kanta.Translations.SingularTranslations do
       %{
         msgctxt: msgctxt,
         msgid: msgid,
-        original_text: original_text,
+        previous_text: previous_text,
         text: text
       },
       locale_record,
@@ -68,15 +68,26 @@ defmodule Kanta.Translations.SingularTranslations do
     SingularTranslationQueries.filter(filters)
     |> repo.all()
     |> repo.preload([:locale, :domain])
-    |> Enum.map(fn %SingularTranslation{} = record ->
-      %EmbeddedSingularTranslation{
-        locale: record.locale.name,
-        domain: record.domain.name,
-        msgctxt: record.msgctxt,
-        msgid: record.msgid,
-        original_text: record.original_text,
-        text: record.text
-      }
-    end)
+    |> Enum.map(&into_embedded_singular_translation/1)
+  end
+
+  def list_singular_translations_with_text_not_null do
+    repo = Repo.get_repo()
+
+    SingularTranslationQueries.with_text_not_null()
+    |> repo.all()
+    |> repo.preload([:locale, :domain])
+    |> Enum.map(&into_embedded_singular_translation/1)
+  end
+
+  defp into_embedded_singular_translation(%SingularTranslation{} = record) do
+    %EmbeddedSingularTranslation{
+      locale: record.locale.name,
+      domain: record.domain.name,
+      msgctxt: record.msgctxt,
+      msgid: record.msgid,
+      previous_text: record.previous_text,
+      text: record.text
+    }
   end
 end

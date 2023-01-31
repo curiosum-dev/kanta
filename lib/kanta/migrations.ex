@@ -37,8 +37,8 @@ defmodule Kanta.Migrations do
     create table(@kanta_singular_translations) do
       add(:msgid, :string)
       add(:msgctxt, :string, null: true)
-      add(:original_text, :string)
-      add(:text, :string)
+      add(:previous_text, :string)
+      add(:text, :string, null: true)
       add(:locale_id, references(@kanta_locales))
       add(:domain_id, references(@kanta_domains), null: true)
     end
