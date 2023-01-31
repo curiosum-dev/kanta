@@ -23,11 +23,12 @@ defmodule Kanta.MixProject do
     [
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:gettext, git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext"},
-      {:expo, "~> 0.1.0-beta.7"},
-      {:ecto, ">= 3.0.0"},
-      {:ecto_sql, ">= 3.0.0"},
-      {:phoenix, ">= 1.6.0"},
-      {:phoenix_live_view, ">= 0.17.0"}
+      {:expo, "~> 0.3.0"},
+      {:ecto, "~> 3.9"},
+      {:ecto_sql, "~> 3.9"},
+      {:phoenix, "~> 1.6"},
+      {:phoenix_live_view, "~> 0.17"},
+      {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
     ]
   end
 end
