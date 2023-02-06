@@ -24,7 +24,6 @@ let opts = {
 if (watch) {
   opts = {
     ...opts,
-    watch,
     sourcemap: 'inline'
   }
 }
@@ -33,17 +32,19 @@ if (deploy) {
   opts = {
     ...opts,
     sourcemap: true,
-    // minify: true
+    minify: true
   }
 
   esbuild.build({...opts, format: 'esm', outExtension: { '.js': '.esm.js' }})
   esbuild.build({...opts, format: 'cjs', outExtension: { '.js': '.cjs.js' }})
 }
 
-const promise = esbuild.build(opts)
-
 if (watch) {
+  const promise = esbuild.context(opts)
+
   promise.then(_result => {
+    console.log("Watching changes...")
+
     process.stdin.on('close', () => {
       process.exit(0)
     })

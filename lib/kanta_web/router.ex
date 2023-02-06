@@ -1,18 +1,19 @@
 defmodule KantaWeb.Router do
   use KantaWeb, :router
-  alias KantaWeb.{PageController}
-  alias KantaWeb.Languages.{TranslationsController}
-  alias KantaWeb.Admin.{StorageController, GettextController}
 
-  scope "/" do
+  scope "/", KantaWeb do
     get "/", PageController, :index
 
-    scope "/languages" do
-      get "/", TranslationsController, :index
-      get "/:language", TranslationsController, :show
+    scope "/locales", Translations do
+      get "/", LocaleController, :index
     end
 
-    scope "/admin" do
+    scope "/translations", Translations do
+      get "/", TranslationController, :index
+      get "/:language", TranslationController, :show
+    end
+
+    scope "/admin", Admin do
       get "/storage", StorageController, :index
       get "/gettext", GettextController, :index
     end

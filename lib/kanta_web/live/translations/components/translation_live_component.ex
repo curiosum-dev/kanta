@@ -1,4 +1,4 @@
-defmodule KantaWeb.TranslationLiveComponent do
+defmodule KantaWeb.Translations.TranslationLiveComponent do
   use KantaWeb, :live_component
 
   def render(assigns) do
