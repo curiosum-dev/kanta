@@ -1,9 +1,8 @@
 defmodule Kanta.Gettext.Repo do
   @behaviour Gettext.Repo
 
-  alias Kanta.Cache.Agent, as: CacheAgent
-  alias Kanta.EmbeddedSchemas.SingularTranslation
-  # alias Kanta.Storage
+  alias Kanta.Translations.SingularTranslation
+  alias Kanta.Translations
 
   @impl Gettext.Repo
   def init(_) do
@@ -12,15 +11,16 @@ defmodule Kanta.Gettext.Repo do
 
   @impl Gettext.Repo
   def get_translation(locale, domain, msgctxt, msgid, _) do
-    with :not_found <-
-           CacheAgent.get_cached_translation_text(%SingularTranslation{
-             locale: locale,
-             domain: domain,
-             msgctxt: msgctxt,
-             msgid: msgid
+    with {:ok, %SingularTranslation{text: text}} <-
+           Translations.get_singular_translation(%{
+             "locale" => locale,
+             "domain" => domain,
+             "msgctxt" => msgctxt,
+             "msgid" => msgid
            }) do
-      #        :not_found <- Storage.get_stored_translation(locale, domain, msgctxt, msgid) do
-      :not_found
+      {:ok, text}
+    else
+      _ -> :not_found
     end
   end
 

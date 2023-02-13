@@ -2,8 +2,11 @@ defmodule Kanta.POFiles.Extractor do
   @default_priv "priv/gettext"
   @po_wildcard "*/LC_MESSAGES/*.po"
 
+  alias Kanta.Repo
   alias Expo.{Message, Messages, PO}
-  alias Kanta.EmbeddedSchemas.SingularTranslation
+  alias Kanta.Translations.Domains
+  alias Kanta.Translations.Locales
+  alias Kanta.Translations.SingularTranslation
 
   def get_translations do
     opts = [
@@ -31,7 +34,7 @@ defmodule Kanta.POFiles.Extractor do
     messages
     |> Stream.map(fn
       %Message.Singular{msgctxt: nil, msgid: [msgid], msgstr: [text]} ->
-        SingularTranslation.new(%{
+        create_or_update_singular_translation(%{
           locale: locale,
           domain: domain,
           msgid: msgid,
@@ -39,7 +42,7 @@ defmodule Kanta.POFiles.Extractor do
         })
 
       %Message.Singular{msgctxt: [msgctxt], msgid: [msgid], msgstr: [text]} ->
-        SingularTranslation.new(%{
+        create_or_update_singular_translation(%{
           locale: locale,
           domain: domain,
           msgctxt: msgctxt,
@@ -48,10 +51,40 @@ defmodule Kanta.POFiles.Extractor do
         })
 
       _ ->
-        # TOOD: handle plural translations
         nil
     end)
-    |> Stream.filter(& &1)
+    |> Stream.filter(&(!is_nil(&1)))
+  end
+
+  defp create_or_update_singular_translation(attrs) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:locale, fn _repo, _ ->
+      {:ok, Locales.get_or_create_locale_by_name(attrs[:locale])}
+    end)
+    |> Ecto.Multi.run(:domain, fn _repo, _ ->
+      {:ok, Domains.get_or_create_domain_by_name(attrs[:domain])}
+    end)
+    |> Ecto.Multi.run(:translation_struct, fn repo, _ ->
+      {:ok,
+       repo.get_by(SingularTranslation, msgid: attrs[:msgid]) ||
+         %SingularTranslation{}}
+    end)
+    |> Ecto.Multi.insert_or_update(:insert_or_update_translation, fn %{
+                                                                       locale: locale,
+                                                                       domain: domain,
+                                                                       translation_struct:
+                                                                         translation_struct
+                                                                     } ->
+      SingularTranslation.changeset(
+        translation_struct,
+        Map.merge(attrs, %{locale_id: locale.id, domain_id: domain.id})
+      )
+    end)
+    |> Repo.get_repo().transaction()
+    |> case do
+      {:ok, %{insert_or_update_translation: %SingularTranslation{} = translation}} -> translation
+      _ -> nil
+    end
   end
 
   defp locale_and_domain_from_path(path) do

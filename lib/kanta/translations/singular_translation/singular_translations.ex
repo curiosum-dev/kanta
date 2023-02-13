@@ -1,93 +1,61 @@
 defmodule Kanta.Translations.SingularTranslations do
-  alias Kanta.Translations.{Locales, Domains, SingularTranslation, SingularTranslationQueries}
+  use Nebulex.Caching
+
+  alias Kanta.Cache
   alias Kanta.Repo
-  alias Kanta.EmbeddedSchemas.SingularTranslation, as: EmbeddedSingularTranslation
 
-  def create_singular_translation(
-        %EmbeddedSingularTranslation{
-          locale: locale,
-          domain: domain,
-          msgid: msgid,
-          previous_text: previous_text,
-          text: text
-        } = translation
-      ) do
-    msgctxt = Map.get(translation, :msgctxt)
+  alias Kanta.Translations.{Locales, Domains, SingularTranslation, SingularTranslationQueries}
 
-    locale_record = Locales.get_or_create_locale_by_name(locale)
-    domain_record = Domains.get_or_create_domain_by_name(domain)
+  @ttl :timer.hours(12)
+
+  def create_singular_translation(attrs) do
+    locale = Locales.get_or_create_locale_by_name(attrs["locale"])
+    domain = Domains.get_or_create_domain_by_name(attrs["domain"])
 
     %SingularTranslation{}
-    |> SingularTranslation.create_changeset(
-      %{
-        msgctxt: msgctxt,
-        msgid: msgid,
-        previous_text: previous_text,
-        text: text
-      },
-      locale_record,
-      domain_record
-    )
+    |> SingularTranslation.changeset(%{
+      msgctxt: attrs["msgctxt"],
+      msgid: attrs["msgid"],
+      previous_text: attrs["previous_text"],
+      text: attrs["text"],
+      locale_id: locale.id,
+      domain_id: domain.id
+    })
     |> Repo.get_repo().insert()
   end
 
-  def get_singular_translation(
-        %EmbeddedSingularTranslation{
-          locale: locale,
-          domain: domain,
-          msgid: msgid
-        } = translation
-      ) do
-    msgctxt = Map.get(translation, :msgctxt)
-
+  @decorate cacheable(
+              cache: Cache,
+              key: {SingularTranslation, params["msgid"]},
+              opts: [ttl: @ttl]
+            )
+  def get_singular_translation(params) do
     SingularTranslationQueries.filter(
-      msgid: msgid,
-      msgctxt: msgctxt
+      msgid: params["msgid"],
+      msgctxt: params["msgctxt"]
     )
-    |> SingularTranslationQueries.filter_by_locale(locale)
-    |> SingularTranslationQueries.filter_by_domain(domain)
+    |> SingularTranslationQueries.filter_by_locale(params["locale"])
+    |> SingularTranslationQueries.filter_by_domain(params["domain"])
     |> Repo.get_repo().one()
   end
 
-  def delete_singular_translation(%EmbeddedSingularTranslation{} = translation) do
-    translation
-    |> get_singular_translation()
-    |> delete_singular_translation()
+  @decorate cache_evict(cache: Cache, key: {SingularTranslation, id})
+  def delete_singular_translation(id) do
+    repo = Repo.get_repo()
+
+    with %SingularTranslation{} = translation <- repo.get(id) do
+      repo.delete(translation)
+    else
+      nil -> :not_found
+    end
   end
 
-  def delete_singular_translation(%SingularTranslation{} = singular_translation_record) do
-    singular_translation_record
-    |> Repo.get_repo().delete()
-  end
-
-  def delete_singular_translation(nil), do: nil
-
+  @decorate cacheable(cache: Cache, key: Locale, opts: [ttl: @ttl])
   def list_singular_translations(filters \\ []) do
     repo = Repo.get_repo()
 
     SingularTranslationQueries.filter(filters)
     |> repo.all()
     |> repo.preload([:locale, :domain])
-    |> Enum.map(&into_embedded_singular_translation/1)
-  end
-
-  def list_singular_translations_with_text_not_null do
-    repo = Repo.get_repo()
-
-    SingularTranslationQueries.with_text_not_null()
-    |> repo.all()
-    |> repo.preload([:locale, :domain])
-    |> Enum.map(&into_embedded_singular_translation/1)
-  end
-
-  defp into_embedded_singular_translation(%SingularTranslation{} = record) do
-    %EmbeddedSingularTranslation{
-      locale: record.locale.name,
-      domain: record.domain.name,
-      msgctxt: record.msgctxt,
-      msgid: record.msgid,
-      previous_text: record.previous_text,
-      text: record.text
-    }
   end
 end

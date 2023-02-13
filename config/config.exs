@@ -2,6 +2,13 @@ import Config
 
 config :phoenix, :json_library, Jason
 
+config :kanta, Kanta.Cache,
+  primary: [
+    gc_interval: :timer.hours(24),
+    backend: :shards,
+    partitions: 2
+  ]
+
 config :kanta, KantaWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.

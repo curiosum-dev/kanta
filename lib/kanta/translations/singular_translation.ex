@@ -3,6 +3,9 @@ defmodule Kanta.Translations.SingularTranslation do
   import Ecto.Changeset
   alias Kanta.Translations.{Domain, Locale}
 
+  @all_fields ~w(msgctxt msgid previous_text text locale_id domain_id)a
+  @required_fields ~w(msgid)a
+
   schema "kanta_singular_translations" do
     belongs_to :locale, Locale
     belongs_to :domain, Domain
@@ -12,20 +15,10 @@ defmodule Kanta.Translations.SingularTranslation do
     field :text, :string
   end
 
-  def create_changeset(struct, params, locale, domain) do
+  def changeset(struct, attrs \\ %{}) do
     struct
-    |> cast(params, [:msgctxt, :msgid, :previous_text, :text])
-    |> put_assoc(:locale, locale)
-    |> put_assoc(:domain, domain)
-    |> validate_required([:locale, :domain, :msgid, :previous_text, :text])
-    |> foreign_key_constraint(:locale)
-    |> foreign_key_constraint(:domain)
-  end
-
-  def delete_changeset(struct, params) do
-    struct
-    |> cast(params, [:locale, :domain, :msgctxt, :msgid, :previous_text, :text])
-    |> validate_required([:locale, :domain, :msgid])
+    |> cast(attrs, @all_fields)
+    |> validate_required(@required_fields)
     |> foreign_key_constraint(:locale)
     |> foreign_key_constraint(:domain)
   end

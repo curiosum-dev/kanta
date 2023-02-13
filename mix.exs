@@ -33,6 +33,9 @@ defmodule Kanta.MixProject do
       {:phoenix_live_view, "~> 0.18"},
       {:phoenix_view, "~> 2.0"},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:nebulex, "~> 2.4"},
+      {:decorator, "~> 1.4"},
+      {:shards, "~> 1.0"},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
     ]
   end
