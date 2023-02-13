@@ -11,7 +11,7 @@ defmodule Kanta.Gettext.Repo do
 
   @impl Gettext.Repo
   def get_translation(locale, domain, msgctxt, msgid, _) do
-    with {:ok, %SingularTranslation{text: text}} <-
+    with {:ok, %SingularTranslation{translated_text: text}} <-
            Translations.get_singular_translation(%{
              "locale" => locale,
              "domain" => domain,

@@ -1,12 +1,14 @@
-defmodule Kanta.Translations.SingularTranslation do
+defmodule Kanta.Translations.PluralTranslation do
   use Ecto.Schema
   import Ecto.Changeset
+
   alias Kanta.Translations.{Locale, Message}
 
-  @all_fields ~w(original_text translated_text locale_id message_id)a
-  @required_fields ~w(message_id locale_id)a
+  @all_fields ~w(nplural_index original_text translated_text locale_id message_id)a
+  @required_fields ~w(nplural_index message_id locale_id)a
 
-  schema "kanta_singular_translations" do
+  schema "kanta_plural_translations" do
+    field :nplural_index, :integer
     field :original_text, :string
     field :translated_text, :string
 

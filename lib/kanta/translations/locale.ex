@@ -12,6 +12,5 @@ defmodule Kanta.Translations.Locale do
     struct
     |> cast(params, [:name])
     |> validate_required([:name])
-    |> IO.inspect()
   end
 end
