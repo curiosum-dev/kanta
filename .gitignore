@@ -24,3 +24,6 @@ kanta-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+/assets/node_modules
+/assets/.DS_Store
+/.DS_Store

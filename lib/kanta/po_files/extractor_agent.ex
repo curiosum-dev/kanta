@@ -1,7 +1,7 @@
 defmodule Kanta.POFiles.ExtractorAgent do
   use GenServer
   alias Kanta.POFiles.Extractor
-  alias Kanta.EmbeddedSchemas.SingularTranslation
+  alias Kanta.Translations.SingularTranslation
 
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)

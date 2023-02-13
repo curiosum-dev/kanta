@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "alpinejs": "^3.11.1",
+    "phoenix": "../deps/phoenix",
+    "phoenix_html": "../deps/phoenix_html",
+    "phoenix_live_view": "../deps/phoenix_live_view"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.5"
+  }
+}

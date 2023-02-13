@@ -7,6 +7,7 @@ defmodule Kanta.MixProject do
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -14,7 +15,8 @@ defmodule Kanta.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Kanta.Application, []}
     ]
   end
 
@@ -26,9 +28,25 @@ defmodule Kanta.MixProject do
       {:expo, "~> 0.3.0"},
       {:ecto, "~> 3.9"},
       {:ecto_sql, "~> 3.9"},
-      {:phoenix, "~> 1.6"},
-      {:phoenix_live_view, "~> 0.17"},
+      {:phoenix, "~> 1.7.0-rc.0"},
+      {:jason, "~> 1.0"},
+      {:phoenix_live_view, "~> 0.18"},
+      {:phoenix_view, "~> 2.0"},
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:nebulex, "~> 2.4"},
+      {:decorator, "~> 1.4"},
+      {:shards, "~> 1.0"},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      "assets.build": [
+        "tailwind default --minify",
+        "cmd --cd assets node build.js --deploy"
+      ],
+      "assets.watch": ["tailwind default --minify", "cmd --cd assets node build.js --watch"]
     ]
   end
 end
