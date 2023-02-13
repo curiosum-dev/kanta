@@ -6,11 +6,13 @@ defmodule KantaWeb.Router do
 
     scope "/locales", Translations do
       get "/", LocaleController, :index
-    end
 
-    scope "/translations", Translations do
-      get "/", TranslationController, :index
-      get "/:language", TranslationController, :show
+      scope "/:locale_id" do
+        scope "/translations" do
+          get "/", TranslationController, :index
+          get "/:translation_id", TranslationController, :show
+        end
+      end
     end
 
     scope "/admin", Admin do

@@ -1,26 +1,46 @@
 defmodule KantaWeb.Translations.TranslationsLive do
   use KantaWeb, :live_view
 
-  alias KantaWeb.Translations.TranslationLiveComponent
+  alias Kanta.Translations
+  alias KantaWeb.Translations.{DomainsTabBar, MessagesTable}
 
   def render(assigns) do
     ~H"""
-    <h1 class="my-3">
-    Test
-    </h1>
+    <div>
+      <.live_component module={DomainsTabBar} id="tab-bar" domains={@domains} selected_domain={@selected_domain} />
+      <.live_component module={MessagesTable} id="messages-table" messages={@messages} locale={@locale} />
+    </div>
     """
   end
 
-  def mount(_params, %{"language" => language}, socket) do
-    # domains_with_translations =
-    #   language
-    #   |> Kanta.get_translations()
-    #   |> sort_translations()
-    #   |> group_translations_by_domains()
+  def mount(_params, %{"locale_id" => locale_id}, socket) do
+    locale = Translations.get_locale(locale_id)
+    domains = Translations.list_domains() || []
+    messages = Translations.list_messages_by_domain(List.first(domains).id) || []
+
+    socket =
+      socket
+      |> assign(:locale, locale)
+      |> assign(:domains, domains)
+      |> assign(:messages, messages)
+      |> assign(:selected_domain, List.first(domains).id)
 
     {:ok, socket}
-    #  |> assign(:language, language)
-    #  |> assign(:domains_with_translations, domains_with_translations)}
+  end
+
+  def handle_event("select_domain", %{"id" => id}, socket) do
+    messages = Translations.list_messages_by_domain(id)
+
+    socket =
+      socket
+      |> assign(:selected_domain, id)
+      |> assign(:messages, messages)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("navigate", %{"to" => to}, socket) do
+    {:noreply, push_redirect(socket, to: "/kanta" <> to)}
   end
 
   defp group_translations_by_domains(translations) do

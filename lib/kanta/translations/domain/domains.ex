@@ -9,6 +9,12 @@ defmodule Kanta.Translations.Domains do
 
   @ttl :timer.hours(12)
 
+  @decorate cacheable(cache: Cache, key: Domain, opts: [ttl: @ttl])
+  def list_domains do
+    DomainQueries.all()
+    |> Repo.get_repo().all()
+  end
+
   @decorate cacheable(cache: Cache, key: {Domain, name}, opts: [ttl: @ttl])
   def get_or_create_domain_by_name(name) do
     case get_domain_by_name(name) do

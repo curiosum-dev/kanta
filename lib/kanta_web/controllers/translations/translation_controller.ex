@@ -2,21 +2,18 @@ defmodule KantaWeb.Translations.TranslationController do
   use KantaWeb, :controller
   import Phoenix.LiveView.Controller
 
-  alias KantaWeb.Translations.TranslationsLive
+  alias KantaWeb.Translations.{TranslationFormLive, TranslationsLive}
 
-  def index(conn, _params), do: redirect(conn)
-
-  def show(conn, %{"language" => language}) do
-    # if language in Kanta.get_languages() do
+  def index(conn, %{"locale_id" => locale_id}) do
     live_render(conn, TranslationsLive,
       session: %{
-        "language" => language
+        "locale_id" => locale_id
       }
     )
+  end
 
-    # else
-    # redirect(conn)
-    # end
+  def show(conn, _params) do
+    live_render(conn, TranslationFormLive, session: %{})
   end
 
   defp redirect(conn) do

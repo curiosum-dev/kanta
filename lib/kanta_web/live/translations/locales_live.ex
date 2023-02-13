@@ -13,7 +13,7 @@ defmodule KantaWeb.Translations.LocalesLive do
         <div class="bg-gray-100 my-2 w-full">
           <div class="max-w-7xl">
             <div class="max-w-2xl">
-              <div phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :show, locale.id)} class="bg-white overflow-hidden shadow rounded-lg cursor-pointer">
+              <div phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :index, locale.id)} class="bg-white overflow-hidden shadow rounded-lg cursor-pointer">
                 <div class="px-4 py-5 sm:p-6 font-medium text-md text-slate-700">
                   <%= locale.name %>
                 </div>

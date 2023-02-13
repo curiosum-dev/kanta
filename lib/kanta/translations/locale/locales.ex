@@ -15,6 +15,11 @@ defmodule Kanta.Translations.Locales do
     |> Repo.get_repo().all()
   end
 
+  @decorate cacheable(cache: Cache, key: {Locale, id}, opts: [ttl: @ttl])
+  def get_locale(id) do
+    Repo.get_repo().get(Locale, id)
+  end
+
   @decorate cacheable(cache: Cache, key: {Locale, name}, opts: [ttl: @ttl])
   def get_or_create_locale_by_name(name) do
     case get_locale_by_name(name) do

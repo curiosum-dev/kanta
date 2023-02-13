@@ -13,7 +13,7 @@ defmodule Kanta.Translations.Message do
 
     belongs_to :domain, Domain
 
-    has_many :singular_translations, SingularTranslation
+    has_one :singular_translation, SingularTranslation
     has_many :plural_translations, PluralTranslation
   end
 
