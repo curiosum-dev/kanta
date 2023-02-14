@@ -40,8 +40,15 @@ defmodule Kanta.Migrations do
   end
 
   defp up_messages do
+    create_message_type_query = "CREATE TYPE gettext_message_type AS ENUM ('singular', 'plural')"
+
+    drop_message_type_query = "DROP TYPE gettext_message_type"
+    execute(create_message_type_query, drop_message_type_query)
+
     create table(@kanta_messages) do
       add(:msgid, :string)
+      add(:message_type, :gettext_message_type, null: false)
+      add(:plurals_header, :string)
       add(:msgctxt, :string, null: true)
       add(:domain_id, references(@kanta_domains), null: true)
     end

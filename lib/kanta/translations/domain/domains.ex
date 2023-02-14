@@ -30,9 +30,9 @@ defmodule Kanta.Translations.Domains do
     end
   end
 
-  defp create_domain!(name) do
+  defp create_domain!(attrs) do
     %Kanta.Translations.Domain{}
-    |> Kanta.Translations.Domain.changeset(%{name: name})
+    |> Kanta.Translations.Domain.changeset(attrs)
     |> Kanta.Repo.get_repo().insert!()
   end
 end

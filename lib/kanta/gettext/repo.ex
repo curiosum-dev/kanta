@@ -12,11 +12,13 @@ defmodule Kanta.Gettext.Repo do
   @impl Gettext.Repo
   def get_translation(locale, domain, msgctxt, msgid, _) do
     with {:ok, %SingularTranslation{translated_text: text}} <-
-           Translations.get_singular_translation(%{
-             "locale" => locale,
-             "domain" => domain,
-             "msgctxt" => msgctxt,
-             "msgid" => msgid
+           Translations.get_singular_translation_by(%{
+             "filter" => %{
+               "locale" => locale,
+               "domain" => domain,
+               "msgctxt" => msgctxt,
+               "msgid" => msgid
+             }
            }) do
       {:ok, text}
     else

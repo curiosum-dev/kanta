@@ -2,7 +2,13 @@ defmodule KantaWeb.Translations.TranslationController do
   use KantaWeb, :controller
   import Phoenix.LiveView.Controller
 
-  alias KantaWeb.Translations.{TranslationFormLive, TranslationsLive}
+  alias Kanta.Translations
+
+  alias KantaWeb.Translations.{
+    PluralTranslationFormLive,
+    SingularTranslationFormLive,
+    TranslationsLive
+  }
 
   def index(conn, %{"locale_id" => locale_id}) do
     live_render(conn, TranslationsLive,
@@ -13,15 +19,22 @@ defmodule KantaWeb.Translations.TranslationController do
   end
 
   def show(conn, %{"locale_id" => locale_id, "message_id" => message_id}) do
-    live_render(conn, TranslationFormLive,
-      session: %{
-        "locale_id" => locale_id,
-        "message_id" => message_id
-      }
-    )
-  end
+    message = Translations.get_message(message_id)
 
-  defp redirect(conn) do
-    conn |> redirect(to: Routes.page_path(conn, :index)) |> halt()
+    if message.message_type == :singular do
+      live_render(conn, SingularTranslationFormLive,
+        session: %{
+          "locale_id" => locale_id,
+          "message_id" => message_id
+        }
+      )
+    else
+      live_render(conn, PluralTranslationFormLive,
+        session: %{
+          "locale_id" => locale_id,
+          "message_id" => message_id
+        }
+      )
+    end
   end
 end

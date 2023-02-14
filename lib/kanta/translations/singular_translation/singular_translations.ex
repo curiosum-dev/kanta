@@ -14,7 +14,6 @@ defmodule Kanta.Translations.SingularTranslations do
     SingularTranslationQueries.base()
     |> SingularTranslationQueries.filter_query(params["filter"])
     |> repo.all()
-    |> repo.preload([:locale, :domain])
   end
 
   @decorate cacheable(

@@ -1,8 +1,7 @@
-defmodule KantaWeb.Translations.TranslationFormLive do
+defmodule KantaWeb.Translations.SingularTranslationFormLive do
   use KantaWeb, :live_view
 
   alias Kanta.Translations
-  alias KantaWeb.Translations.{DomainsTabBar, MessagesTable}
 
   def render(assigns) do
     ~H"""

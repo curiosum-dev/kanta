@@ -35,8 +35,9 @@ defmodule Kanta.Translations.Locales do
     end
   end
 
-  defp create_locale!(name) do
-    Locale.changeset(%Locale{}, %{name: name})
+  defp create_locale!(attrs) do
+    %Locale{}
+    |> Locale.changeset(attrs)
     |> Kanta.Repo.get_repo().insert!()
   end
 end
