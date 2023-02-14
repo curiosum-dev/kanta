@@ -12,8 +12,13 @@ defmodule KantaWeb.Translations.TranslationController do
     )
   end
 
-  def show(conn, _params) do
-    live_render(conn, TranslationFormLive, session: %{})
+  def show(conn, %{"locale_id" => locale_id, "message_id" => message_id}) do
+    live_render(conn, TranslationFormLive,
+      session: %{
+        "locale_id" => locale_id,
+        "message_id" => message_id
+      }
+    )
   end
 
   defp redirect(conn) do

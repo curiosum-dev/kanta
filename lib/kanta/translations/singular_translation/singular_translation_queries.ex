@@ -2,38 +2,4 @@ defmodule Kanta.Translations.SingularTranslationQueries do
   use Kanta.Query,
     module: Kanta.Translations.SingularTranslation,
     binding: :singular_translation
-
-  def join_resource(query, :locale) do
-    join(query, :inner, [singular_translation: st], _ in assoc(st, :locale), as: :locale)
-  end
-
-  def join_resource(query, :domain) do
-    join(query, :inner, [singular_translation: st], _ in assoc(st, :domain), as: :domain)
-  end
-
-  def filter_by_locale(query \\ base(), locale) do
-    query
-    |> with_join(:locale)
-    |> where(
-      [locale: lo],
-      lo.name == ^locale
-    )
-  end
-
-  def filter_by_domain(query \\ base(), domain) do
-    query
-    |> with_join(:domain)
-    |> where(
-      [domain: dm],
-      dm.name == ^domain
-    )
-  end
-
-  def with_text_not_null(query \\ base) do
-    query
-    |> where(
-      [singular_translation: st],
-      not is_nil(st.text)
-    )
-  end
 end

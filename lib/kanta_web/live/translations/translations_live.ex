@@ -16,7 +16,9 @@ defmodule KantaWeb.Translations.TranslationsLive do
   def mount(_params, %{"locale_id" => locale_id}, socket) do
     locale = Translations.get_locale(locale_id)
     domains = Translations.list_domains() || []
-    messages = Translations.list_messages_by_domain(List.first(domains).id) || []
+
+    messages =
+      Translations.list_messages_by(%{"filter" => %{"domain_id" => List.first(domains).id}}) || []
 
     socket =
       socket
@@ -29,7 +31,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
   end
 
   def handle_event("select_domain", %{"id" => id}, socket) do
-    messages = Translations.list_messages_by_domain(id)
+    messages = Translations.list_messages_by(%{"filter" => %{"domain_id" => id}}) || []
 
     socket =
       socket
@@ -41,23 +43,5 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   def handle_event("navigate", %{"to" => to}, socket) do
     {:noreply, push_redirect(socket, to: "/kanta" <> to)}
-  end
-
-  defp group_translations_by_domains(translations) do
-    translations
-    |> Enum.group_by(&elem(&1, 1))
-  end
-
-  defp sort_translations(translations) do
-    {empty_translations, filled_translations} =
-      translations
-      |> Enum.reduce({[], []}, fn translation, {empty, filled} ->
-        case elem(translation, 4) === "" do
-          true -> {[translation] ++ empty, filled}
-          false -> {empty, [translation] ++ filled}
-        end
-      end)
-
-    empty_translations ++ filled_translations
   end
 end

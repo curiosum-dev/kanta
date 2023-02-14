@@ -72,7 +72,7 @@ defmodule Kanta.POFiles.Extractor do
   defp create_or_update_message(multi, attrs) do
     multi
     |> Ecto.Multi.run(:domain, fn _repo, _ ->
-      {:ok, Domains.get_or_create_domain_by_name(attrs[:domain_name])}
+      {:ok, Domains.get_or_create_domain_by(%{"filter" => %{"name" => attrs[:domain_name]}})}
     end)
     |> Ecto.Multi.run(:message, fn repo, _ ->
       {:ok, repo.get_by(Message, msgid: attrs[:msgid]) || %Message{}}
@@ -92,7 +92,7 @@ defmodule Kanta.POFiles.Extractor do
     Ecto.Multi.new()
     |> create_or_update_message(attrs)
     |> Ecto.Multi.run(:locale, fn _repo, _ ->
-      {:ok, Locales.get_or_create_locale_by_name(attrs[:locale_name])}
+      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs[:locale_name]}})}
     end)
     |> Ecto.Multi.run(:translation_struct, fn repo,
                                               %{insert_or_update_message: message, locale: locale} ->
@@ -123,7 +123,7 @@ defmodule Kanta.POFiles.Extractor do
     Ecto.Multi.new()
     |> create_or_update_message(attrs)
     |> Ecto.Multi.run(:locale, fn _repo, _ ->
-      {:ok, Locales.get_or_create_locale_by_name(attrs[:locale_name])}
+      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs[:locale_name]}})}
     end)
     |> Ecto.Multi.run(:translation_structs, fn repo,
                                                %{

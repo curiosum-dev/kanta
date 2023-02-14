@@ -11,7 +11,7 @@ defmodule Kanta.Translations.Locales do
 
   @decorate cacheable(cache: Cache, key: Locale, opts: [ttl: @ttl])
   def list_locales do
-    LocaleQueries.all()
+    LocaleQueries.base()
     |> Repo.get_repo().all()
   end
 
@@ -20,18 +20,19 @@ defmodule Kanta.Translations.Locales do
     Repo.get_repo().get(Locale, id)
   end
 
-  @decorate cacheable(cache: Cache, key: {Locale, name}, opts: [ttl: @ttl])
-  def get_or_create_locale_by_name(name) do
-    case get_locale_by_name(name) do
-      %Locale{} = locale -> locale
-      nil -> create_locale!(name)
-    end
+  @decorate cacheable(cache: Cache, key: {Locale, params}, opts: [ttl: @ttl])
+  defp get_locale_by(params) do
+    LocaleQueries.base()
+    |> LocaleQueries.filter_query(params["filter"])
+    |> Repo.get_repo().one()
   end
 
-  @decorate cacheable(cache: Cache, key: {Locale, name}, opts: [ttl: @ttl])
-  defp get_locale_by_name(name) do
-    LocaleQueries.filter(name: name)
-    |> Repo.get_repo().one()
+  @decorate cacheable(cache: Cache, key: {Locale, params}, opts: [ttl: @ttl])
+  def get_or_create_locale_by(params) do
+    case get_locale_by(params) do
+      %Locale{} = locale -> locale
+      nil -> create_locale!(params["filter"])
+    end
   end
 
   defp create_locale!(name) do

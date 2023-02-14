@@ -9,10 +9,16 @@ defmodule Kanta.Translations.Messages do
 
   @ttl :timer.hours(12)
 
-  @decorate cacheable(cache: Cache, key: {Message, domain_id}, opts: [ttl: @ttl])
-  def list_messages_by_domain(domain_id) do
-    MessageQueries.filter(domain_id: domain_id)
+  @decorate cacheable(cache: Cache, key: {Message, params}, opts: [ttl: @ttl])
+  def list_messages_by(params) do
+    MessageQueries.base()
+    |> MessageQueries.filter_query(params["filter"])
     |> Repo.get_repo().all()
     |> Repo.get_repo().preload([:singular_translation, :plural_translations])
+  end
+
+  @decorate cacheable(cache: Cache, key: {Message, id}, opts: [ttl: @ttl])
+  def get_message(id) do
+    Repo.get_repo().get(Message, id)
   end
 end

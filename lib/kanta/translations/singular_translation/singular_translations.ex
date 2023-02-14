@@ -8,9 +8,29 @@ defmodule Kanta.Translations.SingularTranslations do
 
   @ttl :timer.hours(12)
 
+  def list_singular_translations(params) do
+    repo = Repo.get_repo()
+
+    SingularTranslationQueries.base()
+    |> SingularTranslationQueries.filter_query(params["filter"])
+    |> repo.all()
+    |> repo.preload([:locale, :domain])
+  end
+
+  @decorate cacheable(
+              cache: Cache,
+              key: {SingularTranslation, params},
+              opts: [ttl: @ttl]
+            )
+  def get_singular_translation_by(params) do
+    SingularTranslationQueries.base()
+    |> SingularTranslationQueries.filter_query(params["filter"])
+    |> Repo.get_repo().one()
+  end
+
   def create_singular_translation(attrs) do
-    locale = Locales.get_or_create_locale_by_name(attrs["locale"])
-    domain = Domains.get_or_create_domain_by_name(attrs["domain"])
+    locale = Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs["locale"]}})
+    domain = Domains.get_or_create_domain_by(%{"filter" => %{"name" => attrs["domain"]}})
 
     %SingularTranslation{}
     |> SingularTranslation.changeset(%{
@@ -24,19 +44,19 @@ defmodule Kanta.Translations.SingularTranslations do
     |> Repo.get_repo().insert()
   end
 
-  @decorate cacheable(
-              cache: Cache,
-              key: {SingularTranslation, params["msgid"]},
-              opts: [ttl: @ttl]
-            )
-  def get_singular_translation(params) do
-    SingularTranslationQueries.filter(
-      msgid: params["msgid"],
-      msgctxt: params["msgctxt"]
-    )
-    |> SingularTranslationQueries.filter_by_locale(params["locale"])
-    |> SingularTranslationQueries.filter_by_domain(params["domain"])
-    |> Repo.get_repo().one()
+  def update_singular_translation(id, attrs) do
+    repo = Repo.get_repo()
+
+    case repo.get(SingularTranslation, id) do
+      %SingularTranslation{} = singular_translation ->
+        SingularTranslation.changeset(singular_translation, %{
+          translated_text: attrs["translated_text"]
+        })
+        |> repo.update()
+
+      nil ->
+        :error
+    end
   end
 
   @decorate cache_evict(cache: Cache, key: {SingularTranslation, id})
@@ -48,14 +68,5 @@ defmodule Kanta.Translations.SingularTranslations do
     else
       nil -> :not_found
     end
-  end
-
-  @decorate cacheable(cache: Cache, key: Locale, opts: [ttl: @ttl])
-  def list_singular_translations(filters \\ []) do
-    repo = Repo.get_repo()
-
-    SingularTranslationQueries.filter(filters)
-    |> repo.all()
-    |> repo.preload([:locale, :domain])
   end
 end

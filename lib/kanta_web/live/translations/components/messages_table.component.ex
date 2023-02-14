@@ -32,14 +32,14 @@ defmodule KantaWeb.Translations.MessagesTable do
                           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             <%= message.msgid %>
                           </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td class={message_classnames(message)}>
                             <%= translated_singular_text(message) %>
                           </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td class={message_classnames(message)}>
                             <%= translated_plural_text(message) %>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :show, @locale.id, message.id)} class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                            <a phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :show, @locale.id, message.id)} class="cursor-pointer text-indigo-600 hover:text-indigo-900">Edit</a>
                           </td>
                         </tr>
                       <% end %>
@@ -56,6 +56,16 @@ defmodule KantaWeb.Translations.MessagesTable do
 
   def mount(socket) do
     {:ok, socket}
+  end
+
+  def message_classnames(message) do
+    if not is_nil(message.singular_translation) and
+         not is_nil(message.singular_translation.translated_text) and
+         String.length(message.singular_translation.translated_text) > 0 do
+      "px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-main"
+    else
+      "px-6 py-4 whitespace-nowrap text-xs text-red-600"
+    end
   end
 
   def translated_singular_text(message) do

@@ -9,6 +9,14 @@ module.exports = {
     '../lib/*_web.ex',
     '../lib/*_web/**/*.*ex'
   ],
+  safelist: [
+    {
+      pattern: /text-.*-.{2,3}/,
+    },
+    {
+      pattern: /bg-.*-.{2,3}/,
+    },
+  ],
   theme: {
     extend: {
       colors: {
