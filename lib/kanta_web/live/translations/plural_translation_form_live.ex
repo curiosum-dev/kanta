@@ -70,7 +70,6 @@ defmodule KantaWeb.Translations.PluralTranslationFormLive do
   def handle_event("save", %{"id" => id}, socket) do
     %{
       assigns: %{
-        locale: locale,
         translated: translated
       }
     } = socket

@@ -21,7 +21,7 @@ defmodule Kanta.Translations.Locales do
   end
 
   @decorate cacheable(cache: Cache, key: {Locale, params}, opts: [ttl: @ttl])
-  defp get_locale_by(params) do
+  def get_locale_by(params) do
     LocaleQueries.base()
     |> LocaleQueries.filter_query(params["filter"])
     |> Repo.get_repo().one()

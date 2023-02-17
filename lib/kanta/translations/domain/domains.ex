@@ -16,7 +16,7 @@ defmodule Kanta.Translations.Domains do
   end
 
   @decorate cacheable(cache: Cache, key: {Domain, params}, opts: [ttl: @ttl])
-  defp get_domain_by(params) do
+  def get_domain_by(params) do
     DomainQueries.base()
     |> DomainQueries.filter_query(params["filter"])
     |> Repo.get_repo().one()

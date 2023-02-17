@@ -48,20 +48,20 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<img src="./ui.png" alt="kanta-ui" width="400" height="200">
 
 TODO
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Getting Started
+# Getting Started
 
-### Prerequisites
+## Prerequisites
 
 - Elixir/Phoenix project
 - Database setup
 
-#### Installation
+## Installation
 
 The package can be installed
 by adding `kanta` to your list of dependencies in `mix.exs`:
@@ -74,7 +74,7 @@ def deps do
 end
 ```
 
-#### Add configuration
+### Add configuration
 
 Add to `config/config.exs` file:
 
@@ -87,7 +87,7 @@ config :kanta,
 
 Ecto repo is used for translations persistency.
 
-#### Create migration
+### Create migration
 
 Create migration with
 
@@ -117,13 +117,35 @@ And run
 mix ecto.migrate
 ```
 
+### Adjust Gettext module
+
+Add Kanta Repo as a default translation repository inside your Gettext module.
+
+```elixir
+use Gettext, ..., repo: Kanta.Gettext.Repo
+```
+
+### Setup Kanta UI
+
+Inside your `router.ex` file forward desired path to the KantaWeb.Router.
+
+```elixir
+scope "/" do
+  pipe_through :browser
+  forward "/kanta", KantaWeb.Router
+end
+```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+# Usage
 
-TO DO
+1. Start Phoenix server and visit `localhost:4000/kanta` (or otherpath you've set in the router.ex file).
+2. From there you can check and modify your translations from already existing .po files.
+
+TODO
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -131,8 +153,8 @@ TO DO
 
 ## Roadmap
 
-- [ ] Support plural translations
-- [ ] Normalize database
+- [x] Support plural translations
+- [x] Normalize database
 - [ ] Add documentation and typespecs
 
 See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full list of proposed features (and known issues).
@@ -168,10 +190,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Artur Ziętkiewicz - artur.zietkiewicz@curiosum.com
-
-Michał Buszkiewicz - michal.buszkiewicz@curiosum.com
+Michał Buszkiewicz - michal@curiosum.com
 
 Krzysztof Janiec - krzysztof.janiec@curiosum.com
+
+Artur Ziętkiewicz - artur.zietkiewicz@curiosum.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

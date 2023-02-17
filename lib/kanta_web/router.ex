@@ -14,10 +14,5 @@ defmodule KantaWeb.Router do
         end
       end
     end
-
-    scope "/admin", Admin do
-      get "/storage", StorageController, :index
-      get "/gettext", GettextController, :index
-    end
   end
 end

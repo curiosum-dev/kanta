@@ -21,4 +21,11 @@ defmodule Kanta.Translations.Messages do
   def get_message(id) do
     Repo.get_repo().get(Message, id)
   end
+
+  @decorate cacheable(cache: Cache, key: {Message, params}, opts: [ttl: @ttl])
+  def get_message_by(params) do
+    MessageQueries.base()
+    |> MessageQueries.filter_query(params["filter"])
+    |> Repo.get_repo().one()
+  end
 end

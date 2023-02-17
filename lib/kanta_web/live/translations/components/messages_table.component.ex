@@ -90,7 +90,7 @@ defmodule KantaWeb.Translations.MessagesTable do
   def translated_text(assigns, %Message{message_type: :plural} = message),
     do: translated_plural_text(assigns, message)
 
-  def translated_singular_text(assigns, message) do
+  def translated_singular_text(_assigns, message) do
     if message.singular_translation do
       message.singular_translation.translated_text || "Not translated."
     else
@@ -99,10 +99,12 @@ defmodule KantaWeb.Translations.MessagesTable do
   end
 
   def translated_plural_text(assigns, message) do
+    assigns = assign(assigns, :message, message)
+
     if length(message.plural_translations) > 0 do
       ~H"""
         <div>
-          <%= for plural_translation <- message.plural_translations do %>
+          <%= for plural_translation <- @message.plural_translations do %>
             <div>
               Plural form <%= plural_translation.nplural_index %>: <%= plural_translation.translated_text || "Not translated." %>
             </div>
