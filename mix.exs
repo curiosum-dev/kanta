@@ -28,10 +28,11 @@ defmodule Kanta.MixProject do
       {:expo, "~> 0.3.0"},
       {:ecto, "~> 3.9"},
       {:ecto_sql, "~> 3.9"},
-      {:phoenix, "~> 1.7.0-rc.0"},
+      {:phoenix, "~> 1.7.0"},
       {:jason, "~> 1.0"},
       {:phoenix_live_view, "~> 0.18"},
       {:phoenix_view, "~> 2.0"},
+      {:esbuild, "~> 0.5", only: :dev},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:nebulex, "~> 2.4"},
       {:decorator, "~> 1.4"},
@@ -42,11 +43,11 @@ defmodule Kanta.MixProject do
 
   defp aliases do
     [
+      setup: ["deps.get", "cmd --cd assets npm install", "assets.build"],
       "assets.build": [
-        "tailwind default --minify",
-        "cmd --cd assets node build.js --deploy"
-      ],
-      "assets.watch": ["tailwind default --minify", "cmd --cd assets node build.js --watch"]
+        "esbuild default --minify",
+        "tailwind default --minify"
+      ]
     ]
   end
 end

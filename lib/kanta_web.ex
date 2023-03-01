@@ -17,13 +17,26 @@ defmodule KantaWeb do
   and import those modules here.
   """
 
+  def static_paths do
+    ~w(assets fonts images favicon.ico robots.txt)
+  end
+
+  def html do
+    quote do
+      @moduledoc false
+      use Phoenix.Component
+
+      unquote(view_helpers())
+    end
+  end
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: KantaWeb
 
       import Plug.Conn
-      # import KantaWeb.Gettext
       alias KantaWeb.Router.Helpers, as: Routes
+      unquote(verified_routes())
     end
   end
 
@@ -45,7 +58,6 @@ defmodule KantaWeb do
   def live_view do
     quote do
       use Phoenix.LiveView
-      # layout: {KantaWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -90,14 +102,22 @@ defmodule KantaWeb do
       use Phoenix.HTML
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
-      import Phoenix.LiveView.Helpers
+      import Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import KantaWeb.ErrorHelpers
-      # import KantaWeb.Gettext
       alias KantaWeb.Router.Helpers, as: Routes
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: Application.compile_env(:kanta, :endpoint),
+        router: KantaWeb.Router,
+        statics: KantaWeb.static_paths()
     end
   end
 

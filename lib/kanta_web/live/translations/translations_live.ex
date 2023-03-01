@@ -13,7 +13,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
     """
   end
 
-  def mount(_params, %{"locale_id" => locale_id}, socket) do
+  def mount(%{"locale_id" => locale_id}, _session, socket) do
     locale = Translations.get_locale(locale_id)
     domains = Translations.list_domains() || []
 

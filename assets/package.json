@@ -1,11 +1,20 @@
 {
-  "dependencies": {
-    "alpinejs": "^3.11.1",
-    "phoenix": "../deps/phoenix",
-    "phoenix_html": "../deps/phoenix_html",
-    "phoenix_live_view": "../deps/phoenix_live_view"
+  "name": "kanta",
+  "version": "0.1.0",
+  "description": "The Phoenix translations management framework.",
+  "license": "MIT",
+  "main": "./assets/js/kanta.js",
+  "repository": {},
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
   },
+  "dependencies": {},
   "devDependencies": {
-    "esbuild": "^0.17.5"
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.4.1",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
   }
 }

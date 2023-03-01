@@ -68,8 +68,7 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
 
     Translations.update_singular_translation(translation.id, %{"translated_text" => translated})
 
-    {:noreply,
-     push_redirect(socket, to: "/kanta" <> Routes.translation_path(socket, :index, locale.id))}
+    {:noreply, push_patch(socket, to: path(socket, ~p"/kanta/translations/#{locale.id}"))}
   end
 
   def handle_event("navigate", %{"to" => to}, socket) do
@@ -92,7 +91,7 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
           <ol class="flex items-center space-x-4">
             <li>
               <div>
-                <a phx-click="navigate" phx-value-to={Routes.locale_path(@socket, :index)} class="cursor-pointer text-sm font-medium text-gray-400 hover:text-gray-200">Locales</a>
+                <a phx-click="navigate" phx-value-to={path(@socket, ~p"/kanta/locales")} class="cursor-pointer text-sm font-medium text-gray-400 hover:text-gray-200">Locales</a>
               </div>
             </li>
             <li>
@@ -100,7 +99,7 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
                 <svg class="flex-shrink-0 h-5 w-5 text-gray-500" x-description="Heroicon name: solid/chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <a phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :index, @locale.id)} class="cursor-pointer ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"><%= @locale.name %></a>
+                <a phx-click="navigate" phx-value-to={path(@socket, ~p"/kanta/locales/#{@locale.id}/translations")} class="cursor-pointer ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"><%= @locale.name %></a>
               </div>
             </li>
             <li>

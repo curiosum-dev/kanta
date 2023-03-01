@@ -13,7 +13,7 @@ defmodule KantaWeb.Translations.LocalesLive do
         <div class="bg-gray-100 my-2 w-full">
           <div class="max-w-7xl">
             <div class="max-w-2xl">
-              <div phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :index, locale.id)} class="bg-white overflow-hidden shadow rounded-lg cursor-pointer">
+              <div phx-click="navigate" phx-value-to={path(@socket, ~p"/kanta/locales/#{locale.id}/translations")} class="bg-white overflow-hidden shadow rounded-lg cursor-pointer">
                 <div class="px-4 py-5 sm:p-6 font-medium text-md text-slate-700">
                   <%= locale.name %>
                 </div>
@@ -26,7 +26,7 @@ defmodule KantaWeb.Translations.LocalesLive do
     """
   end
 
-  def mount(_params, _session, socket) do
+  def mount(params, session, socket) do
     locales = Translations.list_locales()
 
     {:ok,
@@ -35,6 +35,6 @@ defmodule KantaWeb.Translations.LocalesLive do
   end
 
   def handle_event("navigate", %{"to" => to}, socket) do
-    {:noreply, push_redirect(socket, to: "/kanta" <> to)}
+    {:noreply, push_patch(socket, to: to)}
   end
 end
