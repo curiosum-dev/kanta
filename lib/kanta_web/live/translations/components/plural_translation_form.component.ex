@@ -1,5 +1,5 @@
-defmodule KantaWeb.Translations.SingularTranslationFormLive do
-  use KantaWeb, :live_view
+defmodule KantaWeb.Translations.PluralTranslationForm do
+  use KantaWeb, :live_component
 
   alias Kanta.Translations
 
@@ -9,66 +9,60 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
       <div class="mb-4">
         <%= header(assigns) %>
       </div>
-      <div class="mb-4">
-        <div class="mt-4">
-          <label for="original_text" class="block text-sm font-medium text-gray-700">Original text</label>
-          <div class="mt-1">
-            <input value={@translation.original_text} disabled type="text" name="original_text" id="original_text" class="bg-gray-50 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="">
+      <%= for translation <- @translations do %>
+        <div>
+          <div class="mt-8 pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+              Plural form <%= translation.nplural_index %>
+            </h3>
+            <div class="mt-3 sm:mt-0 sm:ml-4">
+              <button phx-click="save" phx-value-id={translation.id} type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Save
+              </button>
+            </div>
+          </div>
+          <div class="mt-4">
+            <label for="original_text" class="block text-sm font-medium text-gray-700">Original text</label>
+            <div class="mt-1">
+              <input value={translation.original_text} disabled type="text" name="original_text" id="original_text" class="bg-gray-50 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="">
+            </div>
+          </div>
+          <div class="mt-4">
+            <label for="translated_text" class="block text-sm font-medium text-gray-700">Translated text</label>
+            <div class="mt-1">
+              <input phx-keyup="keyup" phx-value-index={translation.id} value={translation.translated_text} type="text" name="translated_text" id="translated_text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="">
+            </div>
           </div>
         </div>
-        <div class="mt-4">
-          <label for="translated_text" class="block text-sm font-medium text-gray-700">Translated text</label>
-          <div class="mt-1">
-            <input phx-keyup="keyup" value={@translation.translated_text} type="text" name="translated_text" id="translated_text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="">
-          </div>
-        </div>
-      </div>
+      <% end %>
     </div>
     """
   end
 
-  def mount(_params, %{"locale_id" => locale_id, "message_id" => message_id}, socket) do
-    locale = Translations.get_locale(locale_id)
-    message = Translations.get_message(message_id)
-
-    translation =
-      Translations.get_singular_translation_by(%{
-        "filter" => %{
-          "message_id" => message_id,
-          "locale_id" => locale_id
-        }
-      })
-
+  def mount(params, %{"locale_id" => locale_id, "message_id" => message_id} = session, socket) do
     socket =
       socket
-      |> assign(:locale, locale)
-      |> assign(:message, message)
-      |> assign(:translation, translation)
+      |> assign(:translated, %{})
 
     {:ok, socket}
   end
 
-  def handle_event("keyup", %{"value" => translated}, socket) do
+  def handle_event("keyup", %{"value" => value, "index" => index}, socket) do
     {:noreply,
      socket
-     |> assign(:translated, translated)
-     |> assign(:saved?, false)}
+     |> assign(:translated, Map.merge(socket.assigns.translated, %{"#{index}" => value}))}
   end
 
-  def handle_event("save", _event, socket) do
+  def handle_event("save", %{"id" => id}, socket) do
     %{
       assigns: %{
-        locale: locale,
-        translation: translation,
         translated: translated
       }
     } = socket
 
-    translated = String.trim(translated)
+    Translations.update_plural_translation(id, %{"translated_text" => translated["#{id}"]})
 
-    Translations.update_singular_translation(translation.id, %{"translated_text" => translated})
-
-    {:noreply, push_patch(socket, to: path(socket, ~p"/kanta/translations/#{locale.id}"))}
+    {:noreply, socket}
   end
 
   def handle_event("navigate", %{"to" => to}, socket) do
@@ -91,7 +85,7 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
           <ol class="flex items-center space-x-4">
             <li>
               <div>
-                <a phx-click="navigate" phx-value-to={path(@socket, ~p"/kanta/locales")} class="cursor-pointer text-sm font-medium text-gray-400 hover:text-gray-200">Locales</a>
+                <.link patch={"/kanta/locales"} class="cursor-pointer text-sm font-medium text-gray-400 hover:text-gray-200">Locales</.link>
               </div>
             </li>
             <li>
@@ -99,7 +93,7 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
                 <svg class="flex-shrink-0 h-5 w-5 text-gray-500" x-description="Heroicon name: solid/chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <a phx-click="navigate" phx-value-to={path(@socket, ~p"/kanta/locales/#{@locale.id}/translations")} class="cursor-pointer ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"><%= @locale.name %></a>
+                <a phx-click="navigate" phx-value-to={"/kanta/locales/#{@locale.id}/translations"} class="cursor-pointer ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"><%= @locale.name %></a>
               </div>
             </li>
             <li>
@@ -118,11 +112,6 @@ defmodule KantaWeb.Translations.SingularTranslationFormLive do
           <h2 class="text-2xl font-bold leading-7 text-primary-dark sm:text-3xl sm:truncate">
             Translating '<%= @message.msgid %>' to '<%= @locale.name %>'
           </h2>
-        </div>
-        <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
-          <button phx-click="save" type="button" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
-            Save
-          </button>
         </div>
       </div>
     </div>

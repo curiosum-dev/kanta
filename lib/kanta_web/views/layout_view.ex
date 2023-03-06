@@ -15,26 +15,15 @@ defmodule KantaWeb.LayoutView do
     [Enum.map(conn.script_name, &["/" | &1]) | conn.private.live_socket_path]
   end
 
-  # TODO: Remove this and the conditional on Phoenix v1.7+
-  @compile {:no_warn_undefined, Phoenix.VerifiedRoutes}
-
   def asset_path(conn, asset) when asset in [:css, :js] do
     hash = KantaWeb.Assets.current_hash(asset)
 
-    if function_exported?(conn.private.phoenix_router, :__kanta_dashboard_prefix__, 0) do
-      prefix = conn.private.phoenix_router.__kanta_dashboard_prefix__()
+    prefix = conn.private.phoenix_router.__kanta_dashboard_prefix__()
 
-      Phoenix.VerifiedRoutes.unverified_path(
-        conn,
-        conn.private.phoenix_router,
-        "#{prefix}/#{asset}-#{hash}"
-      )
-    else
-      apply(
-        conn.private.phoenix_router.__helpers__(),
-        :kanta_dashboard_asset_path,
-        [conn, asset, hash]
-      )
-    end
+    Phoenix.VerifiedRoutes.unverified_path(
+      conn,
+      conn.private.phoenix_router,
+      "#{prefix}/#{asset}-#{hash}"
+    )
   end
 end
