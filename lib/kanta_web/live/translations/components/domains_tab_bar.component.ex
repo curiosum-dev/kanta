@@ -21,7 +21,7 @@ defmodule KantaWeb.Translations.DomainsTabBar do
                 <span><%= domain.name %></span>
                 <%= if domain.id == @selected_domain do %>
                   <span aria-hidden="true" class="bg-indigo-500 absolute inset-x-0 bottom-0 h-0.5"></span>
-                <%= else %>
+                <% else %>
                   <span aria-hidden="true" class="bg-transparent absolute inset-x-0 bottom-0 h-0.5"></span>
                 <% end %>
               </a>

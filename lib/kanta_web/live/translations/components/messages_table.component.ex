@@ -43,7 +43,7 @@ defmodule KantaWeb.Translations.MessagesTable do
                             <%= translated_text(assigns, message) %>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a phx-click="navigate" phx-value-to={Routes.translation_path(@socket, :show, @locale.id, message.id)} class="cursor-pointer text-indigo-600 hover:text-indigo-900">Edit</a>
+                            <.link patch={path(@socket, ~p"/kanta/locales/#{@locale.id}/translations/#{message.id}")} class="cursor-pointer text-indigo-600 hover:text-indigo-900">Edit</.link>
                           </td>
                         </tr>
                       <% end %>
