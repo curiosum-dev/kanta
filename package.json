@@ -1,0 +1,24 @@
+{
+  "name": "kanta",
+  "version": "0.1.0",
+  "description": "Translations management library for Elixir/Phoenix projects",
+  "license": "MIT",
+  "private": true,
+  "module": "./priv/static/index.esm.js",
+  "main": "./priv/static/index.cjs.js",
+  "exports": {
+    "import": "./priv/static/index.esm.js",
+    "require": "./priv/static/index.cjs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/curiosum-dev/kanta.git"
+  },
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "package.json",
+    "priv/static/*",
+    "assets/js/*"
+  ]
+}

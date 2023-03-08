@@ -1,22 +1,43 @@
 defmodule Kanta.Translations.Locales do
-  alias Kanta.Translations.LocaleQueries
+  use Nebulex.Caching
+
+  alias Kanta.Cache
   alias Kanta.Repo
 
-  def get_or_create_locale_by_name(name) do
-    with nil <- get_locale_by_name(name),
-         locale = create_locale!(name) do
-      locale
-    end
+  alias Kanta.Translations.Locale
+  alias Kanta.Translations.LocaleQueries
+
+  @ttl :timer.hours(12)
+
+  @decorate cacheable(cache: Cache, key: Locale, opts: [ttl: @ttl])
+  def list_locales do
+    LocaleQueries.base()
+    |> Repo.get_repo().all()
   end
 
-  defp get_locale_by_name(name) do
-    LocaleQueries.filter(name: name)
+  @decorate cacheable(cache: Cache, key: {Locale, id}, opts: [ttl: @ttl])
+  def get_locale(id) do
+    Repo.get_repo().get(Locale, id)
+  end
+
+  @decorate cacheable(cache: Cache, key: {Locale, params}, opts: [ttl: @ttl])
+  def get_locale_by(params) do
+    LocaleQueries.base()
+    |> LocaleQueries.filter_query(params["filter"])
     |> Repo.get_repo().one()
   end
 
-  defp create_locale!(name) do
-    %Kanta.Translations.Locale{}
-    |> Kanta.Translations.Locale.changeset(%{name: name})
+  @decorate cacheable(cache: Cache, key: {Locale, params}, opts: [ttl: @ttl])
+  def get_or_create_locale_by(params) do
+    case get_locale_by(params) do
+      %Locale{} = locale -> locale
+      nil -> create_locale!(params["filter"])
+    end
+  end
+
+  defp create_locale!(attrs) do
+    %Locale{}
+    |> Locale.changeset(attrs)
     |> Kanta.Repo.get_repo().insert!()
   end
 end

@@ -1,8 +1,9 @@
 defmodule Kanta.Cache do
-  alias Kanta.Cache.Agent
+  use Nebulex.Cache,
+    otp_app: :kanta,
+    adapter: Nebulex.Adapters.Partitioned,
+    primary_storage_adapter: Nebulex.Adapters.Local
 
-  defdelegate get_cached_translation_text(translation), to: Agent
-  defdelegate get_all_cached_translations, to: Agent
-  defdelegate cache_translation(translation), to: Agent
-  defdelegate delete_cached_translation(translation), to: Agent
+  def match_update({:ok, value}), do: {true, value}
+  def match_update({:error, _}), do: false
 end

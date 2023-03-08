@@ -1,292 +1,210 @@
-# credo:disable-for-this-file Credo.Check.Refactor.LongQuoteBlocks
 defmodule Kanta.Query do
   @moduledoc """
-  This module is a base for all queries modules in the app.
+    This module is a base for all queries modules in the app.
 
-  Including it into given resource query module is as easy as:
-  ```
-  use App.Query,
-    module: App.ResourceModuleGoesHere,
-    binding: :resource_binding_goes_here
-  ```
-
-  **Important!** You need to define two functions in you resource module:
-  - `defp filter_by(_criteria, _query), do: raise ArgumentError, message: "wrong filter criteria"` since it's used by `filter/2`
-  - `defp join_resource(_query, _), do: raise ArgumentError, message: "wrong join criteria"` since it's used by `with_join/2`
+    Including it into given resource query module is as easy as:
+    ```
+    use Kanta.Query,
+      module: Kanta.ResourceModuleGoesHere,
+      binding: :resource_binding_goes_here
+    ```
   """
 
   defmacro __using__(opts \\ []) do
-    base =
-      quote do
-        import Ecto.Query
+    # credo:disable-for-next-line Credo.Check.Refactor.LongQuoteBlocks
+    quote do
+      import Ecto.Query
 
-        @doc """
-        Returns all resources without any conditions.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.all()
-            #Ecto.Query<from u0 in App.Account.User, as: :user>
-
-        """
-        @spec all :: Ecto.Query.t()
-        def all, do: base()
-
-        @doc """
-        Returns unique resources.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.unique()
-            #Ecto.Query<from u0 in App.Account.User, as: :user, distinct: true>
-
-        """
-        @spec unique(Ecto.Query.t()) :: Ecto.Query.t()
-        def unique(query \\ base()), do: distinct(query, true)
-
-        @doc """
-        Filters given resource by specific criterias.
-
-        *Important!* The criterias have to be defined with filter_by/2 function. Example:
-        ```
-        defp filter_by({:id, id}, query) do
-          query
-          |> where([user: u], u.id == ^id)
-        end
-        ```
-
-        First argument is a tuple of `{key_to_match, value_to_compare}` and second argument is a query.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.filter(id: 1, email: "someone@example.com")
-            #Ecto.Query<from u0 in App.Account.User, as: :user,
-              where: u0.id == ^1,
-              where: u0.email == ^"someone@example.com">
-
-            # for dates comparison use tuple
-            iex> App.Account.UserQueries.filter(inserted_at: {:<, Date.utc_today()})
-            #Ecto.Query<from u0 in App.Account.User, as: :user,
-              where: u0.inserted_at < ^~D[2022-07-28]>
-
-        """
-        @spec filter(Ecto.Query.t(), list({atom(), any()})) :: Ecto.Query.t()
-        def filter(query \\ base(), criterias) do
-          Enum.reduce(criterias, query, fn
-            {key, {comparator, value}}, query -> filter_by(query, {key, comparator, value})
-            {key, value}, query -> filter_by(query, {key, value})
-          end)
-        end
-
-        @spec filter_by(Ecto.Query.t(), {atom(), any()}) :: no_return()
-        @spec filter_by(Ecto.Query.t(), {atom(), any(), any()}) :: no_return()
-
-        @doc """
-        Select specific one column from resource.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.select_column(:email)
-            #Ecto.Query<from u0 in App.Account.User, as: :user, select: u0.email>
-
-        """
-        @spec select_resource(Ecto.Query.t()) :: Ecto.Query.t()
-        def select_resource(query \\ base()) do
-          select(query, [{unquote(opts[:binding]), resource}], resource)
-        end
-
-        @spec select_column(Ecto.Query.t(), atom()) :: Ecto.Query.t()
-        def select_column(query \\ base(), column) do
-          select(
-            query,
-            [{unquote(opts[:binding]), resource}],
-            field(resource, ^column)
-          )
-        end
-
-        @doc """
-        Groups the query by specific resource field.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.group_by_column(:email)
-            #Ecto.Query<from u0 in App.Account.User, as: :user, group_by: [u0.email]>
-
-        """
-        @spec(group_by_column(Ecto.Query.t(), atom()) :: Ecto.Query.t(), atom())
-        def group_by_column(query \\ base(), column) do
-          group_by(
-            query,
-            [{unquote(opts[:binding]), resource}],
-            field(resource, ^column)
-          )
-        end
-
-        @doc """
-        Preloads resources for given resource.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.preload_resources(:articles)
-            #Ecto.Query<from u0 in App.Account.User, as: :user,
-              preload: [[:articles]]>
-
-        """
-        @spec preload_resources(Ecto.Query.t(), list(atom() | {atom(), atom()})) :: Ecto.Query.t()
-        def preload_resources(query \\ base(), preloads) do
-          preload(query, ^preloads)
-        end
-
-        @doc """
-        Counts resources by specific column.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.count(:email)
-            #Ecto.Query<from u0 in App.Account.User, as: :user,
-              select: count(u0.email)>
-
-        """
-        @spec count(Ecto.Query.t(), atom()) :: Ecto.Query.t()
-        def count(query \\ base(), column) do
-          select(
-            query,
-            [{unquote(opts[:binding]), resource}],
-            field(resource, ^column) |> count()
-          )
-        end
-
-        @doc """
-        Joins resource with another resource.
-
-        *Important!* The joining has to be defined by join_resource/2 function. Example:
-        ```
-        defp join_resource(query, :articles) do
-          query
-          |> join(:left, [user: u], _ in assoc(u, :articles), as: :article)
-        end
-        ```
-
-        First argument is a query and second argument is pattern-matched atom.
-
-        ## Examples
-
-            iex> App.Account.UserQueries.with_join(:articles)
-            #Ecto.Query<from u0 in App.Account.User, as: :user,
-              left_join: u1 in assoc(u0, :articles), as: :article>
-
-        """
-        @spec with_join(Ecto.Query.t(), atom()) :: Ecto.Query.t()
-        def with_join(query \\ base(), resource_name) when is_atom(resource_name) do
-          if has_named_binding?(query, resource_name) do
-            query
-          else
-            join_resource(query, resource_name)
-          end
-        end
-
-        @spec join_resource(Ecto.Query.t(), atom()) :: no_return()
-
-        # Returns a query for paginating result set using limit and offset based
-        # on page (1-indexed) and per_page settings.
-        #
-        # ## Examples
-        #
-        # iex> paginate(base(), 2, 5)
-        # #Ecto.Query<from u0 in App.Account.User, as: :user>
-        @spec paginate(Ecto.Query.t(), integer(), integer()) :: Ecto.Query.t()
-        def paginate(query \\ base(), page, per_page) do
-          query
-          |> then(&if page, do: limit(&1, ^per_page), else: &1)
-          |> then(&if page, do: offset(&1, (^page - 1) * ^per_page), else: &1)
-        end
-
-        @spec empty_query(Ecto.Query.t()) :: Ecto.Query.t()
-        def empty_query(query), do: where(query, false)
-
-        # Returns the base for resource query with binding.
-        #
-        # ## Examples
-        #
-        # iex> base()
-        # #Ecto.Query<from u0 in App.Account.User, as: :user
-        #
-        @spec base :: Ecto.Query.t()
-        defp base do
-          from(_ in unquote(opts[:module]), as: unquote(opts[:binding]))
-        end
-
-        defp join_resource(_query, _), do: raise(ArgumentError, message: "wrong join criteria")
-        defoverridable join_resource: 2
+      # Returns the base for resource query with binding.
+      #
+      # ## Examples
+      #
+      # iex> base()
+      # #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user
+      #
+      @spec base :: Ecto.Query.t()
+      def base do
+        from(_ in unquote(opts[:module]), as: unquote(opts[:binding]))
       end
 
-    {_, _, module_path} = opts[:module]
-    module = Module.concat(module_path)
+      @doc """
+      Returns unique resources.
 
-    filter_by_functions =
-      Enum.map(module.__schema__(:fields), fn field ->
-        quote do
-          # With the value equal to nil, it should use is_nil for comparison
-          def filter_by(query, {unquote(field), nil}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              is_nil(aliaz.unquote(field))
-            )
-          end
+      ## Examples
 
-          # With the value equal being a list, it should use in as a comparison
-          def filter_by(query, {unquote(field), [_h | _t] = value}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              aliaz.unquote(field) in ^value
-            )
-          end
+          iex> Kanta.Accounts.UserQueries.unique()
+          #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user, distinct: true>
+      """
+      def unique(query \\ base(), column \\ true)
+      def unique(query, true), do: distinct(query, true)
 
-          def filter_by(query, {unquote(field), value}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              aliaz.unquote(field) == ^value
-            )
-          end
+      def unique(query, column) when is_atom(column) do
+        distinct(
+          query,
+          [{unquote(opts[:binding]), resource}],
+          field(resource, ^column)
+        )
+      end
 
-          def filter_by(query, {unquote(field), :<, value}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              aliaz.unquote(field) < ^value
-            )
-          end
+      @doc """
+      Select specific one column from resource.
 
-          def filter_by(query, {unquote(field), :<=, value}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              aliaz.unquote(field) <= ^value
-            )
-          end
+      ## Examples
 
-          def filter_by(query, {unquote(field), :>, value}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              aliaz.unquote(field) > ^value
-            )
-          end
+          iex> Kanta.Accounts.UserQueries.select_column(:email)
+          #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user, select: u0.email>
+      """
+      @spec select_column(Ecto.Query.t(), atom()) :: Ecto.Query.t()
+      def select_column(query \\ base(), column) do
+        select(
+          query,
+          [{unquote(opts[:binding]), resource}],
+          field(resource, ^column)
+        )
+      end
 
-          def filter_by(query, {unquote(field), :>=, value}) do
-            where(
-              query,
-              [{unquote(opts[:binding]), aliaz}],
-              aliaz.unquote(field) >= ^value
+      @doc """
+      Preloads resources for given resource.
+
+      ## Examples
+
+          iex> Kanta.Accounts.UserQueries.preload_resources(:articles)
+          #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user,
+            preload: [[:articles]]>
+      """
+      @spec preload_resources(Ecto.Query.t(), keyword()) :: Ecto.Query.t()
+      def preload_resources(query \\ base(), preloads) do
+        preload(query, ^preloads)
+      end
+
+      @doc """
+      Counts resources by specific column.
+
+      ## Examples
+
+          iex> Kanta.Accounts.UserQueries.count(:email)
+          #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user,
+            select: count(u0.email)>
+      """
+      @spec count(Ecto.Query.t(), atom()) :: Ecto.Query.t()
+      def count(query \\ base(), column) do
+        select(
+          query,
+          [{unquote(opts[:binding]), resource}],
+          field(resource, ^column) |> count()
+        )
+      end
+
+      @doc """
+      Filters given resource by specific criterias. Filters should be pass to the function as map `%{"field_name" => filter_value}`.
+      It supports associations: `%{"association" => %{"field_name" => filter_value}}`
+      and nested associations `%{"association" => %{"nested association" => %{"field_name" => filter_value}}}`
+
+      ## Examples
+
+          iex> Kanta.Accounts.UserQueries.filter_query(%{"email" => "a@a.com"})
+          #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user, where: u0.email == ^"a@a.com">
+      """
+      @spec filter_query(Ecto.Query.t(), map() | keyword() | nil) :: Ecto.Query.t()
+      def filter_query(query \\ base(), filters)
+      def filter_query(query, nil), do: query
+
+      def filter_query(query, filters) when is_list(filters) do
+        filters
+        |> Enum.into(%{})
+        |> then(&filter_query(query, &1))
+      end
+
+      def filter_query(query, filters) do
+        Enum.reduce(filters, query, fn
+          {association, fields}, q when is_map(fields) ->
+            association_atom = maybe_convert_to_atom(association)
+
+            query = from([..., s] in q, join: a in assoc(s, ^association_atom))
+
+            Enum.reduce(fields, query, fn
+              {assoc, values}, current_query when is_map(values) ->
+                filter_query(current_query, %{assoc => values})
+
+              {field_name, value}, current_query ->
+                get_field_name(value, current_query, field_name)
+            end)
+
+          {field_name, value}, q ->
+            try do
+              field_name = maybe_convert_to_atom(field_name)
+
+              if is_list(value) do
+                from(s in q, where: field(s, ^field_name) in ^value)
+              else
+                from(s in q, where: field(s, ^field_name) == ^value)
+              end
+            rescue
+              _e -> q
+            end
+        end)
+      end
+
+      defp get_field_name(value, current_query, field_name) when is_binary(field_name) do
+        get_field_name(value, current_query, String.to_existing_atom(field_name))
+      end
+
+      defp get_field_name(value, current_query, field_name) do
+        if is_list(value) do
+          field_name =
+            from([..., r] in current_query,
+              where: field(r, ^field_name) in ^value
             )
-          end
+        else
+          field_name =
+            from([..., r] in current_query,
+              where: field(r, ^field_name) == ^value
+            )
         end
-      end)
+      end
 
-    # base
-    [base, filter_by_functions]
+      defp maybe_convert_to_atom(field_name) when is_binary(field_name) do
+        String.to_existing_atom(field_name)
+      end
+
+      defp maybe_convert_to_atom(field_name) when is_atom(field_name) do
+        field_name
+      end
+
+      @doc """
+      Search for rows by given text.
+
+      ## Examples
+
+          iex> Kanta.Accounts.UserQueries.search_query("some text")
+          #Ecto.Query<from u0 in Kanta.Accounts.User, where: fragment("to_tsvector(?::text) @@ plainto_tsquery(?)", u0, ^"some text")>
+      """
+      @spec search_query(Ecto.Query.t(), any()) :: Ecto.Query.t()
+      def search_query(query \\ base(), search)
+      def search_query(query, nil), do: query
+      def search_query(query, ""), do: query
+
+      def search_query(query, search) do
+        from(s in unquote(opts[:module]),
+          where:
+            fragment(
+              "searchable @@ websearch_to_tsquery(?)",
+              ^search
+            ),
+          order_by: {
+            :desc,
+            fragment(
+              "ts_rank_cd(searchable, websearch_to_tsquery(?), 4)",
+              ^search
+            )
+          }
+        )
+      end
+
+      @spec order_query(Ecto.Query.t(), keyword()) :: Ecto.Query.t()
+      def order_query(query \\ base(), order) do
+        order_by(query, [{unquote(opts[:binding]), resource}], ^order)
+      end
+    end
   end
 end

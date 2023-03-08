@@ -1,93 +1,72 @@
 defmodule Kanta.Translations.SingularTranslations do
-  alias Kanta.Translations.{Locales, Domains, SingularTranslation, SingularTranslationQueries}
+  use Nebulex.Caching
+
+  alias Kanta.Cache
   alias Kanta.Repo
-  alias Kanta.EmbeddedSchemas.SingularTranslation, as: EmbeddedSingularTranslation
 
-  def create_singular_translation(
-        %EmbeddedSingularTranslation{
-          locale: locale,
-          domain: domain,
-          msgid: msgid,
-          previous_text: previous_text,
-          text: text
-        } = translation
-      ) do
-    msgctxt = Map.get(translation, :msgctxt)
+  alias Kanta.Translations.{Locales, Domains, SingularTranslation, SingularTranslationQueries}
 
-    locale_record = Locales.get_or_create_locale_by_name(locale)
-    domain_record = Domains.get_or_create_domain_by_name(domain)
+  @ttl :timer.hours(12)
 
-    %SingularTranslation{}
-    |> SingularTranslation.create_changeset(
-      %{
-        msgctxt: msgctxt,
-        msgid: msgid,
-        previous_text: previous_text,
-        text: text
-      },
-      locale_record,
-      domain_record
-    )
-    |> Repo.get_repo().insert()
+  def list_singular_translations(params) do
+    repo = Repo.get_repo()
+
+    SingularTranslationQueries.base()
+    |> SingularTranslationQueries.filter_query(params["filter"])
+    |> repo.all()
   end
 
-  def get_singular_translation(
-        %EmbeddedSingularTranslation{
-          locale: locale,
-          domain: domain,
-          msgid: msgid
-        } = translation
-      ) do
-    msgctxt = Map.get(translation, :msgctxt)
-
-    SingularTranslationQueries.filter(
-      msgid: msgid,
-      msgctxt: msgctxt
-    )
-    |> SingularTranslationQueries.filter_by_locale(locale)
-    |> SingularTranslationQueries.filter_by_domain(domain)
+  @decorate cacheable(
+              cache: Cache,
+              key: {SingularTranslation, params},
+              opts: [ttl: @ttl]
+            )
+  def get_singular_translation_by(params) do
+    SingularTranslationQueries.base()
+    |> SingularTranslationQueries.filter_query(params["filter"])
     |> Repo.get_repo().one()
   end
 
-  def delete_singular_translation(%EmbeddedSingularTranslation{} = translation) do
-    translation
-    |> get_singular_translation()
-    |> delete_singular_translation()
+  def create_singular_translation(attrs) do
+    locale = Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs["locale"]}})
+    domain = Domains.get_or_create_domain_by(%{"filter" => %{"name" => attrs["domain"]}})
+
+    %SingularTranslation{}
+    |> SingularTranslation.changeset(%{
+      msgctxt: attrs["msgctxt"],
+      msgid: attrs["msgid"],
+      previous_text: attrs["previous_text"],
+      text: attrs["text"],
+      locale_id: locale.id,
+      domain_id: domain.id
+    })
+    |> Repo.get_repo().insert()
   end
 
-  def delete_singular_translation(%SingularTranslation{} = singular_translation_record) do
-    singular_translation_record
-    |> Repo.get_repo().delete()
-  end
-
-  def delete_singular_translation(nil), do: nil
-
-  def list_singular_translations(filters \\ []) do
+  @decorate cache_put(cache: Cache, key: {SingularTranslation, id})
+  def update_singular_translation(id, attrs) do
     repo = Repo.get_repo()
 
-    SingularTranslationQueries.filter(filters)
-    |> repo.all()
-    |> repo.preload([:locale, :domain])
-    |> Enum.map(&into_embedded_singular_translation/1)
+    case repo.get(SingularTranslation, id) do
+      %SingularTranslation{} = singular_translation ->
+        SingularTranslation.changeset(singular_translation, %{
+          translated_text: attrs["translated_text"]
+        })
+        |> repo.update()
+
+      nil ->
+        :error
+    end
   end
 
-  def list_singular_translations_with_text_not_null do
+  @decorate cache_evict(cache: Cache, key: {SingularTranslation, id})
+  def delete_singular_translation(id) do
     repo = Repo.get_repo()
 
-    SingularTranslationQueries.with_text_not_null()
-    |> repo.all()
-    |> repo.preload([:locale, :domain])
-    |> Enum.map(&into_embedded_singular_translation/1)
-  end
-
-  defp into_embedded_singular_translation(%SingularTranslation{} = record) do
-    %EmbeddedSingularTranslation{
-      locale: record.locale.name,
-      domain: record.domain.name,
-      msgctxt: record.msgctxt,
-      msgid: record.msgid,
-      previous_text: record.previous_text,
-      text: record.text
-    }
+    with %SingularTranslation{} = translation <- repo.get(id) do
+      repo.delete(translation)
+    else
+      nil -> :not_found
+    end
   end
 end
