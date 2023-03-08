@@ -16,14 +16,15 @@ defmodule KantaWeb.Router do
 
           import Phoenix.Router
           import Phoenix.LiveView.Router, only: [live: 4, live_session: 3]
+          import Redirect
 
           live_session session_name, session_opts do
             get "/css-:md5", KantaWeb.Assets, :css, as: :kanta_dashboard_asset
             get "/js-:md5", KantaWeb.Assets, :js, as: :kanta_dashboard_asset
 
-            scope "/", KantaWeb do
-              get "/", PageController, :index, route_opts
+            redirect "/", "/kanta/locales", :permanent
 
+            scope "/", KantaWeb do
               scope "/locales", Translations do
                 live "/", LocalesLive, :index, route_opts
 

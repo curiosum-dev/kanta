@@ -9,7 +9,6 @@ defmodule Kanta.Translations.Messages do
 
   @ttl :timer.hours(12)
 
-  @decorate cacheable(cache: Cache, key: {Message, params}, opts: [ttl: @ttl])
   def list_messages_by(params) do
     MessageQueries.base()
     |> MessageQueries.filter_query(params["filter"])

@@ -16,7 +16,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
               Plural form <%= translation.nplural_index %>
             </h3>
             <div class="mt-3 sm:mt-0 sm:ml-4">
-              <button phx-click="save" phx-value-id={translation.id} type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <button phx-click="save" phx-target={@myself} phx-value-id={translation.id} type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Save
               </button>
             </div>
@@ -30,7 +30,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
           <div class="mt-4">
             <label for="translated_text" class="block text-sm font-medium text-gray-700">Translated text</label>
             <div class="mt-1">
-              <input phx-keyup="keyup" phx-value-index={translation.id} value={translation.translated_text} type="text" name="translated_text" id="translated_text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="">
+              <input phx-keyup="keyup" phx-target={@myself} phx-value-index={translation.id} value={translation.translated_text} type="text" name="translated_text" id="translated_text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="">
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     """
   end
 
-  def mount(params, %{"locale_id" => locale_id, "message_id" => message_id} = session, socket) do
+  def mount(_params, _session, socket) do
     socket =
       socket
       |> assign(:translated, %{})
@@ -48,9 +48,11 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
   end
 
   def handle_event("keyup", %{"value" => value, "index" => index}, socket) do
+    translated = if is_map_key(socket.assigns, :translated), do: socket.assigns.translated, else: %{}
+
     {:noreply,
      socket
-     |> assign(:translated, Map.merge(socket.assigns.translated, %{"#{index}" => value}))}
+     |> assign(:translated, Map.merge(translated, %{"#{index}" => value}))}
   end
 
   def handle_event("save", %{"id" => id}, socket) do
