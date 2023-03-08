@@ -43,6 +43,7 @@ defmodule Kanta.Translations.SingularTranslations do
     |> Repo.get_repo().insert()
   end
 
+  @decorate cache_put(cache: Cache, key: {SingularTranslation, id})
   def update_singular_translation(id, attrs) do
     repo = Repo.get_repo()
 

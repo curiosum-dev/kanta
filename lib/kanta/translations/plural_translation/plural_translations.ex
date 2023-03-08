@@ -43,6 +43,7 @@ defmodule Kanta.Translations.PluralTranslations do
     |> Repo.get_repo().insert()
   end
 
+  @decorate cache_put(cache: Cache, key: {PluralTranslation, id})
   def update_plural_translation(id, attrs) do
     repo = Repo.get_repo()
 
