@@ -4,11 +4,20 @@ defmodule Kanta.MixProject do
   def project do
     [
       app: :kanta,
+      description: "User-friendly translations manager for Elixir/Phoenix projects.",
+      package: package(),      
       version: "0.0.1-rc1",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/curiosum-dev/kanta"}
     ]
   end
 
@@ -24,7 +33,8 @@ defmodule Kanta.MixProject do
   defp deps do
     [
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:gettext, git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext"},
+      {:gettext,
+       git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext", only: [:dev, :test]},
       {:expo, "~> 0.3.0"},
       {:ecto, "~> 3.9"},
       {:ecto_sql, "~> 3.9"},
