@@ -10,9 +10,11 @@ defmodule Kanta.Gettext.Repo do
   end
 
   @impl Gettext.Repo
-  def get_translation(locale, domain, _msgctxt, msgid, _) do
+  def get_translation(locale, domain, msgctxt, msgid, opts) do
+    default_locale = Application.get_env(:kanta, :default_locale) || "en"
+
     with %Locale{id: locale_id} <-
-           Translations.get_locale_by(%{"filter" => %{"name" => locale}}),
+           Translations.get_locale_by(%{"filter" => %{"iso639_code" => locale}}),
          %Domain{id: domain_id} <-
            Translations.get_domain_by(%{"filter" => %{"name" => domain}}),
          %Message{id: message_id} <-
@@ -26,7 +28,11 @@ defmodule Kanta.Gettext.Repo do
                "message_id" => message_id
              }
            }) do
-      {:ok, text}
+      if is_nil(text) do
+        get_translation(default_locale, domain, msgctxt, msgid, opts)
+      else
+        {:ok, text}
+      end
     else
       _ ->
         :not_found
@@ -37,14 +43,16 @@ defmodule Kanta.Gettext.Repo do
   def get_plural_translation(
         locale,
         domain,
-        _msgctxt,
-        _msgid,
+        msgctxt,
+        msgid,
         msgid_plural,
         plural_form,
-        _
+        opts
       ) do
+    default_locale = Application.get_env(:kanta, :default_locale) || "en"
+
     with %Locale{id: locale_id} <-
-           Translations.get_locale_by(%{"filter" => %{"name" => locale}}),
+           Translations.get_locale_by(%{"filter" => %{"iso639_code" => locale}}),
          %Domain{id: domain_id} <-
            Translations.get_domain_by(%{"filter" => %{"name" => domain}}),
          %Message{id: message_id, plurals_header: plurals_header} <-
@@ -61,7 +69,19 @@ defmodule Kanta.Gettext.Repo do
                "nplural_index" => nplural_index
              }
            }) do
-      {:ok, text}
+      if is_nil(text) do
+        get_plural_translation(
+          default_locale,
+          domain,
+          msgctxt,
+          msgid,
+          msgid_plural,
+          plural_form,
+          opts
+        )
+      else
+        {:ok, text}
+      end
     else
       _ ->
         :not_found

@@ -1,12 +1,9 @@
 defmodule Kanta.Translations.PluralTranslations do
-  use Nebulex.Caching
 
   alias Kanta.Cache
   alias Kanta.Repo
 
   alias Kanta.Translations.{Locales, Domains, PluralTranslation, PluralTranslationQueries}
-
-  @ttl :timer.hours(12)
 
   def list_plural_translations(params) do
     repo = Repo.get_repo()
@@ -16,11 +13,6 @@ defmodule Kanta.Translations.PluralTranslations do
     |> repo.all()
   end
 
-  @decorate cacheable(
-              cache: Cache,
-              key: {PluralTranslation, params},
-              opts: [ttl: @ttl]
-            )
   def get_plural_translation_by(params) do
     PluralTranslationQueries.base()
     |> PluralTranslationQueries.filter_query(params["filter"])
@@ -43,7 +35,6 @@ defmodule Kanta.Translations.PluralTranslations do
     |> Repo.get_repo().insert()
   end
 
-  @decorate cache_put(cache: Cache, key: {PluralTranslation, id})
   def update_plural_translation(id, attrs) do
     repo = Repo.get_repo()
 
@@ -59,7 +50,6 @@ defmodule Kanta.Translations.PluralTranslations do
     end
   end
 
-  @decorate cache_evict(cache: Cache, key: {PluralTranslation, id})
   def delete_plural_translation(id) do
     repo = Repo.get_repo()
 

@@ -1,0 +1,82 @@
+<div>
+  <div class="mb-4">
+    <div>
+      <div>
+        <nav class="sm:hidden" aria-label="Back">
+          <.link navigate={~p"/kanta/locales/#{@locale.id}/translations"} class="flex items-center text-sm font-medium text-gray-400 hover:text-gray-200">
+            <svg class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Back
+          </.link>
+        </nav>
+        <nav class="hidden sm:flex" aria-label="Breadcrumb">
+          <ol class="flex items-center space-x-4">
+            <li>
+              <div>
+                <.link patch={"/kanta/locales"} class="cursor-pointer text-sm font-medium text-gray-400 hover:text-gray-200">Locales</.link>
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <.link patch={"/kanta/locales/#{@locale.id}/translations"} class="cursor-pointer ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"><%= @locale.native_name %></.link>
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <a href="#" aria-current="page" class="cursor-pointer ml-4 text-sm font-medium text-gray-400 hover:text-gray-200"><%= String.slice(@message.msgid, 0..15) %>...</a>
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="mt-2 md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+          <h2 class="text-xl font-bold leading-7 text-slate-800 sm:text-2xl sm:truncate">
+            Translating '<%= String.slice(@message.msgid, 0..15) %>...' to '<%= @locale.native_name %>'
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="my-16 mx-8 text-md italic font-medium text-primary-dark text-center">
+    <%= @message.msgid %>
+  </div>
+  <.form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="space-y-2">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-1 space-y-2">
+        <div>
+          <label for="original_text" class="block text-sm font-medium text-gray-700">PO file text</label>
+          <div class="mt-1">
+            <textarea disabled type="text" name="original_text" id="original_text" class="bg-gray-100 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"><%= @form["original_text"] %></textarea>
+          </div>
+        </div>
+        <div>
+          <label for="translated_text" class="block text-sm font-medium text-gray-700">Kanta translated text</label>
+          <div class="mt-1">
+            <textarea type="text" name="translated_text" id="translated_text" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"><%= @form["translated_text"] %></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="pt-6 col-span-1 space-y-2">
+        <button phx-click="overwrite_po" phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+          Overwrite PO file text
+        </button>
+        <button phx-click="translate" phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+          Translate via DeepL
+        </button>
+      </div>
+      <div class="col-span-2">
+        <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+          Save
+        </button>
+      </div>
+    </div>
+  </.form>
+</div>

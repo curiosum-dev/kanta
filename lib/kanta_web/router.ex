@@ -25,6 +25,10 @@ defmodule KantaWeb.Router do
             redirect "/", "/kanta/locales", :permanent
 
             scope "/", KantaWeb do
+              scope "/dashboard", Dashboard do
+                live "/", DashboardLive, :index, route_opts
+              end
+
               scope "/locales", Translations do
                 live "/", LocalesLive, :index, route_opts
 

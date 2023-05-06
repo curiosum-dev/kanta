@@ -3,16 +3,19 @@ defmodule Kanta.Translations do
 
   # DOMAINS
   defdelegate list_domains, to: Domains
+  defdelegate get_domain(id), to: Domains
   defdelegate get_domain_by(params), to: Domains
 
   # MESSAGES
   defdelegate list_messages_by(params), to: Messages
+  defdelegate get_messages_count, to: Messages
   defdelegate get_message(id), to: Messages
   defdelegate get_message_by(params), to: Messages
 
   # LOCALES
   defdelegate list_locales, to: Locales
   defdelegate get_locale(id), to: Locales
+  defdelegate get_locale_translation_progress(id), to: Locales
   defdelegate get_locale_by(params), to: Locales
 
   # TRANSLATIONS

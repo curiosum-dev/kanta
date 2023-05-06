@@ -15,7 +15,7 @@ defmodule Kanta.Translations.Message do
 
     belongs_to :domain, Domain
 
-    has_one :singular_translation, SingularTranslation
+    has_many :singular_translations, SingularTranslation
     has_many :plural_translations, PluralTranslation
   end
 
@@ -23,7 +23,5 @@ defmodule Kanta.Translations.Message do
     struct
     |> cast(params, @all_fields)
     |> validate_required(@required_fields)
-
-    # |> foreign_key_constraint(:domain_id)
   end
 end

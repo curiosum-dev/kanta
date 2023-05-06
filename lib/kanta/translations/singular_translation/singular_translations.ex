@@ -1,6 +1,4 @@
 defmodule Kanta.Translations.SingularTranslations do
-  use Nebulex.Caching
-
   alias Kanta.Cache
   alias Kanta.Repo
 
@@ -16,11 +14,6 @@ defmodule Kanta.Translations.SingularTranslations do
     |> repo.all()
   end
 
-  @decorate cacheable(
-              cache: Cache,
-              key: {SingularTranslation, params},
-              opts: [ttl: @ttl]
-            )
   def get_singular_translation_by(params) do
     SingularTranslationQueries.base()
     |> SingularTranslationQueries.filter_query(params["filter"])
@@ -43,15 +36,12 @@ defmodule Kanta.Translations.SingularTranslations do
     |> Repo.get_repo().insert()
   end
 
-  @decorate cache_put(cache: Cache, key: {SingularTranslation, id})
   def update_singular_translation(id, attrs) do
     repo = Repo.get_repo()
 
     case repo.get(SingularTranslation, id) do
       %SingularTranslation{} = singular_translation ->
-        SingularTranslation.changeset(singular_translation, %{
-          translated_text: attrs["translated_text"]
-        })
+        SingularTranslation.changeset(singular_translation, attrs)
         |> repo.update()
 
       nil ->
@@ -59,7 +49,6 @@ defmodule Kanta.Translations.SingularTranslations do
     end
   end
 
-  @decorate cache_evict(cache: Cache, key: {SingularTranslation, id})
   def delete_singular_translation(id) do
     repo = Repo.get_repo()
 

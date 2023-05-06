@@ -8,13 +8,25 @@ defmodule KantaWeb.Translations.TranslationFormLive do
 
   def render(%{message: %Message{message_type: :singular}} = assigns) do
     ~H"""
-      <.live_component module={SingularTranslationForm} id="singular-translation-form" translations={@translations} message={@message} locale={@locale} />
+      <.live_component
+        module={SingularTranslationForm}
+        id="singular-translation-form"
+        translation={@translations}
+        message={@message}
+        locale={@locale}
+      />
     """
   end
 
   def render(%{message: %Message{message_type: :plural}} = assigns) do
     ~H"""
-      <.live_component module={PluralTranslationForm} id="plural-translation-form" translations={@translations} message={@message} locale={@locale} />
+      <.live_component
+        module={PluralTranslationForm}
+        id="plural-translation-form"
+        translations={@translations}
+        message={@message}
+        locale={@locale}
+      />
     """
   end
 

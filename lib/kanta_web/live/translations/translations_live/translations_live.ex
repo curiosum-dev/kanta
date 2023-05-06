@@ -4,15 +4,6 @@ defmodule KantaWeb.Translations.TranslationsLive do
   alias Kanta.Translations
   alias KantaWeb.Translations.{DomainsTabBar, MessagesTable}
 
-  def render(assigns) do
-    ~H"""
-    <div>
-      <.live_component module={DomainsTabBar} id="tab-bar" domains={@domains} selected_domain={@selected_domain} />
-      <.live_component module={MessagesTable} id="messages-table" messages={@messages} locale={@locale} />
-    </div>
-    """
-  end
-
   def mount(%{"locale_id" => locale_id}, _session, socket) do
     locale = Translations.get_locale(locale_id)
     domains = Translations.list_domains() || []
@@ -35,7 +26,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
     socket =
       socket
-      |> assign(:selected_domain, id)
+      |> assign(:selected_domain, String.to_integer(id))
       |> assign(:messages, messages)
 
     {:noreply, socket}

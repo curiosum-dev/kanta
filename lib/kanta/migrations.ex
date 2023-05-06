@@ -25,10 +25,15 @@ defmodule Kanta.Migrations do
 
   defp up_locales do
     create_if_not_exists table(@kanta_locales) do
+      add(:iso639_code, :string)
       add(:name, :string)
+      add(:native_name, :string)
+      add(:family, :string)
+      add(:wiki_url, :string)
+      add(:colors, {:array, :string})
     end
 
-    create_if_not_exists unique_index(@kanta_locales, [:name])
+    create_if_not_exists unique_index(@kanta_locales, [:iso639_code])
   end
 
   defp up_domains do
@@ -82,7 +87,11 @@ defmodule Kanta.Migrations do
       add(:message_id, references(@kanta_messages))
     end
 
-    create_if_not_exists unique_index(@kanta_plural_translations, [:locale_id, :message_id, :nplural_index])
+    create_if_not_exists unique_index(@kanta_plural_translations, [
+                           :locale_id,
+                           :message_id,
+                           :nplural_index
+                         ])
   end
 
   defp down_locales do

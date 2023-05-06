@@ -5,19 +5,12 @@ defmodule Kanta.MixProject do
     [
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
-      package: package(),      
+      package: package(),
       version: "0.0.1-rc1",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
-    ]
-  end
-
-  defp package do
-    [
-      licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/curiosum-dev/kanta"}
     ]
   end
 
@@ -44,6 +37,7 @@ defmodule Kanta.MixProject do
       {:phoenix_view, "~> 2.0"},
       {:esbuild, "~> 0.5", only: :dev},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:lucide_live_view, "~> 0.1.0"},
       {:nebulex, "~> 2.4"},
       {:decorator, "~> 1.4"},
       {:shards, "~> 1.0"},
@@ -58,6 +52,14 @@ defmodule Kanta.MixProject do
         "esbuild default --minify",
         "tailwind default --minify"
       ]
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/curiosum-dev/kanta"},
+      files: ~w(lib priv dist CHANGELOG.md LICENSE.md mix.exs README.md)
     ]
   end
 end

@@ -7,7 +7,7 @@ defmodule Kanta.POFiles.Extractor do
   alias Kanta.Translations.{Domains, Locales}
   alias Kanta.Translations.{Message, PluralTranslation, SingularTranslation}
 
-  def get_translations do
+  def parse_translations do
     opts = [
       project_root: Application.fetch_env!(:kanta, :project_root),
       priv: Application.get_env(:kanta, :priv, @default_priv),
@@ -98,7 +98,7 @@ defmodule Kanta.POFiles.Extractor do
     Ecto.Multi.new()
     |> create_or_update_message(Map.merge(attrs, %{message_type: :singular}))
     |> Ecto.Multi.run(:locale, fn _repo, _ ->
-      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs[:locale_name]}})}
+      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"iso639_code" => attrs[:locale_name]}})}
     end)
     |> Ecto.Multi.run(:translation_struct, fn repo,
                                               %{insert_or_update_message: message, locale: locale} ->
@@ -131,7 +131,7 @@ defmodule Kanta.POFiles.Extractor do
       Map.merge(attrs, %{message_type: :plural, plurals_header: attrs[:plurals_header]})
     )
     |> Ecto.Multi.run(:locale, fn _repo, _ ->
-      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs[:locale_name]}})}
+      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"iso639_code" => attrs[:locale_name]}})}
     end)
     |> Ecto.Multi.run(:translation_structs, fn repo,
                                                %{
