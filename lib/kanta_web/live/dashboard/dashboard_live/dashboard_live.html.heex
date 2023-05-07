@@ -6,19 +6,29 @@
   </div>
 </div>
 <div class="mt-8 grid grid-cols-12 gap-2">
-  <div class="col-span-3">
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-        <div class="text-3xl font-bold text-primary-main"><%= length(@languages) %></div>
-        <div class="text-slate-600 font-medium text-lg">Languages</div>
+  <div class="col-span-6 grid grid-cols-4 gap-2 h-fit">
+    <div class="col-span-2">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+          <div class="text-3xl font-bold text-primary"><%= length(@languages) %></div>
+          <div class="text-slate-600 font-medium text-lg">Languages</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-span-3">
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-        <div class="text-3xl font-bold text-primary-main"><%= @messages_count %></div>
-        <div class="text-slate-600 font-medium text-lg">Messages</div>
+    <div class="col-span-2">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+          <div class="text-3xl font-bold text-primary"><%= @messages_count %></div>
+          <div class="text-slate-600 font-medium text-lg">Messages</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-2">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+          <div class="text-3xl font-bold text-primary"><%= @deep_l_usage %>%</div>
+          <div class="text-slate-600 font-medium text-lg">DeepL Usage</div>
+        </div>
       </div>
     </div>
   </div>
@@ -35,7 +45,7 @@
             <li class="bg-white shadow overflow-hidden rounded-md px-6 py-4">
               <div class="flex flex-row items-center justify-between">
                 <div class="font-medium text-md text-primary-light mr-6"><%= language.native_name %></div>
-                <div class="font-semibold text-lg text-primary-main"><%= translation_progress(language) %>%</div>
+                <div class="font-semibold text-lg text-primary"><%= translation_progress(language) %>%</div>
               </div>
             </li>
           <% end %>

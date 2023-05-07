@@ -1,5 +1,17 @@
 defmodule Kanta.Translations do
-  alias Kanta.Translations.{Domains, Locales, Messages, PluralTranslations, SingularTranslations}
+  alias Kanta.Translations.{
+    Contexts,
+    Domains,
+    Locales,
+    Messages,
+    PluralTranslations,
+    SingularTranslations
+  }
+
+  # CONTEXTS
+  defdelegate list_contexts, to: Contexts
+  defdelegate get_context(id), to: Contexts
+  defdelegate get_context_by(params), to: Contexts
 
   # DOMAINS
   defdelegate list_domains, to: Domains
@@ -19,8 +31,7 @@ defmodule Kanta.Translations do
   defdelegate get_locale_by(params), to: Locales
 
   # TRANSLATIONS
-  defdelegate list_singular_translations(params), to: SingularTranslations
-  defdelegate list_plural_translations(params), to: PluralTranslations
+  defdelegate list_plural_translations_by(params), to: PluralTranslations
 
   defdelegate get_singular_translation_by(params), to: SingularTranslations
   defdelegate get_plural_translation_by(params), to: PluralTranslations
@@ -28,5 +39,4 @@ defmodule Kanta.Translations do
   defdelegate create_singular_translation(attrs), to: SingularTranslations
   defdelegate update_singular_translation(id, attrs), to: SingularTranslations
   defdelegate update_plural_translation(id, attrs), to: PluralTranslations
-  defdelegate delete_singular_translation(id), to: SingularTranslations
 end

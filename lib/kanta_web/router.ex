@@ -22,7 +22,7 @@ defmodule KantaWeb.Router do
             get "/css-:md5", KantaWeb.Assets, :css, as: :kanta_dashboard_asset
             get "/js-:md5", KantaWeb.Assets, :js, as: :kanta_dashboard_asset
 
-            redirect "/", "/kanta/locales", :permanent
+            redirect "/", "/kanta/dashboard", :permanent
 
             scope "/", KantaWeb do
               scope "/dashboard", Dashboard do

@@ -3,14 +3,15 @@ defmodule Kanta.Translations.Locales do
   alias Kanta.Repo
 
   alias Kanta.Translations.Locale
-  alias Kanta.Translations.LocaleQueries
 
   alias Kanta.Translations.Locale.Utils.LocaleCodeMapper
   alias Kanta.Translations.Locale.Services.LocaleTranslationProgress
 
+  @cache_prefix "locale_"
+  @ttl :timer.seconds(3600)
+
   def list_locales do
-    LocaleQueries.base()
-    |> Repo.get_repo().all()
+    Repo.get_repo().all(Locale)
   end
 
   def get_locale(id) do
@@ -22,9 +23,23 @@ defmodule Kanta.Translations.Locales do
   end
 
   def get_locale_by(params) do
-    LocaleQueries.base()
-    |> LocaleQueries.filter_query(params["filter"])
-    |> Repo.get_repo().one()
+    cache_key = @cache_prefix <> URI.encode_query(params)
+
+    case Cache.get(cache_key) do
+      nil ->
+        case Repo.get_repo().get_by(Locale, params) do
+          %Locale{} = locale ->
+            Cache.put(cache_key, locale, ttl: @ttl)
+
+            locale
+
+          _ ->
+            :not_found
+        end
+
+      cached_locale ->
+        cached_locale
+    end
   end
 
   def get_or_create_locale_by(params) do
@@ -32,18 +47,17 @@ defmodule Kanta.Translations.Locales do
       %Locale{} = locale ->
         locale
 
-      nil ->
-        iso_code = params["filter"]["iso639_code"]
+      :not_found ->
+        iso_code = params[:iso639_code]
 
-        create_locale!(
-          Map.merge(params["filter"], %{
-            "name" => LocaleCodeMapper.get_name(iso_code),
-            "native_name" => LocaleCodeMapper.get_native_name(iso_code),
-            "family" => LocaleCodeMapper.get_family(iso_code),
-            "wiki_url" => LocaleCodeMapper.get_wiki_url(iso_code),
-            "colors" => LocaleCodeMapper.get_colors(iso_code)
-          })
-        )
+        create_locale!(%{
+          "iso639_code" => iso_code,
+          "name" => LocaleCodeMapper.get_name(iso_code),
+          "native_name" => LocaleCodeMapper.get_native_name(iso_code),
+          "family" => LocaleCodeMapper.get_family(iso_code),
+          "wiki_url" => LocaleCodeMapper.get_wiki_url(iso_code),
+          "colors" => LocaleCodeMapper.get_colors(iso_code)
+        })
     end
   end
 

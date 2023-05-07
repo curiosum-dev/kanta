@@ -3,12 +3,14 @@ defmodule Kanta.Migrations do
 
   @kanta_locales "kanta_locales"
   @kanta_domains "kanta_domains"
+  @kanta_contexts "kanta_contexts"
   @kanta_messages "kanta_messages"
   @kanta_singular_translations "kanta_singular_translations"
   @kanta_plural_translations "kanta_plural_translations"
 
   def up do
     up_locales()
+    up_contexts()
     up_domains()
     up_messages()
     up_singular_translations()
@@ -18,6 +20,7 @@ defmodule Kanta.Migrations do
   def down do
     down_locales()
     down_domains()
+    down_contexts()
     down_messages()
     down_singular_translations()
     down_plural_translations()
@@ -44,6 +47,14 @@ defmodule Kanta.Migrations do
     create_if_not_exists unique_index(@kanta_domains, [:name])
   end
 
+  defp up_contexts do
+    create_if_not_exists table(@kanta_contexts) do
+      add(:name, :string)
+    end
+
+    create_if_not_exists unique_index(@kanta_contexts, [:name])
+  end
+
   defp up_messages do
     create_if_not_exists_message_type_query = "
       DO $$ BEGIN
@@ -57,20 +68,20 @@ defmodule Kanta.Migrations do
     execute(create_if_not_exists_message_type_query, drop_message_type_query)
 
     create_if_not_exists table(@kanta_messages) do
-      add(:msgid, :string)
+      add(:msgid, :text)
       add(:message_type, :gettext_message_type, null: false)
       add(:plurals_header, :string)
-      add(:msgctxt, :string, null: true)
       add(:domain_id, references(@kanta_domains), null: true)
+      add(:context_id, references(@kanta_contexts), null: true)
     end
 
-    create_if_not_exists unique_index(@kanta_messages, [:domain_id, :msgid])
+    create_if_not_exists unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])
   end
 
   defp up_singular_translations do
     create_if_not_exists table(@kanta_singular_translations) do
-      add(:original_text, :string)
-      add(:translated_text, :string, null: true)
+      add(:original_text, :text)
+      add(:translated_text, :text, null: true)
       add(:locale_id, references(@kanta_locales))
       add(:message_id, references(@kanta_messages))
     end
@@ -81,8 +92,8 @@ defmodule Kanta.Migrations do
   defp up_plural_translations do
     create_if_not_exists table(@kanta_plural_translations) do
       add(:nplural_index, :integer)
-      add(:original_text, :string)
-      add(:translated_text, :string, null: true)
+      add(:original_text, :text)
+      add(:translated_text, :text, null: true)
       add(:locale_id, references(@kanta_locales))
       add(:message_id, references(@kanta_messages))
     end
@@ -100,6 +111,10 @@ defmodule Kanta.Migrations do
 
   defp down_domains do
     drop table(@kanta_domains)
+  end
+
+  defp down_contexts do
+    drop table(@kanta_contexts)
   end
 
   defp down_messages do

@@ -18,7 +18,7 @@ defmodule KantaWeb.Translations.MessagesTable do
     if not is_nil(translation) and
          not is_nil(translation.translated_text) and
          String.length(translation.translated_text) > 0 do
-      "whitespace-nowrap text-sm font-medium text-primary-main"
+      "whitespace-nowrap text-sm font-medium text-primary"
     else
       "whitespace-nowrap text-xs text-red-600"
     end
@@ -32,7 +32,7 @@ defmodule KantaWeb.Translations.MessagesTable do
            translations,
            &(not is_nil(&1.translated_text) and String.length(&1.translated_text) > 0)
          ) do
-      "text-sm font-medium text-primary-main"
+      "text-sm font-medium text-primary"
     else
       "text-xs text-red-600"
     end
@@ -56,11 +56,12 @@ defmodule KantaWeb.Translations.MessagesTable do
 
   def translated_plural_text(assigns, message) do
     translations = Enum.filter(message.plural_translations, &(&1.locale_id == assigns.locale.id))
+    assigns = assign(assigns, :translations, translations)
 
     if length(translations) > 0 do
       ~H"""
         <div>
-          <%= for plural_translation <- translations do %>
+          <%= for plural_translation <- @translations do %>
             <div>
               Plural form <%= plural_translation.nplural_index %>: <%= String.slice(plural_translation.translated_text || "Not translated.", 0..30) %>
             </div>

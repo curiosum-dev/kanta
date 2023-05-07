@@ -41,6 +41,8 @@ defmodule Kanta.MixProject do
       {:nebulex, "~> 2.4"},
       {:decorator, "~> 1.4"},
       {:shards, "~> 1.0"},
+      {:tesla, "~> 1.4"},
+      {:finch, "~> 0.15"},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
     ]
   end

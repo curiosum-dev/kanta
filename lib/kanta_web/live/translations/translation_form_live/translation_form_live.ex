@@ -46,20 +46,16 @@ defmodule KantaWeb.Translations.TranslationFormLive do
   end
 
   defp get_translations(%Message{message_type: :singular} = message, locale_id) do
-    Translations.get_singular_translation_by(%{
-      "filter" => %{
-        "message_id" => message.id,
-        "locale_id" => locale_id
-      }
-    })
+    Translations.get_singular_translation_by(
+      locale_id: locale_id,
+      message_id: message.id
+    )
   end
 
   defp get_translations(%Message{message_type: :plural} = message, locale_id) do
-    Translations.list_plural_translations(%{
-      "filter" => %{
-        "message_id" => message.id,
-        "locale_id" => locale_id
-      }
-    })
+    Translations.list_plural_translations_by(
+      locale_id: locale_id,
+      message_id: message.id
+    )
   end
 end

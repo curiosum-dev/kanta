@@ -13,7 +13,7 @@
     <a href="https://github.com/curiosum-dev/kanta/DOCS.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="#">View Demo</a>
+    <a href="https://github.com/curiosum-dev/kanta-example-app">View Demo</a>
     ·
     <a href="https://github.com/curiosum-dev/kanta/issues">Report Bug</a>
     ·
@@ -50,7 +50,7 @@
 
 <img src="./ui.png" alt="kanta-ui" width="400" height="200">
 
-TODO
+If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,6 +76,7 @@ end
 ```
 
 The dependency on this specific `gettext` version is because this library depends on an in-progress feature, to be included in a future release of `gettext` (see discussion in elixir-gettext/gettext#280 and pull request elixir-gettext/gettext#305). As of March 2023, this has been approved by an Elixir core team member, so we are eagerly awaiting for it being merged upstream.
+
 ### Add configuration
 
 Add to `config/config.exs` file:
@@ -83,8 +84,10 @@ Add to `config/config.exs` file:
 ```elixir
 # config/config.exs
 config :kanta,
-  ecto_repo: MyApp.Repo,
-  project_root: File.cwd!()
+  endpoint: KantaTestWeb.Endpoint, # Your app Endpoint module
+  ecto_repo: KantaTest.Repo, # Your app Repo module
+  project_root: File.cwd!(), # Project root directory
+  deep_l_api_key: DEEP_L_API_KEY # https://www.deepl.com/pl/pro-api
 ```
 
 Ecto repo is used for translations persistency.
@@ -134,7 +137,8 @@ Inside your `router.ex` file forward desired path to the KantaWeb.Router.
 ```elixir
 scope "/" do
   pipe_through :browser
-  forward "/kanta", KantaWeb.Router
+
+  kanta_dashboard("/kanta")
 end
 ```
 
@@ -147,17 +151,16 @@ end
 1. Start Phoenix server and visit `localhost:4000/kanta` (or otherpath you've set in the router.ex file).
 2. From there you can check and modify your translations from already existing .po files.
 
-TODO
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 
 ## Roadmap
 
-- [x] Support plural translations
-- [x] Normalize database
 - [ ] Add documentation and typespecs
+- [ ] Add interation with more translating services
+- [ ] Add import options
+- [ ] Adjust UI according to passed config
 
 See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full list of proposed features (and known issues).
 

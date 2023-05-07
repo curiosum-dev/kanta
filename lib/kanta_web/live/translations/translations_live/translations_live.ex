@@ -8,8 +8,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
     locale = Translations.get_locale(locale_id)
     domains = Translations.list_domains() || []
 
-    messages =
-      Translations.list_messages_by(%{"filter" => %{"domain_id" => List.first(domains).id}}) || []
+    messages = Translations.list_messages_by(domain_id: List.first(domains).id) || []
 
     socket =
       socket
@@ -22,7 +21,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
   end
 
   def handle_event("select_domain", %{"id" => id}, socket) do
-    messages = Translations.list_messages_by(%{"filter" => %{"domain_id" => id}}) || []
+    messages = Translations.list_messages_by(domain_id: id) || []
 
     socket =
       socket

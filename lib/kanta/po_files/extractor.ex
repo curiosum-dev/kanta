@@ -4,7 +4,7 @@ defmodule Kanta.POFiles.Extractor do
 
   alias Kanta.Repo
   alias Expo.{Messages, PO}
-  alias Kanta.Translations.{Domains, Locales}
+  alias Kanta.Translations.{Contexts, Domains, Locales}
   alias Kanta.Translations.{Message, PluralTranslation, SingularTranslation}
 
   def parse_translations do
@@ -45,7 +45,7 @@ defmodule Kanta.POFiles.Extractor do
       %Expo.Message.Singular{msgctxt: [msgctxt], msgid: [msgid], msgstr: [text]} ->
         create_or_update_singular_translation(%{
           msgid: msgid,
-          msgctxt: msgctxt,
+          context_name: msgctxt,
           locale_name: locale,
           domain_name: domain,
           original_text: text
@@ -63,7 +63,7 @@ defmodule Kanta.POFiles.Extractor do
       %Expo.Message.Plural{msgctxt: [msgctxt], msgid_plural: [msgid], msgstr: plurals_map} ->
         create_or_update_plural_translation(%{
           msgid: msgid,
-          msgctxt: msgctxt,
+          context_name: msgctxt,
           locale_name: locale,
           domain_name: domain,
           plurals_map: plurals_map,
@@ -76,7 +76,18 @@ defmodule Kanta.POFiles.Extractor do
   defp create_or_update_message(multi, attrs) do
     multi
     |> Ecto.Multi.run(:domain, fn _repo, _ ->
-      {:ok, Domains.get_or_create_domain_by(%{"filter" => %{"name" => attrs[:domain_name]}})}
+      if is_nil(attrs[:domain_name]) do
+        {:ok, nil}
+      else
+        {:ok, Domains.get_or_create_domain_by(name: attrs[:domain_name])}
+      end
+    end)
+    |> Ecto.Multi.run(:context, fn _repo, _ ->
+      if is_nil(attrs[:context_name]) do
+        {:ok, nil}
+      else
+        {:ok, Contexts.get_or_create_context_by(name: attrs[:context_name])}
+      end
     end)
     |> Ecto.Multi.run(:message, fn repo, _ ->
       {:ok,
@@ -85,11 +96,26 @@ defmodule Kanta.POFiles.Extractor do
     end)
     |> Ecto.Multi.insert_or_update(:insert_or_update_message, fn %{
                                                                    message: message,
-                                                                   domain: domain
+                                                                   domain: domain,
+                                                                   context: context
                                                                  } ->
+      attrs =
+        unless is_nil(domain) do
+          Map.merge(attrs, %{domain_id: domain.id})
+        else
+          attrs
+        end
+
+      attrs =
+        unless is_nil(context) do
+          Map.merge(attrs, %{context_id: context.id})
+        else
+          attrs
+        end
+
       Message.changeset(
         message,
-        Map.merge(attrs, %{domain_id: domain.id})
+        attrs
       )
     end)
   end
@@ -98,7 +124,7 @@ defmodule Kanta.POFiles.Extractor do
     Ecto.Multi.new()
     |> create_or_update_message(Map.merge(attrs, %{message_type: :singular}))
     |> Ecto.Multi.run(:locale, fn _repo, _ ->
-      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"iso639_code" => attrs[:locale_name]}})}
+      {:ok, Locales.get_or_create_locale_by(iso639_code: attrs[:locale_name])}
     end)
     |> Ecto.Multi.run(:translation_struct, fn repo,
                                               %{insert_or_update_message: message, locale: locale} ->
@@ -131,7 +157,7 @@ defmodule Kanta.POFiles.Extractor do
       Map.merge(attrs, %{message_type: :plural, plurals_header: attrs[:plurals_header]})
     )
     |> Ecto.Multi.run(:locale, fn _repo, _ ->
-      {:ok, Locales.get_or_create_locale_by(%{"filter" => %{"iso639_code" => attrs[:locale_name]}})}
+      {:ok, Locales.get_or_create_locale_by(iso639_code: attrs[:locale_name])}
     end)
     |> Ecto.Multi.run(:translation_structs, fn repo,
                                                %{
