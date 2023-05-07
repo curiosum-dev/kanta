@@ -35,11 +35,11 @@
                       </svg>
                     </div>
                     <nav class="mt-5 flex-1 px-2 space-y-1">
-                      <%= link to: ~p"/kanta/dashboard", class: "bg-primary-dark text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md" do %>
+                      <%= link to: path(@conn, ~p"/kanta/dashboard"), class: "bg-primary-dark text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md" do %>
                         <Lucide.inspect class="mr-3 flex-shrink-0 h-6 w-6 text-primary-light" />
                         Dashboard
                       <% end %>
-                      <%= link to: ~p"/kanta/locales", class: "bg-primary-dark text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md" do %>
+                      <%= link to: path(@conn, ~p"/kanta/locales"), class: "bg-primary-dark text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md" do %>
                         <Lucide.languages class="mr-3 flex-shrink-0 h-6 w-6 text-primary-light" />
                         Locales
                       <% end %>

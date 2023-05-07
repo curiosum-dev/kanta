@@ -47,12 +47,13 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     {:noreply, update(socket, :form, &Map.merge(&1, %{"translated_text" => translation}))}
   end
 
-  def handle_event("submit", %{"translated_text" => translated} = attrs, socket) do
+  def handle_event("submit", %{"translated_text" => translated}, socket) do
     locale = socket.assigns.locale
     translation = socket.assigns.translation
 
     Translations.update_singular_translation(translation.id, %{"translated_text" => translated})
 
-    {:noreply, push_redirect(socket, to: ~p"/kanta/locales/#{locale.id}/translations")}
+    {:noreply,
+     push_redirect(socket, to: path(socket, ~p"/kanta/locales/#{locale.id}/translations"))}
   end
 end

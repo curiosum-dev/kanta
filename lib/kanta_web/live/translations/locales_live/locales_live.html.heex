@@ -10,7 +10,7 @@
     <div class="col-span-1 bg-gray-100 my-2 w-full">
       <div class="max-w-7xl">
         <div class="max-w-2xl">
-          <.link navigate={~p"/kanta/locales/#{locale.id}/translations"}>
+          <.link navigate={path(@socket, ~p"/kanta/locales/#{locale.id}/translations")}>
             <div class="bg-white overflow-hidden shadow rounded-lg items-center cursor-pointer" style={generate_locale_gradient(locale)}>
               <div class="flex flex-row justify-start px-4 py-5 sm:p-6 font-medium text-md text-slate-700">
                 <div class="w-12 h-12 p-4 text-primary-dark bg-white rounded-full flex justify-center items-center text-sm font-bold uppercase"><%= locale.iso639_code %></div>

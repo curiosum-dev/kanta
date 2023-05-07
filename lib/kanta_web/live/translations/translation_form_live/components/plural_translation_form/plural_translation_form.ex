@@ -122,6 +122,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
       "translated_text" => translated
     })
 
-    {:noreply, push_redirect(socket, to: ~p"/kanta/locales/#{locale.id}/translations")}
+    {:noreply,
+     push_redirect(socket, to: path(socket, ~p"/kanta/locales/#{locale.id}/translations"))}
   end
 end

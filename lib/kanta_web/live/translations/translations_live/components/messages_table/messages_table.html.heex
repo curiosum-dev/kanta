@@ -31,7 +31,7 @@
                         </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <.link navigate={~p"/kanta/locales/#{@locale.id}/translations/#{message.id}"} class="cursor-pointer text-primary-dark hover:text-indigo-900">Edit</.link>
+                        <.link navigate={path(@socket, ~p"/kanta/locales/#{@locale.id}/translations/#{message.id}")} class="cursor-pointer text-primary-dark hover:text-indigo-900">Edit</.link>
                       </td>
                     </tr>
                   <% end %>

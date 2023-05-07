@@ -9,7 +9,9 @@ defmodule KantaWeb.Translations.MessagesTable do
 
   def handle_event("edit_message", %{"id" => id}, socket) do
     {:noreply,
-     push_navigate(socket, to: ~p"/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}")}
+     push_navigate(socket,
+       to: path(socket, ~p"/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}")
+     )}
   end
 
   def message_classnames(%Message{message_type: :singular} = message, locale) do
