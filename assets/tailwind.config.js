@@ -2,6 +2,7 @@
 // https://tailwindcss.com/docs/configuration
 
 let plugin = require("tailwindcss/plugin");
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   content: ["./js/**/*.js", "../lib/*_web.ex", "../lib/*_web/**/*.*ex"],
@@ -15,6 +16,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["KoHo", ...defaultTheme.fontFamily.sans],
+      },
       colors: {
         primary: {
           light: "#995FE0",

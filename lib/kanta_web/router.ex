@@ -22,11 +22,20 @@ defmodule KantaWeb.Router do
             get "/css-:md5", KantaWeb.Assets, :css, as: :kanta_dashboard_asset
             get "/js-:md5", KantaWeb.Assets, :js, as: :kanta_dashboard_asset
 
-            redirect "/", "/kanta/dashboard", :permanent
+            redirect("/", "/kanta/dashboard", :permanent)
 
             scope "/", KantaWeb do
               scope "/dashboard", Dashboard do
                 live "/", DashboardLive, :index, route_opts
+              end
+
+              scope "/contexts", Translations do
+                live "/", ContextsLive, :index, route_opts
+              end
+
+              scope "/domains", Translations do
+                live "/", DomainsLive, :index, route_opts
+                live "/:id", DomainLive, :index, route_opts
               end
 
               scope "/locales", Translations do

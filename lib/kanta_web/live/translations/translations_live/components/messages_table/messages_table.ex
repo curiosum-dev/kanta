@@ -1,7 +1,7 @@
 defmodule KantaWeb.Translations.MessagesTable do
   use KantaWeb, :live_component
 
-  alias Kanta.Translations.Message
+  alias Kanta.Translations.{Message, SingularTranslation}
 
   def update(socket, assigns) do
     {:ok, assign(assigns, socket)}
@@ -14,50 +14,93 @@ defmodule KantaWeb.Translations.MessagesTable do
      )}
   end
 
-  def message_classnames(%Message{message_type: :singular} = message, locale) do
-    translation = Enum.find(message.singular_translations, &(&1.locale_id == locale.id))
+  def is_translated(%Message{message_type: :singular} = message, locale, source) do
+    case Enum.find(message.singular_translations, &(&1.locale_id == locale.id)) do
+      nil ->
+        false
 
-    if not is_nil(translation) and
-         not is_nil(translation.translated_text) and
-         String.length(translation.translated_text) > 0 do
-      "whitespace-nowrap text-sm font-medium text-primary"
-    else
-      "whitespace-nowrap text-xs text-red-600"
+      %SingularTranslation{} = translation ->
+        case get_in(translation, [Access.key!(source)]) do
+          nil -> false
+          "" -> false
+          _text -> true
+        end
     end
   end
 
-  def message_classnames(%Message{message_type: :plural} = message, locale) do
-    translations = Enum.filter(message.plural_translations, &(&1.locale_id == locale.id))
+  def is_translated(%Message{message_type: :plural} = message, locale, source) do
+    case Enum.filter(message.plural_translations, &(&1.locale_id == locale.id)) do
+      [] ->
+        false
 
-    if length(translations) > 0 and
-         Enum.any?(
-           translations,
-           &(not is_nil(&1.translated_text) and String.length(&1.translated_text) > 0)
-         ) do
-      "text-sm font-medium text-primary"
-    else
-      "text-xs text-red-600"
+      translations ->
+        translations
+        |> Enum.map(fn translation ->
+          case get_in(translation, [Access.key!(source)]) do
+            nil ->
+              false
+
+            "" ->
+              false
+
+            _text ->
+              true
+          end
+        end)
     end
   end
 
   def translated_text(assigns, %Message{message_type: :singular} = message),
-    do: translated_singular_text(assigns, message)
+    do: translated_singular_text(assigns, message, :translated_text)
 
   def translated_text(assigns, %Message{message_type: :plural} = message),
-    do: translated_plural_text(assigns, message)
+    do: translated_plural_text(assigns, message, :translated_text)
 
-  def translated_singular_text(assigns, message) do
-    translation = Enum.find(message.singular_translations, &(&1.locale_id == assigns.locale.id))
+  def original_text(assigns, %Message{message_type: :singular} = message),
+    do: translated_singular_text(assigns, message, :original_text)
 
-    if translation do
-      String.slice(translation.translated_text || "Not translated.", 0..30)
-    else
-      "---"
+  def original_text(assigns, %Message{message_type: :plural} = message),
+    do: translated_plural_text(assigns, message, :original_text)
+
+  def translated_singular_text(assigns, message, source) do
+    case Enum.find(message.singular_translations, &(&1.locale_id == assigns.locale.id)) do
+      nil ->
+        "Missing"
+
+      %SingularTranslation{} = translation ->
+        case get_in(translation, [Access.key!(source)]) do
+          nil -> "Missing"
+          "" -> "Missing"
+          text -> if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
+        end
     end
   end
 
-  def translated_plural_text(assigns, message) do
-    translations = Enum.filter(message.plural_translations, &(&1.locale_id == assigns.locale.id))
+  def translated_plural_text(assigns, message, source) do
+    translations =
+      case Enum.filter(message.plural_translations, &(&1.locale_id == assigns.locale.id)) do
+        [] ->
+          []
+
+        translations ->
+          translations
+          |> Enum.map(fn translation ->
+            text =
+              case get_in(translation, [Access.key!(source)]) do
+                nil ->
+                  "Missing"
+
+                "" ->
+                  "Missing"
+
+                text ->
+                  if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
+              end
+
+            %{index: translation.nplural_index, text: text}
+          end)
+      end
+
     assigns = assign(assigns, :translations, translations)
 
     if length(translations) > 0 do
@@ -65,13 +108,13 @@ defmodule KantaWeb.Translations.MessagesTable do
         <div>
           <%= for plural_translation <- @translations do %>
             <div>
-              Plural form <%= plural_translation.nplural_index %>: <%= String.slice(plural_translation.translated_text || "Not translated.", 0..30) %>
+              Plural form <%= plural_translation[:index] %>: <%= plural_translation[:text] %>
             </div>
           <% end %>
         </div>
       """
     else
-      "---"
+      "Missing"
     end
   end
 end

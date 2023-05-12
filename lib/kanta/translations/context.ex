@@ -6,13 +6,15 @@ defmodule Kanta.Translations.Context do
 
   schema "kanta_contexts" do
     field :name, :string
+    field :description, :string
+    field :color, :string
 
     has_many :messages, Message
   end
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:name])
+    |> cast(params, [:name, :description, :color])
     |> validate_required([:name])
   end
 end

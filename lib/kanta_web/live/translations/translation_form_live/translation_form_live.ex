@@ -31,31 +31,34 @@ defmodule KantaWeb.Translations.TranslationFormLive do
   end
 
   def mount(%{"message_id" => message_id, "locale_id" => locale_id}, _session, socket) do
-    locale = Translations.get_locale(locale_id)
-    message = Translations.get_message(message_id)
-
-    translations = get_translations(message, locale_id)
-
     socket =
-      socket
-      |> assign(:locale, locale)
-      |> assign(:message, message)
-      |> assign(:translations, translations)
+      with {:ok, locale} <- Translations.get_locale(filter: [id: locale_id]),
+           {:ok, message} <- Translations.get_message(filter: [id: message_id]),
+           {:ok, translations} <- get_translations(message, locale_id) do
+        socket
+        |> assign(:locale, locale)
+        |> assign(:message, message)
+        |> assign(:translations, translations)
+      end
 
     {:ok, socket}
   end
 
   defp get_translations(%Message{message_type: :singular} = message, locale_id) do
-    Translations.get_singular_translation_by(
-      locale_id: locale_id,
-      message_id: message.id
+    Translations.get_singular_translation(
+      filter: [
+        locale_id: locale_id,
+        message_id: message.id
+      ]
     )
   end
 
   defp get_translations(%Message{message_type: :plural} = message, locale_id) do
-    Translations.list_plural_translations_by(
-      locale_id: locale_id,
-      message_id: message.id
+    Translations.list_plural_translations(
+      filter: [
+        locale_id: locale_id,
+        message_id: message.id
+      ]
     )
   end
 end

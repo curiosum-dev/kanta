@@ -43,6 +43,8 @@ defmodule Kanta.MixProject do
       {:shards, "~> 1.0"},
       {:tesla, "~> 1.4"},
       {:finch, "~> 0.15"},
+      {:scrivener, "~> 2.0"},
+      {:scrivener_ecto, "~> 2.0"},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
     ]
   end

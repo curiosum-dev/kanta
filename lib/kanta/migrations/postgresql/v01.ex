@@ -1,4 +1,4 @@
-defmodule Kanta.Migrations do
+defmodule Kanta.Migrations.Postgresql.V01 do
   use Ecto.Migration
 
   @kanta_locales "kanta_locales"
@@ -8,7 +8,7 @@ defmodule Kanta.Migrations do
   @kanta_singular_translations "kanta_singular_translations"
   @kanta_plural_translations "kanta_plural_translations"
 
-  def up do
+  def up(_opts) do
     up_locales()
     up_contexts()
     up_domains()
@@ -17,7 +17,7 @@ defmodule Kanta.Migrations do
     up_plural_translations()
   end
 
-  def down do
+  def down(_opts) do
     down_locales()
     down_domains()
     down_contexts()
@@ -42,6 +42,8 @@ defmodule Kanta.Migrations do
   defp up_domains do
     create_if_not_exists table(@kanta_domains) do
       add(:name, :string)
+      add(:description, :text)
+      add(:color, :string, null: false, default: "#7E37D8")
     end
 
     create_if_not_exists unique_index(@kanta_domains, [:name])
@@ -50,6 +52,8 @@ defmodule Kanta.Migrations do
   defp up_contexts do
     create_if_not_exists table(@kanta_contexts) do
       add(:name, :string)
+      add(:description, :text)
+      add(:color, :string, null: false, default: "#7E37D8")
     end
 
     create_if_not_exists unique_index(@kanta_contexts, [:name])

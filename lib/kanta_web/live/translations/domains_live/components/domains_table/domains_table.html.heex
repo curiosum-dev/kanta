@@ -1,0 +1,48 @@
+<div class="bg-slate-100 py-6">
+  <div class="w-full">
+      <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto">
+          <div class="py-2 align-middle inline-block min-w-full">
+            <div class="shadow overflow-hidden border-b border-slate-200 sm:rounded-lg">
+              <table class="min-w-full w-full divide-y divide-slate-200">
+                <thead class="bg-slate-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Description
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Color
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-slate-200">
+                  <%= for domain <- @domains do %>
+                    <tr class="cursor-pointer hover:bg-slate-50 transition-all" phx-click="edit_domain" phx-value-id={domain.id} phx-target={@myself}>
+                      <td class="flex px-6 py-4">
+                        <div class="text-sm font-medium text-primary-dark truncate"><%= String.slice(domain.name, 0..30) %></div>
+                      </td>
+                      <td>
+                        <div class="text-sm font-medium text-primary-dark truncate">
+                          <%= domain.description %>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="text-sm font-medium text-primary-dark truncate">
+                          <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary text-white font-bold" style={"background-color:#{domain.color};"}>
+                            <%= domain.color %>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

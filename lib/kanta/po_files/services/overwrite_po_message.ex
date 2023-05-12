@@ -5,7 +5,7 @@ defmodule Kanta.PoFiles.Services.OverwritePoMessage do
   def singular(translation, locale, message) do
     priv = Application.get_env(:kanta, :priv, @default_priv)
 
-    domain = Translations.get_domain(message.domain_id)
+    {:ok, domain} = Translations.get_domain(filter: [id: message.domain_id])
 
     original_file_path = Path.join(priv, "#{locale.iso639_code}/LC_MESSAGES/#{domain.name}.po")
     copy_file_path = "#{original_file_path}.copy"
@@ -27,7 +27,7 @@ defmodule Kanta.PoFiles.Services.OverwritePoMessage do
 
   def plural(translation, nplural_index, locale, message) do
     priv = Application.get_env(:kanta, :priv, @default_priv)
-    domain = Translations.get_domain(message.domain_id)
+    {:ok, domain} = Translations.get_domain(filter: [id: message.domain_id])
     original_file_path = Path.join(priv, "#{locale.iso639_code}/LC_MESSAGES/#{domain.name}.po")
     copy_file_path = "#{original_file_path}.copy"
 

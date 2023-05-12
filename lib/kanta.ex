@@ -1,6 +1,6 @@
 defmodule Kanta do
   use GenServer
-  alias Kanta.POFiles.Extractor
+  alias Kanta.POFiles.MessagesExtractor
 
   @kanta_tables ~w(kanta_locales kanta_domains kanta_messages kanta_singular_translations kanta_plural_translations)
 
@@ -13,7 +13,7 @@ defmodule Kanta do
     repo = Kanta.Repo.get_repo()
 
     if Enum.all?(@kanta_tables, &Ecto.Adapters.SQL.table_exists?(repo, &1)) do
-      Extractor.parse_translations()
+      MessagesExtractor.call()
     end
 
     {:ok, %{}}

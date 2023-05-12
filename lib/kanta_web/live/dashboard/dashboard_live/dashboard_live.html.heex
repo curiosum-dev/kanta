@@ -1,13 +1,13 @@
 <div class="md:flex md:items-center md:justify-between">
   <div class="flex-1 min-w-0">
-    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+    <h2 class="text-2xl font-bold leading-7 text-primary-dark sm:text-3xl sm:truncate">
       Dashboard
     </h2>
   </div>
 </div>
 <div class="mt-8 grid grid-cols-12 gap-2">
-  <div class="col-span-6 grid grid-cols-4 gap-2 h-fit">
-    <div class="col-span-2">
+  <div class="col-span-6 grid grid-cols-4 gap-4 h-fit">
+    <div class="col-span-1">
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
           <div class="text-3xl font-bold text-primary"><%= length(@languages) %></div>
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-2">
+    <div class="col-span-1">
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
           <div class="text-3xl font-bold text-primary"><%= @messages_count %></div>
@@ -34,8 +34,8 @@
   </div>
   <div class="col-span-6">
     <div class="bg-white overflow-hidden shadow rounded-lg">
-      <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
+      <div class="bg-white px-4 py-5 border-b border-slate-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-primary-dark">
           Translation Progress
         </h3>
       </div>
@@ -44,7 +44,7 @@
           <%= for language <- @languages do %>
             <li class="bg-white shadow overflow-hidden rounded-md px-6 py-4">
               <div class="flex flex-row items-center justify-between">
-                <div class="font-medium text-md text-primary-light mr-6"><%= language.native_name %></div>
+                <div class="font-semibold text-lg text-slate-600 mr-6"><%= language.native_name %></div>
                 <div class="font-semibold text-lg text-primary"><%= translation_progress(language) %>%</div>
               </div>
             </li>

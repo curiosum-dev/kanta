@@ -51,7 +51,7 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     locale = socket.assigns.locale
     translation = socket.assigns.translation
 
-    Translations.update_singular_translation(translation.id, %{"translated_text" => translated})
+    Translations.update_singular_translation(translation, %{"translated_text" => translated})
 
     {:noreply,
      push_redirect(socket, to: path(socket, ~p"/kanta/locales/#{locale.id}/translations"))}

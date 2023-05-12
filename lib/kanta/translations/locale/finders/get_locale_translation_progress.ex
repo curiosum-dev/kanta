@@ -1,9 +1,9 @@
-defmodule Kanta.Translations.Locale.Services.LocaleTranslationProgress do
+defmodule Kanta.Translations.Locale.Finders.GetLocaleTranslationProgress do
   import Ecto.Query, only: [from: 2]
 
   alias Kanta.Translations.{PluralTranslation, SingularTranslation}
 
-  def call(locale_id) do
+  def find(locale_id) do
     translations_count = translations_count(locale_id)
 
     case translations_count do
