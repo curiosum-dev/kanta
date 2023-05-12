@@ -8,8 +8,8 @@ defmodule Kanta.POFiles.MessagesExtractor do
 
   def call do
     opts = [
-      project_root: Application.fetch_env!(:kanta, :project_root),
-      priv: Application.get_env(:kanta, :priv, @default_priv),
+      project_root: Kanta.config().project_root,
+      priv: @default_priv,
       allowed_locales: Application.get_env(:kanta, :allowed_locales)
     ]
 

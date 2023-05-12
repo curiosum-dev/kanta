@@ -1,10 +1,10 @@
-defmodule Kanta.External.DeepL.Adapter do
+defmodule Kanta.Plugins.DeepL.Adapter do
   use Tesla
 
   plug Tesla.Middleware.BaseUrl, "https://api-free.deepl.com"
 
   plug Tesla.Middleware.Headers, [
-    {"Authorization", "DeepL-Auth-Key #{Application.get_env(:kanta, :deep_l_api_key)}"}
+    {"Authorization", "DeepL-Auth-Key #{deep_l_api_key()}"}
   ]
 
   plug Tesla.Middleware.JSON
@@ -28,6 +28,13 @@ defmodule Kanta.External.DeepL.Adapter do
       {:ok, %Tesla.Env{body: body}} -> {:ok, body}
       {_, %Tesla.Env{body: body, status: status}} -> {:error, status, body}
       error -> {:error, error}
+    end
+  end
+
+  defp deep_l_api_key do
+    case Enum.find(Kanta.config().plugins, &(elem(&1, 0) == Kanta.Plugins.DeepL)) do
+      nil -> raise "missing DeepL API key"
+      {_, config} -> Keyword.get(config, :api_key)
     end
   end
 end

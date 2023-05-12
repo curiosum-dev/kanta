@@ -4,20 +4,27 @@ defmodule KantaWeb.Dashboard.DashboardLive do
   alias Kanta.Translations
 
   alias Kanta.Translations.Locale.Finders.GetLocaleTranslationProgress
-  alias Kanta.External.DeepL.Adapter
+  alias Kanta.Plugins.DeepL
 
   def mount(_params, _session, socket) do
     messages_count = Translations.get_messages_count()
     %{entries: locales, metadata: _locales_metadata} = Translations.list_locales()
 
-    {:ok, %{"character_count" => character_count, "character_limit" => character_limit}} =
-      Adapter.usage()
+    socket =
+      if Kanta.plugin_enabled?(Kanta.Plugins.DeepL) do
+        {:ok, %{"character_count" => character_count, "character_limit" => character_limit}} =
+          DeepL.usage()
+
+        socket
+        |> assign(:deep_l_usage, Float.ceil(character_count / character_limit, 2))
+      else
+        socket
+      end
 
     socket =
       socket
       |> assign(:messages_count, messages_count)
       |> assign(:languages, locales)
-      |> assign(:deep_l_usage, Float.ceil(character_count / character_limit, 2))
 
     {:ok, socket}
   end
