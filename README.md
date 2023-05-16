@@ -1,19 +1,14 @@
-<a name="readme-top"></a>
-
-<!-- PROJECT LOGO -->
+<a id="readme-top" name="readme-top"></a>
 <br />
+
 <div align="center">
   <a href="https://github.com/curiosum-dev/kanta">
-    <img src="./logo.png" alt="Logo" width="110" height="160">
+    <img src="./logo.png" alt="Logo" height="111">
   </a>
-
-  <p align="center">
+  <p style="margin-top: 3rem; font-size: 14pt;" align="center">
     User-friendly translations manager for Elixir/Phoenix projects.
     <br />
-    <a href="https://github.com/curiosum-dev/kanta/DOCS.md"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/curiosum-dev/kanta-example-app">View Demo</a>
+    <a href="https://kanta.munasoft.pl">View Demo</a>
     ·
     <a href="https://github.com/curiosum-dev/kanta/issues">Report Bug</a>
     ·
@@ -21,34 +16,45 @@
   </p>
 </div>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+<ul style="margin-top: 3rem; margin-bottom: 3rem;">
+  <li>
+    <a href="#about-the-project">About The Project</a>
+  </li>
+  <li>
+    <a href="#getting-started">Getting Started</a>
+    <ul>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#configuration">Configuration</a></li>
+      <li><a href="#database-migrations">Database Migrations</a></li>
+      <li><a href="#gettext-module">Gettext Module</a></li>
+      <li><a href="#kanta-supervisor">Kanta Supervisor</a></li>
+      <li><a href="#kanta-ui">Kanta UI</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#features">Features</a>
+    <ul>
+      <li><a href="#extracting-from-po-files">Extracting from PO files</a></li>
+      <li><a href="#storing-messages-in-the-database">Storing messages in the database</a></li>
+      <li><a href="#translation-progress">Translation progress</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#plugins">Plugins</a>
+    <ul>
+      <li><a href="#po-writer">PO Writer</a></li>
+      <li><a href="#deepl">DeepL</a></li>
+    </ul>
+  </li>
+  <li><a href="#roadmap">Roadmap</a></li>
+  <li><a href="#contributing">Contributing</a></li>
+  <li><a href="#license">License</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#acknowledgments">Acknowledgments</a></li>
+</ul>
 
-<!-- ABOUT THE PROJECT -->
-
-## About The Project
-
-<img src="./ui.png" alt="kanta-ui" width="400" height="200">
+# About The Project
 
 If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
 
@@ -58,8 +64,9 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
 
 ## Prerequisites
 
-- Elixir/Phoenix project
-- Database setup
+- Elixir (tested on 1.14.0)
+- Phoenix (tested on 1.7.0)
+- Ecto SQL (tested on 3.6)
 
 ## Installation
 
@@ -77,7 +84,7 @@ end
 
 The dependency on this specific `gettext` version is because this library depends on an in-progress feature, to be included in a future release of `gettext` (see discussion in elixir-gettext/gettext#280 and pull request elixir-gettext/gettext#305). As of March 2023, this has been approved by an Elixir core team member, so we are eagerly awaiting for it being merged upstream.
 
-### Add configuration
+## Configuration
 
 Add to `config/config.exs` file:
 
@@ -85,16 +92,16 @@ Add to `config/config.exs` file:
 # config/config.exs
 config :kanta,
   endpoint: KantaTestWeb.Endpoint, # Your app Endpoint module
-  ecto_repo: KantaTest.Repo, # Your app Repo module
+  repo: KantaTest.Repo, # Your app Repo module
   project_root: File.cwd!(), # Project root directory
-  deep_l_api_key: DEEP_L_API_KEY # https://www.deepl.com/pl/pro-api
+  plugins: []
 ```
 
-Ecto repo is used for translations persistency.
+Ecto repo module is used mostly for translations persistency. We also need endpoint to use VerifiedRoutes and project_root to locate the project's .po files.
 
-### Create migration
+## Database migrations
 
-Create migration with
+Migrations is heavily inspired by the Oban approach. To add to the project tables necessary for the operation of Kanta and responsible for storing translations create migration with:
 
 ```bash
 mix ecto.gen.migration add_kanta_translations_table
@@ -107,32 +114,47 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migrations.up()
+    Kanta.Migration.up(version: 1)
   end
 
   def down do
-    Kanta.Migrations.down()
+    Kanta.Migration.down(version: 1)
   end
 end
 ```
 
-And run
+after that run
 
 ```bash
 mix ecto.migrate
 ```
 
-### Adjust Gettext module
+## Gettext module
 
-Add Kanta Repo as a default translation repository inside your Gettext module.
+We now need to pass information to our project's `Gettext` module that we want Kanta to manage translations. To do this add `Kanta.Gettext.Repo` as a default translation repository inside your `Gettext` module.
 
 ```elixir
 use Gettext, ..., repo: Kanta.Gettext.Repo
 ```
 
-### Setup Kanta UI
+## Kanta Supervisor
 
-Inside your `router.ex` file forward desired path to the KantaWeb.Router.
+In the `application.ex` file of our project, we add Kanta and its configuration to the list of processes.
+
+```elixir
+  def start(_type, _args) do
+    children = [
+      ...
+      {Kanta, Application.fetch_env!(:kanta_test, Kanta)}
+      ...
+    ]
+    ...
+  end
+```
+
+## Kanta UI
+
+Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
 
 ```elixir
 scope "/" do
@@ -144,23 +166,69 @@ end
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
+# Features
 
-# Usage
+## Extracting from PO files
 
-1. Start Phoenix server and visit `localhost:4000/kanta` (or otherpath you've set in the router.ex file).
-2. From there you can check and modify your translations from already existing .po files.
+<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./messages.png" alt="messages">
+
+Kanta is based on the Phoenix Framework's default localization tool, GNU gettext. The process, which runs at application startup, analyzes .po files with messages and converts them to a format for convenient use with Ecto and Kanta itself.
+
+## Storing messages in the database
+
+<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./singular.png" alt="singular">
+
+Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
+
+## Translation progress
+
+<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./dashboard.png" alt="dashboard">
+
+Kanta tracks the progress of your application's translation into other languages and reports it in the user's dashboard. In the dashboard you can filter your messages by domain or context, or use a search engine. It is also possible to display only the messages that need translation to better see how much work remains to be done.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- ROADMAP -->
+# Plugins
+
+## PO Writer
+
+Kanta was created to allow easy management of static text translations in the application, however, for various reasons like wanting a backup or parallel use of other tools like TMS etc. you may want to overwrite .po files with translations entered in Kanta. All you need to do is add `Kanta.Plugins.POWriter` to the list of plugins, and new functions will appear in the Kanta UI to allow writing to .po files.
+
+```elixir
+# config/config.exs
+config :kanta,
+  ...
+  plugins: [
+    Kanta.Plugins.POWriter
+  ]
+```
+
+## DeepL
+
+Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `Kanta.Plugins.DeepL` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
+
+<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./plural.png" alt="plural">
+
+```elixir
+# config/config.exs
+config :kanta,
+  ...
+  plugins: [
+    {Kanta.Plugins.DeepL, api_key: "YOUR_DEEPL_API_KEY"}
+  ]
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
 
-- [ ] Add documentation and typespecs
-- [ ] Add interation with more translating services
-- [ ] Add import options
-- [ ] Adjust UI according to passed config
+- [ ] Typespecs, tests, better docs
+- [ ] CI/CD
+- [ ] Gettext extract/merge automation
+- [ ] Google Translate, Yandex Translate, LibreTranslate Plugins
+- [ ] File import/export
+- [ ] Bumblebee AI translations
+- [ ] REST API
 
 See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full list of proposed features (and known issues).
 
@@ -172,7 +240,7 @@ See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full l
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. We prefer gitflow and Conventional ommits style but we don't require that. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repo and create a pull request. We prefer gitflow and Conventional commits style but we don't require that. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project

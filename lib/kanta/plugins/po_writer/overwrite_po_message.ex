@@ -1,4 +1,4 @@
-defmodule Kanta.PoFiles.Services.OverwritePoMessage do
+defmodule Kanta.Plugins.POWriter.OverwritePoMessage do
   alias Kanta.Translations
   @default_priv "priv/gettext"
 

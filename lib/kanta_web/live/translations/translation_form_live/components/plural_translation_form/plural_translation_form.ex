@@ -2,7 +2,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
   use KantaWeb, :live_component
 
   alias Kanta.Translations
-  alias Kanta.External.DeepL.Adapter
+  alias Kanta.Plugins.DeepL.Adapter
 
   def update(assigns, socket) do
     forms =
@@ -33,7 +33,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
         form["nplural_index"] == nplural_index
       end)
 
-    Kanta.PoFiles.Services.OverwritePoMessage.plural(
+    Kanta.Plugins.POWriter.OverwritePoMessage.plural(
       form["translated_text"],
       nplural_index,
       locale,

@@ -2,7 +2,7 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
   use KantaWeb, :live_component
 
   alias Kanta.Translations
-  alias Kanta.External.DeepL.Adapter
+  alias Kanta.Plugins.DeepL.Adapter
 
   def update(assigns, socket) do
     socket =
@@ -18,7 +18,7 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
   def handle_event("overwrite_po", _, socket) do
     %{form: form, translation: translation, locale: locale, message: message} = socket.assigns
 
-    Kanta.PoFiles.Services.OverwritePoMessage.singular(form["translated_text"], locale, message)
+    Kanta.Plugins.POWriter.OverwritePoMessage.singular(form["translated_text"], locale, message)
 
     Translations.update_singular_translation(translation.id, %{
       "original_text" => form["translated_text"]
