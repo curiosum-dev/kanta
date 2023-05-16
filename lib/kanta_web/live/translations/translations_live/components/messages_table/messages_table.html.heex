@@ -1,42 +1,42 @@
-<div class="bg-slate-100 py-6">
+<div class="bg-base-light dark:bg-base-dark py-6">
   <div class="w-full">
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto">
           <div class="py-2 align-middle inline-block min-w-full">
             <div class="shadow overflow-hidden border-b border-slate-200 sm:rounded-lg">
               <table class="min-w-full w-full divide-y divide-slate-200">
-                <thead class="bg-slate-50">
+                <thead class="bg-slate-50 dark:bg-stone-900">
                   <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Message ID
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       PO Translation
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Kanta Translation
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Domain
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Context
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Type
                     </th>
                   </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-slate-200">
+                <tbody class="bg-white dark:bg-stone-800 divide-y divide-slate-200 dark:divide-accent-dark">
                   <%= for message <- @messages do %>
-                    <tr class="cursor-pointer hover:bg-slate-50 transition-all" phx-click="edit_message" phx-value-id={message.id} phx-target={@myself}>
+                    <tr class="cursor-pointer hover:bg-slate-50 hover:dark:bg-base-dark transition-all" phx-click="edit_message" phx-value-id={message.id} phx-target={@myself}>
                       <td class="flex px-6 py-4">
-                        <div class="text-md font-medium text-primary-dark truncate"><%= String.slice(message.msgid, 0..30) %></div>
+                        <div class="text-md font-medium text-primary-dark dark:text-accent-dark truncate"><%= String.slice(message.msgid, 0..30) %></div>
                       </td>
                       <td class="px-6 py-4">
                         <div class={[
                           "text-md font-medium tracking-wide",
-                          "#{if is_translated(message, @locale, :original_text), do: "text-green-700", else: "text-red-700"}"
+                          "#{if is_translated(message, @locale, :original_text), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500"}"
                         ]}>
                           <%= original_text(assigns, message) %>
                         </div>
@@ -44,27 +44,27 @@
                       <td class="px-6 py-4">
                         <div class={[
                           "text-md font-medium tracking-wide",
-                          "#{if is_translated(message, @locale, :translated_text), do: "text-green-700", else: "text-red-700"}"
+                          "#{if is_translated(message, @locale, :translated_text), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500"}"
                         ]}>
                           <%= translated_text(assigns, message) %>
                         </div>
                       </td>
                       <td class="px-6 py-4">
                         <div class="text-sm font-medium text-primary-dark truncate">
-                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary #{if is_nil(message.domain), do: "text-primary-dark", else: "text-white"} font-bold"} style={"background-color:#{message.domain.color};"}>
+                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.domain), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{message.domain.color};"}>
                             <%= if is_nil(message.domain), do: "None", else: message.domain.name %>
                           </span>
                         </div>
                       </td>
                       <td class="px-6 py-4">
                         <div class="text-sm font-medium text-primary-dark truncate">
-                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary #{if is_nil(message.context), do: "text-primary-dark", else: "text-white"} font-bold"} style={"background-color:#{unless is_nil(message.context), do: message.context.color, else: "transparent"};"}>
+                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.context), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{unless is_nil(message.context), do: message.context.color, else: "transparent"};"}>
                             <%= if is_nil(message.context), do: "None", else: message.context.name %>
                           </span>
                         </div>
                       </td>
                       <td class="px-6 py-4">
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary text-primary-dark font-bold">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark text-primary-dark dark:text-accent-dark font-bold">
                           <%= message.message_type %>
                         </span>
                       </td>

@@ -11,73 +11,95 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <script nonce={csp_nonce(@conn, :script)} src={asset_path(@conn, :js)} defer></script>
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+
+      window.addEventListener("toggle_dark_mode", (event) => {
+        if (localStorage.theme === 'dark') {
+          localStorage.setItem("theme", "light")
+          document.documentElement.classList.remove('dark')
+        } else {
+          localStorage.setItem("theme", "dark")
+          document.documentElement.classList.add('dark')
+        }
+      });
+    </script>
   </head>
   <body>
     <main>
-        <div style="min-height: 640px" class="bg-slate-100">
-          <div class="h-screen flex overflow-hidden bg-slate-100">
-            <div class="hidden border-r border-slate-200 bg-white md:flex md:flex-shrink-0">
-              <div class="flex flex-col w-72">
-                <div class="flex flex-col h-0 flex-1">
-                  <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-                    <div class="flex justify-start items-center mb-4">
-                      <Logo.render class="ml-4 w-10 h-10 text-primary-dark" />
-                      <div class="ml-4 text-4xl text-primary-dark fotn-medium">Kanta</div>
-                    </div>
-                    <div class="border-b border-slate-50 opacity-50" />
-                    <nav class="mt-5 flex-1 px-2 space-y-3">
-                      <%= link to: path(@conn, ~p"/kanta/dashboard"), class: "bg-white transition-all hover:bg-slate-100 border-slate-300 shadow-md text-primary-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
-                        <Lucide.inspect class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark" />
-                        Dashboard
-                      <% end %>
-                      <%= link to: path(@conn, ~p"/kanta/locales"), class: "bg-white transition-all hover:bg-slate-100 border-slate-300 shadow-md text-primary-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
-                        <Lucide.languages class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark" />
-                        Locales
-                      <% end %>
-                      <%= link to: path(@conn, ~p"/kanta/domains"), class: "bg-white transition-all hover:bg-slate-100 border-slate-300 shadow-md text-primary-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
-                        <Lucide.album class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark" />
-                          Domains
-                      <% end %>
-                      <%= link to: path(@conn, ~p"/kanta/contexts"), class: "bg-white transition-all hover:bg-slate-100 border-slate-300 shadow-md text-primary-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
-                        <Lucide.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark" />
-                          Contexts
-                      <% end %>
-                    </nav>
+      <div style="min-height: 640px">
+        <div class="h-screen flex overflow-hidden bg-base-light dark:bg-base-dark">
+          <div class="hidden border-r border-slate-200 bg-white md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-72 bg-white dark:bg-stone-900">
+              <div class="flex flex-col h-0 flex-1">
+                <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+                  <div class="flex justify-start items-center mb-4">
+                    <Logo.render class="ml-4 w-10 h-10 text-primary-dark dark:text-accent-light" />
+                    <div class="ml-4 text-4xl text-primary-dark dark:text-accent-light fotn-medium">Kanta</div>
                   </div>
+                  <div class="border-b border-slate-50 opacity-50" />
+                  <nav class="mt-5 flex-1 px-2 space-y-3">
+                    <%= link to: path(@conn, ~p"/kanta/dashboard"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                      <Lucide.inspect class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                      Dashboard
+                    <% end %>
+                    <%= link to: path(@conn, ~p"/kanta/locales"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                      <Lucide.languages class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                      Locales
+                    <% end %>
+                    <%= link to: path(@conn, ~p"/kanta/domains"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                      <Lucide.album class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                        Domains
+                    <% end %>
+                    <%= link to: path(@conn, ~p"/kanta/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                      <Lucide.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                        Contexts
+                    <% end %>
+                  </nav>
                 </div>
               </div>
-            </div>
-            <div class="flex flex-col w-0 flex-1 overflow-hidden">
-              <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
-                <button class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-slate-500 hover:text-primary-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
-                  <span class="sr-only">Open sidebar</span>
-                  <svg
-                    class="h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-              <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-                <div class="py-6">
-                  <div class="px-4 sm:px-6 md:px-8">
-                    <%= @inner_content %>
-                  </div>
-                </div>
-              </main>
             </div>
           </div>
+          <div class="flex flex-col w-0 flex-1 overflow-hidden">
+            <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
+              <button class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-slate-500 hover:text-primary-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+                <span class="sr-only">Open sidebar</span>
+                <svg
+                  class="h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
+              <div phx-click={Phoenix.LiveView.JS.dispatch("toggle_dark_mode")} class="cursor-pointer absolute top-5 right-5 h-10 w-10 p-4 bg-white dark:bg-stone-900 border border-primary-dark dark:border-accent-dark hover:bg-stone-50 hover:dark:bg-stone-600 rounded-full flex justify-center items-center">
+                <div>
+                  <Lucide.moon class="h-5 w-5 text-primary-dark dark:text-accent-dark" />
+                </div>
+              </div>
+              <div class="py-6">
+                <div class="px-4 sm:px-6 md:px-8">
+                  <%= @inner_content %>
+                </div>
+              </div>
+            </main>
+          </div>
         </div>
+      </div>
     </main>
 </body>
 </html>

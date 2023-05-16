@@ -7,14 +7,14 @@ defmodule KantaWeb.Components.Shared.TextInput do
   def render(assigns) do
     ~H"""
     <div>
-      <label class="block text-sm font-medium text-gray-700">
+      <label class="block text-sm font-medium text-gray-700 dark:text-content-light">
         <%= @label %>
       </label>
       <div class="relative mt-1">
         <input
           style="min-width: 18rem;"
           class={[
-            "font-medium text-base-content py-2 pl-4 pr-2 shadow-sm bg-white border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm rounded-md"
+            "font-medium text-base-content py-2 pl-4 pr-2 shadow-sm bg-white dark:bg-stone-900 text-stone-900 dark:text-content-light border border-gray-300 focus:outline-none focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm rounded-md"
           ]}
           {@rest}
         />

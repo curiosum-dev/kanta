@@ -38,7 +38,7 @@
       </div>
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="text-2xl font-bold leading-7 text-primary-dark sm:text-3xl sm:truncate">
+          <h2 class="text-2xl font-bold leading-7 text-primary-dark dark:text-accent-dark sm:text-3xl sm:truncate">
             Translating '<%= @message.msgid %>' to '<%= @locale.name %>'
           </h2>
         </div>
@@ -48,34 +48,38 @@
   <%= for form <- Enum.sort_by(@forms, & &1["nplural_index"]) do %>
     <.form for={form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="space-y-2">
       <div class="mt-8 pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
-        <h3 class="text-lg leading-6 font-medium text-primary-dark">
+        <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">
           Plural form <%= form["nplural_index"] %>
         </h3>
       </div>
       <div class="grid grid-cols-6 gap-4">
         <div class="col-span-4 space-y-2">
           <div class="mt-4">
-            <label for={"original_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700">Original text</label>
+            <label for={"original_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Original text</label>
             <div class="mt-1">
-              <textarea disabled name={"original_text.#{form["nplural_index"]}"} id={"original_text.#{form["nplural_index"]}"} class="bg-slate-100 shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 rounded-md"><%= form["original_text"] %></textarea>
+              <textarea disabled name={"original_text.#{form["nplural_index"]}"} id={"original_text.#{form["nplural_index"]}"} class="bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= form["original_text"] %></textarea>
             </div>
           </div>
           <div class="mt-4">
-            <label for={"translated_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700">Translated text</label>
+            <label for={"translated_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Translated text</label>
             <div class="mt-1">
-              <textarea name={"translated_text.#{form["nplural_index"]}"} id={"translated_text.#{form["nplural_index"]}"} class="bg-slate-50 shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 rounded-md"><%= form["translated_text"] %></textarea>
+              <textarea name={"translated_text.#{form["nplural_index"]}"} id={"translated_text.#{form["nplural_index"]}"} class="bg-white dark:bg-base-dark text-content-dark dark:text-content-light shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= form["translated_text"] %></textarea>
             </div>
           </div>
         </div>
         <div class="pt-10 col-span-2 space-y-2">
-          <button phx-click="overwrite_po" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary">
-            Overwrite PO file text
-          </button>
-          <button phx-click="translate_via_deep_l" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary">
-            Translate via DeepL
-          </button>
+          <%= if Kanta.plugin_enabled?(Kanta.Plugins.POWriter) do %>
+            <button phx-click="overwrite_po" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
+              Overwrite PO file text
+            </button>
+          <% end %>
+          <%= if Kanta.plugin_enabled?(Kanta.Plugins.DeepL) do %>
+            <button phx-click="translate_via_deep_l" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
+              Translate via DeepL
+            </button>
+          <% end %>
         </div>
-        <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary">
+        <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
           Save
         </button>
       </div>
