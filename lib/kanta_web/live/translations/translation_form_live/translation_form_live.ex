@@ -45,20 +45,56 @@ defmodule KantaWeb.Translations.TranslationFormLive do
   end
 
   defp get_translations(%Message{message_type: :singular} = message, locale_id) do
-    Translations.get_singular_translation(
-      filter: [
-        locale_id: locale_id,
-        message_id: message.id
-      ]
-    )
+    case Translations.get_singular_translation(
+           filter: [
+             locale_id: locale_id,
+             message_id: message.id
+           ]
+         ) do
+      {:ok, translations} ->
+        {:ok, translations}
+
+      {:error, _, _} ->
+        Translations.create_singular_translation(%{
+          original_text: nil,
+          translated_text: nil,
+          locale_id: locale_id,
+          message_id: message.id
+        })
+    end
   end
 
   defp get_translations(%Message{message_type: :plural} = message, locale_id) do
-    Translations.list_plural_translations(
-      filter: [
-        locale_id: locale_id,
-        message_id: message.id
-      ]
-    )
+    case Translations.list_plural_translations(
+           filter: [
+             locale_id: locale_id,
+             message_id: message.id
+           ]
+         ) do
+      %{entries: entries} = page when length(entries) > 0 ->
+        {:ok, entries}
+
+      _ ->
+        with {:ok, %{nplurals: plurals_count}} <- Expo.PluralForms.parse(message.plurals_header) do
+          {
+            :ok,
+            Enum.map(0..plurals_count, fn index ->
+              case(
+                Translations.create_plural_translation(%{
+                  nplural_index: index,
+                  original_text: nil,
+                  translated_text: nil,
+                  locale_id: locale_id,
+                  message_id: message.id
+                })
+              ) do
+                {:ok, translation} -> translation
+                _ -> nil
+              end
+            end)
+            |> Enum.reject(&is_nil/1)
+          }
+        end
+    end
   end
 end

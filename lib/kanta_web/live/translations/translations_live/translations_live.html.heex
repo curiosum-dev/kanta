@@ -38,6 +38,7 @@
   </div>
 </div>
 <div class="mt-4">
+  <.live_component module={FiltersBar} filters={@filters} id="filters-bar" />
   <.live_component module={MessagesTable} id="messages-table" messages={@messages} locale={@locale} />
   <Pagination.render metadata={@messages_metadata} on_page_change="page_changed" />
 </div>

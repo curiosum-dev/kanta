@@ -1,4 +1,4 @@
-defmodule KantaWeb.Translations.MessagesTable do
+defmodule KantaWeb.Translations.Components.MessagesTable do
   use KantaWeb, :live_component
 
   alias Kanta.Translations.{Message, SingularTranslation}
@@ -106,8 +106,8 @@ defmodule KantaWeb.Translations.MessagesTable do
     if length(translations) > 0 do
       ~H"""
         <div>
-          <%= for plural_translation <- @translations do %>
-            <div>
+          <%= for plural_translation <- Enum.sort_by(@translations, & &1[:index], :asc) do %>
+            <div class={"#{if plural_translation[:text] != "Missing", do: "text-green-700", else: "text-red-700"}"}>
               Plural form <%= plural_translation[:index] %>: <%= plural_translation[:text] %>
             </div>
           <% end %>

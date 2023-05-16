@@ -34,6 +34,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:family, :string)
       add(:wiki_url, :string)
       add(:colors, {:array, :string})
+      timestamps()
     end
 
     create_if_not_exists unique_index(@kanta_locales, [:iso639_code])
@@ -44,6 +45,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:name, :string)
       add(:description, :text)
       add(:color, :string, null: false, default: "#7E37D8")
+      timestamps()
     end
 
     create_if_not_exists unique_index(@kanta_domains, [:name])
@@ -54,6 +56,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:name, :string)
       add(:description, :text)
       add(:color, :string, null: false, default: "#7E37D8")
+      timestamps()
     end
 
     create_if_not_exists unique_index(@kanta_contexts, [:name])
@@ -77,7 +80,20 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:plurals_header, :string)
       add(:domain_id, references(@kanta_domains), null: true)
       add(:context_id, references(@kanta_contexts), null: true)
+      timestamps()
     end
+
+    execute """
+      ALTER TABLE #{@kanta_messages}
+        ADD COLUMN searchable tsvector
+        GENERATED ALWAYS AS (
+          setweight(to_tsvector('english', coalesce(msgid, '')), 'A')
+        ) STORED;
+    """
+
+    execute """
+      CREATE INDEX #{@kanta_messages}_searchable_idx ON #{@kanta_messages} USING gin(searchable);
+    """
 
     create_if_not_exists unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])
   end
@@ -88,6 +104,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:translated_text, :text, null: true)
       add(:locale_id, references(@kanta_locales))
       add(:message_id, references(@kanta_messages))
+      timestamps()
     end
 
     create_if_not_exists unique_index(@kanta_singular_translations, [:locale_id, :message_id])
@@ -100,6 +117,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:translated_text, :text, null: true)
       add(:locale_id, references(@kanta_locales))
       add(:message_id, references(@kanta_messages))
+      timestamps()
     end
 
     create_if_not_exists unique_index(@kanta_plural_translations, [

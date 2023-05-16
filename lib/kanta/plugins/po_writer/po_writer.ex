@@ -9,7 +9,7 @@ defmodule Kanta.Plugins.POWriter do
     {:ok, %{}}
   end
 
-  def validate(opts) do
+  def validate(_opts) do
     :ok
   end
 end

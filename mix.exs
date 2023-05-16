@@ -17,7 +17,7 @@ defmodule Kanta.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:uri_query, :logger],
       mod: {Kanta.Application, []}
     ]
   end
@@ -45,6 +45,7 @@ defmodule Kanta.MixProject do
       {:finch, "~> 0.15"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 2.0"},
+      {:uri_query, "~> 0.1.1"},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
     ]
   end

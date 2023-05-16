@@ -118,7 +118,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
         &(&1.nplural_index == String.to_integer(nplural_index))
       )
 
-    Translations.update_plural_translation(translation.id, %{
+    Translations.update_plural_translation(translation, %{
       "translated_text" => translated
     })
 

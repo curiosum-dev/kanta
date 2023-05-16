@@ -1,0 +1,62 @@
+<div
+  id={"#{@id}-wrapper"}
+  phx-hook="Select"
+  x-data={"{ open: false, idx: -1, selectedIdx: #{Enum.find_index(@options, & &1.value == @field.value) || 0}, max: #{length(@options) - 1} }"}
+  x-init={"() => { $watch('selectedIdx', val => $dispatch('selected-change', { selectedIdx: val, id: '##{@id}' }) ) }"}
+  x-on:reset="open = false"
+>
+  <label class="block text-sm font-medium text-gray-700" @click="$refs.button.focus()">
+    <%= @label %>
+  </label>
+  <%= hidden_input @form, @field.name %>
+  <div class="relative mt-1">
+    <button
+      type="button"
+      style="min-width: 12rem;"
+      class="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 cursor-default rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      x-ref="button"
+      @click="open = !open"
+      @keydown.escape.window="open = false"
+      @keydown.enter.stop.prevent="selectedIdx = idx"
+      @keydown.arrow-up.prevent="idx = idx === 0 ? max : idx - 1"
+      @keydown.arrow-down.prevent="idx = idx === max ? 0 : idx + 1"
+    >
+      <span class="flex items-center">
+        <div class="flex-shrink-0 w-3 h-3 rounded-full" style={"background-color: #{@selected_option.color}"}/>
+        <span class="block ml-3 truncate"><%= @selected_option.label %></span>
+      </span>
+      <span class="absolute inset-y-0 right-0 flex items-center pr-2 ml-3 pointer-events-none">
+        <Lucide.chevrons_up_down class="w-5 h-5 text-gray-400" />
+      </span>
+    </button>
+
+    <ul
+        x-show="open"
+        x-transition:leave="transition ease-in duration-100"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white shadow-lg max-h-56 rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+        @click.away="open = false"
+        tabindex="-1"
+        role="listbox"
+      >
+
+      <%= for {option, idx} <- Enum.with_index(@options)  do %>
+        <li
+          x-bind:class={"{ 'text-white bg-indigo-600': idx === #{idx}, 'text-gray-900': !(idx === #{idx}) }"}
+          class="relative py-2 pl-3 text-gray-900 cursor-pointer select-none pr-9"
+          role="option"
+          @click="selectedIdx = idx"
+          @mouseenter={"idx = #{idx}"}
+        >
+          <div class="flex items-center">
+            <div class="flex-shrink-0 w-3 h-3 rounded-full" style={"background-color: #{option.color}"}/>
+            <span class="block ml-3 font-normal truncate">
+              <%= option.label %>
+            </span>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
