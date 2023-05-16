@@ -1,4 +1,4 @@
-defmodule KantaWeb.Components.Shared.TextInput do
+defmodule KantaWeb.Components.Shared.SearchInput do
   use Phoenix.Component
 
   attr :label, :string, required: true

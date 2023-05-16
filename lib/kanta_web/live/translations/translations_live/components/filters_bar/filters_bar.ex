@@ -3,7 +3,7 @@ defmodule KantaWeb.Translations.Components.FiltersBar do
 
   alias Kanta.Translations
 
-  alias KantaWeb.Components.Shared.{Select, TextInput, Toggle}
+  alias KantaWeb.Components.Shared.{Select, SearchInput, Toggle}
 
   def update(assigns, socket) do
     %{entries: contexts, metadata: _contexts_metadata} = Translations.list_contexts()

@@ -64,26 +64,48 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col w-0 flex-1 overflow-hidden">
+          <div x-data={"{ open: false}"} class="relative flex flex-col w-0 flex-1 overflow-hidden">
             <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
-              <button class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-slate-500 hover:text-primary-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+              <button @click="open = !open" class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-slate-500 dark:text-content-light hover:text-primary-dark hover:dark:text-accent-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary focus:dark:ring-accent-dark">
                 <span class="sr-only">Open sidebar</span>
-                <svg
-                  class="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  ></path>
-                </svg>
+                <Lucide.menu class="h-6 w-6" />
               </button>
+            </div>
+            <div 
+              x-show="open"
+              x-transition:enter="transition ease-in duration-400"
+              x-transition:enter-start="opacity-0 -translate-y-20"
+              x-transition:enter-end="opacity-100 translate-y-0" 
+              x-transition:leave="transition ease-in duration-100"
+              x-transition:leave-start="opacity-100 translate-y-20"
+              x-transition:leave-end="opacity-0 translate-y-0" 
+              class="mt-2 py-4 mx-4 rounded-md bg-white dark:bg-stone-900 border border-primary-dark dark:border-accent-dark"
+            >
+              <div class="flex-1 flex flex-col overflow-y-auto">
+                <div class="flex justify-start items-center mb-4">
+                  <Logo.render class="ml-4 w-10 h-10 text-primary-dark dark:text-accent-light" />
+                  <div class="ml-4 text-4xl text-primary-dark dark:text-accent-light fotn-medium">Kanta</div>
+                </div>
+                <div class="border-b border-slate-50 opacity-50" />
+                <nav class="mt-5 flex-1 px-2 pb-2 space-y-3">
+                  <%= link to: path(@conn, ~p"/kanta/dashboard"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <Lucide.inspect class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                    Dashboard
+                  <% end %>
+                  <%= link to: path(@conn, ~p"/kanta/locales"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <Lucide.languages class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                    Locales
+                  <% end %>
+                  <%= link to: path(@conn, ~p"/kanta/domains"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <Lucide.album class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                      Domains
+                  <% end %>
+                  <%= link to: path(@conn, ~p"/kanta/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <Lucide.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                      Contexts
+                  <% end %>
+                </nav>
+              </div>
             </div>
             <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
               <div phx-click={Phoenix.LiveView.JS.dispatch("toggle_dark_mode")} class="cursor-pointer absolute top-5 right-5 h-10 w-10 p-4 bg-white dark:bg-stone-900 border border-primary-dark dark:border-accent-dark hover:bg-stone-50 hover:dark:bg-stone-600 rounded-full flex justify-center items-center">
