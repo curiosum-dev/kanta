@@ -5,6 +5,8 @@
   <a href="https://github.com/curiosum-dev/kanta">
     <img src="./logo.png" alt="Logo" height="111">
   </a>
+  <br />
+  <br />
   <p style="margin-top: 3rem; font-size: 14pt;" align="center">
     User-friendly translations manager for Elixir/Phoenix projects.
     <br />
