@@ -1,72 +1,46 @@
 defmodule Kanta.Translations.PluralTranslations do
-  use Nebulex.Caching
-
   alias Kanta.Cache
   alias Kanta.Repo
+  alias Kanta.Translations.PluralTranslation
 
-  alias Kanta.Translations.{Locales, Domains, PluralTranslation, PluralTranslationQueries}
+  alias Kanta.Translations.PluralTranslations.Finders.{
+    GetPluralTranslation,
+    ListPluralTranslations
+  }
 
-  @ttl :timer.hours(12)
-
-  def list_plural_translations(params) do
-    repo = Repo.get_repo()
-
-    PluralTranslationQueries.base()
-    |> PluralTranslationQueries.filter_query(params["filter"])
-    |> repo.all()
+  def list_plural_translations(params \\ []) do
+    ListPluralTranslations.find(params)
   end
 
-  @decorate cacheable(
-              cache: Cache,
-              key: {PluralTranslation, params},
-              opts: [ttl: @ttl]
-            )
-  def get_plural_translation_by(params) do
-    PluralTranslationQueries.base()
-    |> PluralTranslationQueries.filter_query(params["filter"])
-    |> Repo.get_repo().one()
+  def get_plural_translation(params \\ []) do
+    GetPluralTranslation.find(params)
   end
 
   def create_plural_translation(attrs) do
-    locale = Locales.get_or_create_locale_by(%{"filter" => %{"name" => attrs["locale"]}})
-    domain = Domains.get_or_create_domain_by(%{"filter" => %{"name" => attrs["domain"]}})
-
-    %PluralTranslation{}
-    |> PluralTranslation.changeset(%{
-      msgctxt: attrs["msgctxt"],
-      msgid: attrs["msgid"],
-      previous_text: attrs["previous_text"],
-      text: attrs["text"],
-      locale_id: locale.id,
-      domain_id: domain.id
-    })
+    attrs
+    |> then(&PluralTranslation.changeset(%PluralTranslation{}, &1))
     |> Repo.get_repo().insert()
-  end
+    |> case do
+      {:ok, plural_translation} ->
+        cache_key =
+          Cache.generate_cache_key("plural_translation",
+            filter: [
+              nplural_index: plural_translation.nplural_index,
+              locale_id: plural_translation.locale_id,
+              message_id: plural_translation.message_id
+            ]
+          )
 
-  @decorate cache_put(cache: Cache, key: {PluralTranslation, id})
-  def update_plural_translation(id, attrs) do
-    repo = Repo.get_repo()
+        Cache.put(cache_key, plural_translation)
+        {:ok, plural_translation}
 
-    case repo.get(PluralTranslation, id) do
-      %PluralTranslation{} = plural_translation ->
-        PluralTranslation.changeset(plural_translation, %{
-          translated_text: attrs["translated_text"]
-        })
-        |> repo.update()
-
-      nil ->
-        :error
+      error ->
+        error
     end
   end
 
-  @decorate cache_evict(cache: Cache, key: {PluralTranslation, id})
-  def delete_plural_translation(id) do
-    repo = Repo.get_repo()
-
-    with %PluralTranslation{} = translation <- repo.get(id) do
-      repo.delete(translation)
-    else
-      nil -> :not_found
-    end
+  def update_plural_translation(translation, attrs) do
+    PluralTranslation.changeset(translation, attrs)
+    |> Repo.get_repo().update()
   end
 end

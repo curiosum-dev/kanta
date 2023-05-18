@@ -1,38 +1,20 @@
 defmodule Kanta.Translations.Domains do
-  use Nebulex.Caching
-
-  alias Kanta.Cache
   alias Kanta.Repo
 
   alias Kanta.Translations.Domain
-  alias Kanta.Translations.DomainQueries
+  alias Kanta.Translations.Domains.Finders.{ListDomains, GetDomain}
 
-  @ttl :timer.hours(12)
-
-  @decorate cacheable(cache: Cache, key: Domain, opts: [ttl: @ttl])
-  def list_domains do
-    DomainQueries.base()
-    |> Repo.get_repo().all()
+  def list_domains(params \\ []) do
+    ListDomains.find(params)
   end
 
-  @decorate cacheable(cache: Cache, key: {Domain, params}, opts: [ttl: @ttl])
-  def get_domain_by(params) do
-    DomainQueries.base()
-    |> DomainQueries.filter_query(params["filter"])
-    |> Repo.get_repo().one()
+  def get_domain(params) do
+    GetDomain.find(params)
   end
 
-  @decorate cacheable(cache: Cache, key: {Domain, params}, opts: [ttl: @ttl])
-  def get_or_create_domain_by(params) do
-    case get_domain_by(params) do
-      %Domain{} = domain -> domain
-      nil -> create_domain!(params["filter"])
-    end
-  end
-
-  defp create_domain!(attrs) do
-    %Kanta.Translations.Domain{}
-    |> Kanta.Translations.Domain.changeset(attrs)
-    |> Kanta.Repo.get_repo().insert!()
+  def create_domain(attrs) do
+    %Domain{}
+    |> Domain.changeset(attrs)
+    |> Repo.get_repo().insert()
   end
 end

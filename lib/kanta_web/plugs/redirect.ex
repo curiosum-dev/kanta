@@ -21,7 +21,10 @@ defmodule Redirect do
     end
 
     opts
-    |> Keyword.put(:preserve_query_string, Keyword.get(opts[:opts], :preserve_query_string, false))
+    |> Keyword.put(
+      :preserve_query_string,
+      Keyword.get(opts[:opts], :preserve_query_string, false)
+    )
     |> Keyword.delete(:opts)
   end
 
@@ -53,13 +56,21 @@ defmodule Redirect do
 
   defmacro redirect(path, "http" <> _ = to, type, opts) do
     quote do
-      match(:*, unquote(path), unquote(__MODULE__), external: unquote(to), type: unquote(type), opts: unquote(opts))
+      match(:*, unquote(path), unquote(__MODULE__),
+        external: unquote(to),
+        type: unquote(type),
+        opts: unquote(opts)
+      )
     end
   end
 
   defmacro redirect(path, to, type, opts) do
     quote do
-      match(:*, unquote(path), unquote(__MODULE__), to: unquote(to), type: unquote(type), opts: unquote(opts))
+      match(:*, unquote(path), unquote(__MODULE__),
+        to: unquote(to),
+        type: unquote(type),
+        opts: unquote(opts)
+      )
     end
   end
 end

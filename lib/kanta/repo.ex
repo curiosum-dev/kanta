@@ -1,5 +1,5 @@
 defmodule Kanta.Repo do
   def get_repo do
-    Application.fetch_env!(:kanta, :ecto_repo)
+    Kanta.config().repo
   end
 end

@@ -9,7 +9,9 @@
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "alpinejs": "^3.12.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.4.1",

@@ -7,6 +7,8 @@ config :kanta, Kanta.Cache,
     partitions: 2
   ]
 
+config :tesla, :adapter, {Tesla.Adapter.Finch, name: Kanta.Finch}
+
 config :phoenix, :json_library, Jason
 config :phoenix, :stacktrace_depth, 20
 

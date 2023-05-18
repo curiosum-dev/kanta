@@ -2,6 +2,8 @@ defmodule KantaWeb.LayoutView do
   @moduledoc false
   use KantaWeb, :html
 
+  alias KantaWeb.Components.Shared.Logo
+
   embed_templates "../templates/layouts/*"
 
   def render(_, assigns), do: dashboard(assigns)

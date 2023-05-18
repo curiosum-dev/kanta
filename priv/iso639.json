@@ -1,0 +1,1678 @@
+{
+  "ks": {
+    "639-1": "ks",
+    "639-2": "kas",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Kashmiri",
+    "nativeName": "कश्मीरी, كشميري‎",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kashmiri_language"
+  },
+  "tk": {
+    "639-1": "tk",
+    "639-2": "tuk",
+    "colors": ["#00853A", "#D3212C", "#FFFFFF"],
+    "family": "Turkic",
+    "name": "Turkmen",
+    "nativeName": "Türkmen, Түркмен",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Turkmen_language"
+  },
+  "uz": {
+    "639-1": "uz",
+    "639-2": "uzb",
+    "colors": ["#0099B5", "#FFFFFF", "#1FB43A"],
+    "family": "Turkic",
+    "name": "Uzbek",
+    "nativeName": "Oʻzbek, Ўзбек, أۇزبېك‎",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Uzbek_language"
+  },
+  "mk": {
+    "639-1": "mk",
+    "639-2": "mkd",
+    "639-2/B": "mac",
+    "colors": ["#D91F21", "#F8EA2B"],
+    "family": "Indo-European",
+    "name": "Macedonian",
+    "nativeName": "македонски јазик",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Macedonian_language"
+  },
+  "bm": {
+    "639-1": "bm",
+    "639-2": "bam",
+    "colors": ["#16B43A", "#FCD116", "#CE1226"],
+    "family": "Niger–Congo",
+    "name": "Bambara",
+    "nativeName": "bamanankan",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bambara_language"
+  },
+  "uk": {
+    "639-1": "uk",
+    "639-2": "ukr",
+    "colors": ["#02411C", "#FED500"],
+    "family": "Indo-European",
+    "name": "Ukrainian",
+    "nativeName": "Українська",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Ukrainian_language"
+  },
+  "pt": {
+    "639-1": "pt",
+    "639-2": "por",
+    "colors": ["#336704", "#E93F33", "#E93F33"],
+    "family": "Indo-European",
+    "name": "Portuguese",
+    "nativeName": "Português",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Portuguese_language"
+  },
+  "sq": {
+    "639-1": "sq",
+    "639-2": "sqi",
+    "639-2/B": "alb",
+    "colors": ["#FF2600", "#000000"],
+    "family": "Indo-European",
+    "name": "Albanian",
+    "nativeName": "Shqip",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Albanian_language"
+  },
+  "da": {
+    "639-1": "da",
+    "639-2": "dan",
+    "colors": ["#C7102E", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Danish",
+    "nativeName": "dansk",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Danish_language"
+  },
+  "sl": {
+    "639-1": "sl",
+    "639-2": "slv",
+    "colors": ["#FFFFFF", "#0C4EA2", "#EE2325"],
+    "family": "Indo-European",
+    "name": "Slovene",
+    "nativeName": "slovenski jezik, slovenščina",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Slovene_language"
+  },
+  "lb": {
+    "639-1": "lb",
+    "639-2": "ltz",
+    "colors": ["#EE2436", "#FFFFFF", "#01A2DF"],
+    "family": "Indo-European",
+    "name": "Luxembourgish, Letzeburgesch",
+    "nativeName": "Lëtzebuergesch",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Luxembourgish_language"
+  },
+  "az": {
+    "639-1": "az",
+    "639-2": "aze",
+    "colors": ["#01B5E1", "#EF333F", "#509E2E"],
+    "family": "Turkic",
+    "name": "Azerbaijani",
+    "nativeName": "azərbaycan dili",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Azerbaijani_language"
+  },
+  "zh": {
+    "639-1": "zh",
+    "639-2": "zho",
+    "639-2/B": "chi",
+    "colors": ["#EE1420", "#FFFF00"],
+    "family": "Sino-Tibetan",
+    "name": "Chinese",
+    "nativeName": "中文 (Zhōngwén), 汉语, 漢語",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Chinese_language"
+  },
+  "kv": {
+    "639-1": "kv",
+    "639-2": "kom",
+    "colors": ["#0036A7", "#019D37", "#FFFFFF"],
+    "family": "Uralic",
+    "name": "Komi",
+    "nativeName": "коми кыв",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Komi_language"
+  },
+  "ro": {
+    "639-1": "ro",
+    "639-2": "ron",
+    "639-2/B": "rum",
+    "colors": ["#002B7F", "#FCD116", "#CE1126"],
+    "family": "Indo-European",
+    "name": "Romanian",
+    "nativeName": "Română",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Romanian_language"
+  },
+  "nb": {
+    "639-1": "nb",
+    "639-2": "nob",
+    "colors": ["#BB1A2B", "#FFFFFF", "#001B5B"],
+    "family": "Indo-European",
+    "name": "Norwegian Bokmål",
+    "nativeName": "Norsk bokmål",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bokm%C3%A5l"
+  },
+  "id": {
+    "639-1": "id",
+    "639-2": "ind",
+    "colors": ["#009641", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Indonesian",
+    "nativeName": "Bahasa Indonesia",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Indonesian_language"
+  },
+  "kj": {
+    "639-1": "kj",
+    "639-2": "kua",
+    "colors": ["#CD1D2B", "#FFCC00", "#000000"],
+    "family": "Niger–Congo",
+    "name": "Kwanyama, Kuanyama",
+    "nativeName": "Kuanyama",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kwanyama"
+  },
+  "cr": {
+    "639-1": "cr",
+    "639-2": "cre",
+    "colors": ["#252D7E", "#FFFFFF"],
+    "family": "Algonquian",
+    "name": "Cree",
+    "nativeName": "ᓀᐦᐃᔭᐍᐏᐣ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Cree_language"
+  },
+  "fy": {
+    "639-1": "fy",
+    "639-2": "fry",
+    "colors": ["#AE1C28", "#FFFFFF", "#21468A"],
+    "family": "Indo-European",
+    "name": "Western Frisian",
+    "nativeName": "Frysk",
+    "wikiUrl": "https://en.wikipedia.org/wiki/West_Frisian_language"
+  },
+  "ga": {
+    "639-1": "ga",
+    "639-2": "gle",
+    "colors": ["#0D9C62", "#FFFFFF", "#FE893C"],
+    "family": "Indo-European",
+    "name": "Irish",
+    "nativeName": "Gaeilge",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Irish_language"
+  },
+  "hr": {
+    "639-1": "hr",
+    "639-2": "hrv",
+    "colors": ["#FF0000", "#FFFFFF", "#171796"],
+    "family": "Indo-European",
+    "name": "Croatian",
+    "nativeName": "hrvatski jezik",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Croatian_language"
+  },
+  "fo": {
+    "639-1": "fo",
+    "639-2": "fao",
+    "colors": ["#FFFFFF", "#EF2F3E", "#005DB9"],
+    "family": "Indo-European",
+    "name": "Faroese",
+    "nativeName": "føroyskt",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Faroese_language"
+  },
+  "eo": {
+    "639-1": "eo",
+    "639-2": "epo",
+    "colors": ["#FFFFFF", "#009A00"],
+    "family": "Constructed",
+    "name": "Esperanto",
+    "nativeName": "Esperanto",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Esperanto"
+  },
+  "kn": {
+    "639-1": "kn",
+    "639-2": "kan",
+    "colors": ["#FF9A2F", "#FFFFFF", "#0B8901"],
+    "family": "Dravidian",
+    "name": "Kannada",
+    "nativeName": "ಕನ್ನಡ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kannada_language"
+  },
+  "om": {
+    "639-1": "om",
+    "639-2": "orm",
+    "colors": ["#008A2C", "#FCDE02", "#DB1F13"],
+    "family": "Afro-Asiatic",
+    "name": "Oromo",
+    "nativeName": "Afaan Oromoo",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Oromo_language"
+  },
+  "pi": {
+    "639-1": "pi",
+    "639-2": "pli",
+    "colors": ["#FF9A2F", "#FFFFFF", "#0B8901"],
+    "family": "Indo-European",
+    "name": "Pāli",
+    "nativeName": "पाऴि",
+    "wikiUrl": "https://en.wikipedia.org/wiki/P%C4%81li_language"
+  },
+  "fj": {
+    "639-1": "fj",
+    "639-2": "fij",
+    "colors": ["#69B5E7"],
+    "family": "Austronesian",
+    "name": "Fijian",
+    "nativeName": "vosa Vakaviti",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Fijian_language"
+  },
+  "ng": {
+    "639-1": "ng",
+    "639-2": "ndo",
+    "colors": ["#003281", "#D31F32", "#019641"],
+    "family": "Niger–Congo",
+    "name": "Ndonga",
+    "nativeName": "Owambo",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Ndonga"
+  },
+  "ln": {
+    "639-1": "ln",
+    "639-2": "lin",
+    "colors": ["#0080FF", "#F7D711", "#CF1D1B"],
+    "family": "Niger–Congo",
+    "name": "Lingala",
+    "nativeName": "Lingála",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Lingala_language"
+  },
+  "sc": {
+    "639-1": "sc",
+    "639-2": "srd",
+    "colors": ["#FFFFFF", "#D91F1B", "#000000"],
+    "family": "Indo-European",
+    "name": "Sardinian",
+    "nativeName": "sardu",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sardinian_language"
+  },
+  "za": {
+    "639-1": "za",
+    "639-2": "zha",
+    "colors": ["#EE1420", "#FFFF00"],
+    "family": "Tai–Kadai",
+    "name": "Zhuang, Chuang",
+    "nativeName": "Saɯ cueŋƅ, Saw cuengh",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Zhuang_languages"
+  },
+  "te": {
+    "639-1": "te",
+    "639-2": "tel",
+    "colors": ["#FF9A2F", "#FFFFFF", "#0B8901"],
+    "family": "Dravidian",
+    "name": "Telugu",
+    "nativeName": "తెలుగు",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Telugu_language"
+  },
+  "tw": {
+    "639-1": "tw",
+    "639-2": "twi",
+    "colors": ["#FFFB01", "#000000", "#009900"],
+    "family": "Niger–Congo",
+    "name": "Twi",
+    "nativeName": "Twi",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Twi"
+  },
+  "bg": {
+    "639-1": "bg",
+    "639-2": "bul",
+    "colors": ["#FFFFFF", "#00966E", "#D62612"],
+    "family": "Indo-European",
+    "name": "Bulgarian",
+    "nativeName": "български език",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bulgarian_language"
+  },
+  "sm": {
+    "639-1": "sm",
+    "639-2": "smo",
+    "colors": ["#CF1D21", "#002780", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Samoan",
+    "nativeName": "gagana fa'a Samoa",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Samoan_language"
+  },
+  "av": {
+    "639-1": "av",
+    "639-2": "ava",
+    "colors": ["#01B5E1", "#EF333F", "#509E2E"],
+    "family": "Northeast Caucasian",
+    "name": "Avaric",
+    "nativeName": "авар мацӀ, магӀарул мацӀ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Avar_language"
+  },
+  "fa": {
+    "639-1": "fa",
+    "639-2": "fas",
+    "639-2/B": "per",
+    "colors": ["#239F40", "#FFFFFF", "#DA0001"],
+    "family": "Indo-European",
+    "name": "Persian (Farsi)",
+    "nativeName": "فارسی",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Persian_language"
+  },
+  "ht": {
+    "639-1": "ht",
+    "639-2": "hat",
+    "colors": ["#001BA0", "#D30831"],
+    "family": "Creole",
+    "name": "Haitian, Haitian Creole",
+    "nativeName": "Kreyòl ayisyen",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Haitian_Creole_language"
+  },
+  "is": {
+    "639-1": "is",
+    "639-2": "isl",
+    "639-2/B": "ice",
+    "colors": ["#01529C", "#FFFFFF", "#DC2035"],
+    "family": "Indo-European",
+    "name": "Icelandic",
+    "nativeName": "Íslenska",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Icelandic_language"
+  },
+  "ha": {
+    "639-1": "ha",
+    "639-2": "hau",
+    "colors": ["#E05205", "#FFFFFF", "#0DAF2A"],
+    "family": "Afro-Asiatic",
+    "name": "Hausa",
+    "nativeName": "(Hausa) هَوُسَ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Hausa_language"
+  },
+  "mt": {
+    "639-1": "mt",
+    "639-2": "mlt",
+    "colors": ["#FFFFFF", "#D01E27"],
+    "family": "Afro-Asiatic",
+    "name": "Maltese",
+    "nativeName": "Malti",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Maltese_language"
+  },
+  "ts": {
+    "639-1": "ts",
+    "639-2": "tso",
+    "colors": ["#E1392D", "#007847", "#01168A"],
+    "family": "Niger–Congo",
+    "name": "Tsonga",
+    "nativeName": "Xitsonga",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tsonga_language"
+  },
+  "ta": {
+    "639-1": "ta",
+    "639-2": "tam",
+    "colors": ["#FF9A2F", "#FFFFFF", "#0B8901"],
+    "family": "Dravidian",
+    "name": "Tamil",
+    "nativeName": "தமிழ்",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tamil_language"
+  },
+  "or": {
+    "639-1": "or",
+    "639-2": "ori",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Oriya",
+    "nativeName": "ଓଡ଼ିଆ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Oriya_language"
+  },
+  "kl": {
+    "639-1": "kl",
+    "639-2": "kal",
+    "colors": ["#FFFFFF", "#C91C2A"],
+    "family": "Eskimo–Aleut",
+    "name": "Kalaallisut, Greenlandic",
+    "nativeName": "kalaallisut, kalaallit oqaasii",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kalaallisut_language"
+  },
+  "so": {
+    "639-1": "so",
+    "639-2": "som",
+    "colors": ["#3F8ADE", "#FFFFFF"],
+    "family": "Afro-Asiatic",
+    "name": "Somali",
+    "nativeName": "Soomaaliga, af Soomaali",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Somali_language"
+  },
+  "ti": {
+    "639-1": "ti",
+    "639-2": "tir",
+    "colors": ["#EC2330", "#02AE1F", "#398CDD"],
+    "family": "Afro-Asiatic",
+    "name": "Tigrinya",
+    "nativeName": "ትግርኛ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tigrinya_language"
+  },
+  "ne": {
+    "639-1": "ne",
+    "639-2": "nep",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Nepali",
+    "nativeName": "नेपाली",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Nepali_language"
+  },
+  "sr": {
+    "639-1": "sr",
+    "639-2": "srp",
+    "colors": ["#C6363C", "#0C4076", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Serbian",
+    "nativeName": "српски језик",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Serbian_language"
+  },
+  "ur": {
+    "639-1": "ur",
+    "639-2": "urd",
+    "colors": ["#02411C", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Urdu",
+    "nativeName": "اردو",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Urdu"
+  },
+  "cy": {
+    "639-1": "cy",
+    "639-2": "cym",
+    "639-2/B": "wel",
+    "colors": ["#FFFFFF", "##CA0529", "#01B23E"],
+    "family": "Indo-European",
+    "name": "Welsh",
+    "nativeName": "Cymraeg",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Welsh_language"
+  },
+  "bh": {
+    "639-1": "bh",
+    "639-2": "bih",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Bihari",
+    "nativeName": "भोजपुरी",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bihari_languages"
+  },
+  "ml": {
+    "639-1": "ml",
+    "639-2": "mal",
+    "colors": ["#FF9A2F", "#FFFFFF", "#0B8901"],
+    "family": "Dravidian",
+    "name": "Malayalam",
+    "nativeName": "മലയാളം",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Malayalam_language"
+  },
+  "an": {
+    "639-1": "an",
+    "639-2": "arg",
+    "colors": ["#AE0E12", "#FABE01"],
+    "family": "Indo-European",
+    "name": "Aragonese",
+    "nativeName": "aragonés",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Aragonese_language"
+  },
+  "oc": {
+    "639-1": "oc",
+    "639-2": "oci",
+    "colors": ["#AE1612", "#FABE00", "#AE1612"],
+    "family": "Indo-European",
+    "name": "Occitan",
+    "nativeName": "occitan, lenga d'òc",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Occitan_language"
+  },
+  "ig": {
+    "639-1": "ig",
+    "639-2": "ibo",
+    "colors": ["#018850", "#FFFFFF"],
+    "family": "Niger–Congo",
+    "name": "Igbo",
+    "nativeName": "Asụsụ Igbo",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Igbo_language"
+  },
+  "ug": {
+    "639-1": "ug",
+    "639-2": "uig",
+    "colors": ["#EF2321", "#FFFB01"],
+    "family": "Turkic",
+    "name": "Uyghur",
+    "nativeName": "ئۇيغۇرچە‎, Uyghurche",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Uyghur_language"
+  },
+  "ay": {
+    "639-1": "ay",
+    "639-2": "aym",
+    "colors": ["#D62618", "#F9E400", "#007A30"],
+    "family": "Aymaran",
+    "name": "Aymara",
+    "nativeName": "aymar aru",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Aymara_language"
+  },
+  "bs": {
+    "639-1": "bs",
+    "639-2": "bos",
+    "colors": ["#002395", "#FFFFFF", "#FECB00"],
+    "family": "Indo-European",
+    "name": "Bosnian",
+    "nativeName": "bosanski jezik",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bosnian_language"
+  },
+  "gu": {
+    "639-1": "gu",
+    "639-2": "guj",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Gujarati",
+    "nativeName": "ગુજરાતી",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Gujarati_language"
+  },
+  "ho": {
+    "639-1": "ho",
+    "639-2": "hmo",
+    "colors": ["#CF0822", "#FBD210", "#000000"],
+    "family": "Austronesian",
+    "name": "Hiri Motu",
+    "nativeName": "Hiri Motu",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Hiri_Motu_language"
+  },
+  "lu": {
+    "639-1": "lu",
+    "639-2": "lub",
+    "colors": ["#0080FF", "#F7D711", "#CF1D1B"],
+    "family": "Niger–Congo",
+    "name": "Luba-Katanga",
+    "nativeName": "Tshiluba",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tshiluba_language"
+  },
+  "nd": {
+    "639-1": "nd",
+    "639-2": "nde",
+    "colors": ["#006400", "#FFD301", "#D51E00"],
+    "family": "Niger–Congo",
+    "name": "Northern Ndebele",
+    "nativeName": "isiNdebele",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Northern_Ndebele_language"
+  },
+  "kg": {
+    "639-1": "kg",
+    "639-2": "kon",
+    "colors": ["#CD1D2B", "#FFCC00", "#000000"],
+    "family": "Niger–Congo",
+    "name": "Kongo",
+    "nativeName": "Kikongo",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kongo_language"
+  },
+  "no": {
+    "639-1": "no",
+    "639-2": "nor",
+    "colors": ["#BB1A2B", "#FFFFFF", "#001B5B"],
+    "family": "Indo-European",
+    "name": "Norwegian",
+    "nativeName": "Norsk",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Norwegian_language"
+  },
+  "jv": {
+    "639-1": "jv",
+    "639-2": "jav",
+    "colors": ["#FF2600", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Javanese",
+    "nativeName": "ꦧꦱꦗꦮ, Basa Jawa",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Javanese_language"
+  },
+  "be": {
+    "639-1": "be",
+    "639-2": "bel",
+    "colors": ["#FFFFFF", "#CE1620", "#007C2F"],
+    "family": "Indo-European",
+    "name": "Belarusian",
+    "nativeName": "беларуская мова",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Belarusian_language"
+  },
+  "as": {
+    "639-1": "as",
+    "639-2": "asm",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Assamese",
+    "nativeName": "অসমীয়া",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Assamese_language"
+  },
+  "ik": {
+    "639-1": "ik",
+    "639-2": "ipk",
+    "colors": ["#FFFFFF", "#0036A7", "#D62718"],
+    "family": "Eskimo–Aleut",
+    "name": "Inupiaq",
+    "nativeName": "Iñupiaq, Iñupiatun",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Inupiaq_language"
+  },
+  "eu": {
+    "639-1": "eu",
+    "639-2": "eus",
+    "639-2/B": "baq",
+    "colors": ["#D62618", "#009C46", "#FFFFFF"],
+    "family": "Language isolate",
+    "name": "Basque",
+    "nativeName": "euskara, euskera",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Basque_language"
+  },
+  "rw": {
+    "639-1": "rw",
+    "639-2": "kin",
+    "colors": ["#01A2DF", "#FAD300", "#1A603A"],
+    "family": "Niger–Congo",
+    "name": "Kinyarwanda",
+    "nativeName": "Ikinyarwanda",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kinyarwanda"
+  },
+  "ch": {
+    "639-1": "ch",
+    "639-2": "cha",
+    "colors": ["#00257C", "#C71B35"],
+    "family": "Austronesian",
+    "name": "Chamorro",
+    "nativeName": "Chamoru",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Chamorro_language"
+  },
+  "ru": {
+    "639-1": "ru",
+    "639-2": "rus",
+    "colors": ["#0039A6", "#D52b1E"],
+    "family": "Indo-European",
+    "name": "Russian",
+    "nativeName": "Русский",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Russian_language"
+  },
+  "iu": {
+    "639-1": "iu",
+    "639-2": "iku",
+    "colors": ["#FDD601", "#D61E0E", "#FFFFFF"],
+    "family": "Eskimo–Aleut",
+    "name": "Inuktitut",
+    "nativeName": "ᐃᓄᒃᑎᑐᑦ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Inuktitut"
+  },
+  "su": {
+    "639-1": "su",
+    "639-2": "sun",
+    "colors": ["#FF2600", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Sundanese",
+    "nativeName": "Basa Sunda",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sundanese_language"
+  },
+  "mh": {
+    "639-1": "mh",
+    "639-2": "mah",
+    "colors": ["#003594", "#DE7600", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Marshallese",
+    "nativeName": "Kajin M̧ajeļ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Marshallese_language"
+  },
+  "to": {
+    "639-1": "to",
+    "639-2": "ton",
+    "colors": ["#FFFFFF", "#C21A00"],
+    "family": "Austronesian",
+    "name": "Tonga (Tonga Islands)",
+    "nativeName": "faka Tonga",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tongan_language"
+  },
+  "cs": {
+    "639-1": "cs",
+    "639-2": "ces",
+    "639-2/B": "cze",
+    "colors": ["#11457E", "#D7141A"],
+    "family": "Indo-European",
+    "name": "Czech",
+    "nativeName": "čeština, český jazyk",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Czech_language"
+  },
+  "hy": {
+    "639-1": "hy",
+    "639-2": "hye",
+    "639-2/B": "arm",
+    "colors": ["#D90013", "#0133A0", "#F2A801"],
+    "family": "Indo-European",
+    "name": "Armenian",
+    "nativeName": "Հայերեն",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Armenian_language"
+  },
+  "tl": {
+    "639-1": "tl",
+    "639-2": "tgl",
+    "colors": ["#0038A8", "#FFFFFF", "#CE1D26"],
+    "family": "Austronesian",
+    "name": "Tagalog",
+    "nativeName": "Wikang Tagalog",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tagalog_language"
+  },
+  "ko": {
+    "639-1": "ko",
+    "639-2": "kor",
+    "colors": ["#FFFFFF", "#CD2E3B", "#0047A0"],
+    "family": "Koreanic",
+    "name": "Korean",
+    "nativeName": "한국어",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Korean_language"
+  },
+  "nr": {
+    "639-1": "nr",
+    "639-2": "nbl",
+    "colors": ["#E1392D", "#007847", "#01168A"],
+    "family": "Niger–Congo",
+    "name": "Southern Ndebele",
+    "nativeName": "isiNdebele",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Southern_Ndebele_language"
+  },
+  "tt": {
+    "639-1": "tt",
+    "639-2": "tat",
+    "colors": ["#008100", "#FFFFFF", "#FF2600"],
+    "family": "Turkic",
+    "name": "Tatar",
+    "nativeName": "татар теле, tatar tele",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tatar_language"
+  },
+  "st": {
+    "639-1": "st",
+    "639-2": "sot",
+    "colors": ["#01168A", "#FFFFFF", "#009B42"],
+    "family": "Niger–Congo",
+    "name": "Southern Sotho",
+    "nativeName": "Sesotho",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sotho_language"
+  },
+  "ae": {
+    "639-1": "ae",
+    "639-2": "ave",
+    "colors": ["#000000", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Avestan",
+    "nativeName": "avesta",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Avestan_language"
+  },
+  "ia": {
+    "639-1": "ia",
+    "639-2": "ina",
+    "colors": ["#000000", "#FFCC33", "#E2E6EF"],
+    "family": "Constructed",
+    "name": "Interlingua",
+    "nativeName": "Interlingua",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Interlingua"
+  },
+  "tg": {
+    "639-1": "tg",
+    "639-2": "tgk",
+    "colors": ["#CD1C00", "#FFFFFF", "#006600"],
+    "family": "Indo-European",
+    "name": "Tajik",
+    "nativeName": "тоҷикӣ, toçikī, تاجیکی‎",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tajik_language"
+  },
+  "gn": {
+    "639-1": "gn",
+    "639-2": "grn",
+    "colors": ["#D62618", "#FFFFFF", "#0135A9"],
+    "family": "Tupian",
+    "name": "Guaraní",
+    "nativeName": "Avañe'ẽ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Guaran%C3%AD_language"
+  },
+  "ba": {
+    "639-1": "ba",
+    "639-2": "bak",
+    "colors": ["#0171FF", "#FFFFFF", "#017100"],
+    "family": "Turkic",
+    "name": "Bashkir",
+    "nativeName": "башҡорт теле",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bashkir_language"
+  },
+  "my": {
+    "639-1": "my",
+    "639-2": "mya",
+    "639-2/B": "bur",
+    "colors": ["#FECC00", "#31B431", "#EB2336"],
+    "family": "Sino-Tibetan",
+    "name": "Burmese",
+    "nativeName": "ဗမာစာ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Burmese_language"
+  },
+  "br": {
+    "639-1": "br",
+    "639-2": "bre",
+    "colors": ["#002153", "#FFFFFF", "#CF0822"],
+    "family": "Indo-European",
+    "name": "Breton",
+    "nativeName": "brezhoneg",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Breton_language"
+  },
+  "he": {
+    "639-1": "he",
+    "639-2": "heb",
+    "colors": ["#0DAF2A", "#FFFFFF"],
+    "family": "Afro-Asiatic",
+    "name": "Hebrew (modern)",
+    "nativeName": "עברית",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Hebrew_language"
+  },
+  "nl": {
+    "639-1": "nl",
+    "639-2": "nld",
+    "639-2/B": "dut",
+    "colors": ["#AF2D27", "#21468B"],
+    "family": "Indo-European",
+    "name": "Dutch",
+    "nativeName": "Nederlands, Vlaams",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Dutch_language"
+  },
+  "ku": {
+    "639-1": "ku",
+    "639-2": "kur",
+    "colors": ["#EE231F", "#FFFFFF", "#218F41"],
+    "family": "Indo-European",
+    "name": "Kurdish",
+    "nativeName": "Kurdî, كوردی‎",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kurdish_language"
+  },
+  "yo": {
+    "639-1": "yo",
+    "639-2": "yor",
+    "colors": ["#028751", "#FFFFFF"],
+    "family": "Niger–Congo",
+    "name": "Yoruba",
+    "nativeName": "Yorùbá",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Yoruba_language"
+  },
+  "ca": {
+    "639-1": "ca",
+    "639-2": "cat",
+    "colors": ["#FCDE02", "#DB0914"],
+    "family": "Indo-European",
+    "name": "Catalan",
+    "nativeName": "català",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Catalan_language"
+  },
+  "kr": {
+    "639-1": "kr",
+    "639-2": "kau",
+    "colors": ["#018850", "#FFFFFF", "#018850"],
+    "family": "Nilo-Saharan",
+    "name": "Kanuri",
+    "nativeName": "Kanuri",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kanuri_language"
+  },
+  "xh": {
+    "639-1": "xh",
+    "639-2": "xho",
+    "colors": ["#E1392D", "#007847", "#01168A"],
+    "family": "Niger–Congo",
+    "name": "Xhosa",
+    "nativeName": "isiXhosa",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Xhosa_language"
+  },
+  "km": {
+    "639-1": "km",
+    "639-2": "khm",
+    "colors": ["#012AA2", "#E1201F"],
+    "family": "Austroasiatic",
+    "name": "Khmer",
+    "nativeName": "ខ្មែរ, ខេមរភាសា, ភាសាខ្មែរ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Khmer_language"
+  },
+  "aa": {
+    "639-1": "aa",
+    "639-2": "aar",
+    "colors": ["#088930", "#FCDD0B", "DA131A"],
+    "family": "Afro-Asiatic",
+    "name": "Afar",
+    "nativeName": "Afaraf",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Afar_language"
+  },
+  "nv": {
+    "639-1": "nv",
+    "639-2": "nav",
+    "colors": ["#FFDFAF", "#DD7824", "#604130"],
+    "family": "Dené–Yeniseian",
+    "name": "Navajo, Navaho",
+    "nativeName": "Diné bizaad",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Navajo_language"
+  },
+  "gv": {
+    "639-1": "gv",
+    "639-2": "glv",
+    "colors": ["#D00B27", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Manx",
+    "nativeName": "Gaelg, Gailck",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Manx_language"
+  },
+  "ab": {
+    "639-1": "ab",
+    "639-2": "abk",
+    "colors": ["#C8302A", "#00993D", "#FFFFFF"],
+    "family": "Northwest Caucasian",
+    "name": "Abkhaz",
+    "nativeName": "аҧсуа бызшәа, аҧсшәа",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Abkhaz_language"
+  },
+  "si": {
+    "639-1": "si",
+    "639-2": "sin",
+    "colors": ["#FFBF24", "#8E1337"],
+    "family": "Indo-European",
+    "name": "Sinhalese, Sinhala",
+    "nativeName": "සිංහල",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sinhalese_language"
+  },
+  "lg": {
+    "639-1": "lg",
+    "639-2": "lug",
+    "colors": ["#0039C9", "#FFFFFF", "#F7DB4D"],
+    "family": "Niger–Congo",
+    "name": "Ganda",
+    "nativeName": "Luganda",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Luganda"
+  },
+  "ny": {
+    "639-1": "ny",
+    "639-2": "nya",
+    "colors": ["#000000", "#CF1D21", "#2F9F32"],
+    "family": "Niger–Congo",
+    "name": "Chichewa, Chewa, Nyanja",
+    "nativeName": "chiCheŵa, chinyanja",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Chichewa_language"
+  },
+  "mi": {
+    "639-1": "mi",
+    "639-2": "mri",
+    "639-2/B": "mao",
+    "colors": ["#012169", "#FFFFFF", "#C81C2E"],
+    "family": "Austronesian",
+    "name": "Māori",
+    "nativeName": "te reo Māori",
+    "wikiUrl": "https://en.wikipedia.org/wiki/M%C4%81ori_language"
+  },
+  "mn": {
+    "639-1": "mn",
+    "639-2": "mon",
+    "colors": ["#DB202E", "#FBC601", "#0066B5"],
+    "family": "Mongolic",
+    "name": "Mongolian",
+    "nativeName": "Монгол хэл",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Mongolian_language"
+  },
+  "cv": {
+    "639-1": "cv",
+    "639-2": "chv",
+    "colors": ["#FFE000", "#A32105"],
+    "family": "Turkic",
+    "name": "Chuvash",
+    "nativeName": "чӑваш чӗлхи",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Chuvash_language"
+  },
+  "it": {
+    "639-1": "it",
+    "639-2": "ita",
+    "colors": ["#499348", "#FFFFFF", "#CF3737"],
+    "family": "Indo-European",
+    "name": "Italian",
+    "nativeName": "Italiano",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Italian_language"
+  },
+  "ar": {
+    "639-1": "ar",
+    "639-2": "ara",
+    "colors": ["#006130", "#FFFFFF"],
+    "family": "Afro-Asiatic",
+    "name": "Arabic",
+    "nativeName": "العربية",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Arabic_language"
+  },
+  "ce": {
+    "639-1": "ce",
+    "639-2": "che",
+    "colors": ["#FFFFFF", "#0139A6", "#D52A1E"],
+    "family": "Northeast Caucasian",
+    "name": "Chechen",
+    "nativeName": "нохчийн мотт",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Chechen_language"
+  },
+  "kk": {
+    "639-1": "kk",
+    "639-2": "kaz",
+    "colors": ["#02B1CB", "#FEC605"],
+    "family": "Turkic",
+    "name": "Kazakh",
+    "nativeName": "қазақ тілі",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kazakh_language"
+  },
+  "hu": {
+    "639-1": "hu",
+    "639-2": "hun",
+    "colors": ["#CD2A3E", "#436F4D"],
+    "family": "Uralic",
+    "name": "Hungarian",
+    "nativeName": "magyar",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Hungarian_language"
+  },
+  "sn": {
+    "639-1": "sn",
+    "639-2": "sna",
+    "colors": ["#C60B1E", "#FFC400"],
+    "family": "Niger–Congo",
+    "name": "Shona",
+    "nativeName": "chiShona",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Shona_language"
+  },
+  "mg": {
+    "639-1": "mg",
+    "639-2": "mlg",
+    "colors": ["#FFFFFF", "#FC3A2E", "#007F37"],
+    "family": "Austronesian",
+    "name": "Malagasy",
+    "nativeName": "fiteny malagasy",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Malagasy_language"
+  },
+  "ee": {
+    "639-1": "ee",
+    "639-2": "ewe",
+    "colors": ["#D31F32", "#006A4D", "#FFCF01"],
+    "family": "Niger–Congo",
+    "name": "Ewe",
+    "nativeName": "Eʋegbe",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Ewe_language"
+  },
+  "mr": {
+    "639-1": "mr",
+    "639-2": "mar",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Marathi (Marāṭhī)",
+    "nativeName": "मराठी",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Marathi_language"
+  },
+  "bn": {
+    "639-1": "bn",
+    "639-2": "ben",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Bengali, Bangla",
+    "nativeName": "বাংলা",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bengali_language"
+  },
+  "ff": {
+    "639-1": "ff",
+    "639-2": "ful",
+    "colors": ["#008850", "#FBD210", "#E80929"],
+    "family": "Niger–Congo",
+    "name": "Fula, Fulah, Pulaar, Pular",
+    "nativeName": "Fulfulde, Pulaar, Pular",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Fula_language"
+  },
+  "ki": {
+    "639-1": "ki",
+    "639-2": "kik",
+    "colors": ["#000000", "#BC1900", "#006600"],
+    "family": "Niger–Congo",
+    "name": "Kikuyu, Gikuyu",
+    "nativeName": "Gĩkũyũ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Gikuyu_language"
+  },
+  "co": {
+    "639-1": "co",
+    "639-2": "cos",
+    "colors": ["#002153", "#FFFFFF", "#CF0822"],
+    "family": "Indo-European",
+    "name": "Corsican",
+    "nativeName": "corsu, lingua corsa",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Corsican_language"
+  },
+  "ss": {
+    "639-1": "ss",
+    "639-2": "ssw",
+    "colors": ["#E1392D", "#007847", "#01168A"],
+    "family": "Niger–Congo",
+    "name": "Swati",
+    "nativeName": "SiSwati",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Swati_language"
+  },
+  "ja": {
+    "639-1": "ja",
+    "639-2": "jpn",
+    "colors": ["#FFFFFF", "#BD1A28"],
+    "family": "Japonic",
+    "name": "Japanese",
+    "nativeName": "日本語 (にほんご)",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Japanese_language"
+  },
+  "sv": {
+    "639-1": "sv",
+    "639-2": "swe",
+    "colors": ["#FFCD00", "#004B87", "#004B87"],
+    "family": "Indo-European",
+    "name": "Swedish",
+    "nativeName": "svenska",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Swedish_language"
+  },
+  "hz": {
+    "639-1": "hz",
+    "639-2": "her",
+    "colors": ["#003281", "#D30831", "#009641"],
+    "family": "Niger–Congo",
+    "name": "Herero",
+    "nativeName": "Otjiherero",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Herero_language"
+  },
+  "af": {
+    "639-1": "af",
+    "639-2": "afr",
+    "colors": ["#000000", "#FFB915", "#007846"],
+    "family": "Indo-European",
+    "name": "Afrikaans",
+    "nativeName": "Afrikaans",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Afrikaans_language"
+  },
+  "gl": {
+    "639-1": "gl",
+    "639-2": "glg",
+    "colors": ["#AE0E12", "#FABE01", "#AE0E12"],
+    "family": "Indo-European",
+    "name": "Galician",
+    "nativeName": "galego",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Galician_language"
+  },
+  "el": {
+    "639-1": "el",
+    "639-2": "ell",
+    "639-2/B": "gre",
+    "colors": ["#FFFFFF", "#0C5EAE"],
+    "family": "Indo-European",
+    "name": "Greek (modern)",
+    "nativeName": "ελληνικά",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Greek_language"
+  },
+  "tn": {
+    "639-1": "tn",
+    "639-2": "tsn",
+    "colors": ["#6DAAD3", "#FFFFFF", "#000000"],
+    "family": "Niger–Congo",
+    "name": "Tswana",
+    "nativeName": "Setswana",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tswana_language"
+  },
+  "nn": {
+    "639-1": "nn",
+    "639-2": "nno",
+    "colors": ["#BB1A2B", "#FFFFFF", "#001B5B"],
+    "family": "Indo-European",
+    "name": "Norwegian Nynorsk",
+    "nativeName": "Norsk nynorsk",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Nynorsk"
+  },
+  "ps": {
+    "639-1": "ps",
+    "639-2": "pus",
+    "colors": ["#FFFFFF", "#000000"],
+    "family": "Indo-European",
+    "name": "Pashto, Pushto",
+    "nativeName": "پښتو",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Pashto_language"
+  },
+  "bo": {
+    "639-1": "bo",
+    "639-2": "bod",
+    "639-2/B": "tib",
+    "colors": ["#EE1420", "#FFFF00"],
+    "family": "Sino-Tibetan",
+    "name": "Tibetan Standard, Tibetan, Central",
+    "nativeName": "བོད་ཡིག",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Standard_Tibetan"
+  },
+  "zu": {
+    "639-1": "zu",
+    "639-2": "zul",
+    "colors": ["#E1392D", "#007847", "#01168A"],
+    "family": "Niger–Congo",
+    "name": "Zulu",
+    "nativeName": "isiZulu",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Zulu_language"
+  },
+  "cu": {
+    "639-1": "cu",
+    "639-2": "chu",
+    "colors": ["#FFFFFF", "#0A4EA2", "#EE1B24"],
+    "family": "Indo-European",
+    "name": "Old Church Slavonic, Church Slavonic, Old Bulgarian",
+    "nativeName": "ѩзыкъ словѣньскъ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Old_Church_Slavonic"
+  },
+  "et": {
+    "639-1": "et",
+    "639-2": "est",
+    "colors": ["#0072CD", "#000000", "#FFFFFF"],
+    "family": "Uralic",
+    "name": "Estonian",
+    "nativeName": "eesti, eesti keel",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Estonian_language"
+  },
+  "rn": {
+    "639-1": "rn",
+    "639-2": "run",
+    "colors": ["#C91C2A", "#FFFFFF", "#41B224"],
+    "family": "Niger–Congo",
+    "name": "Kirundi",
+    "nativeName": "Ikirundi",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kirundi"
+  },
+  "dv": {
+    "639-1": "dv",
+    "639-2": "div",
+    "colors": ["#D30831", "#027F36", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Divehi, Dhivehi, Maldivian",
+    "nativeName": "ދިވެހި",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Dhivehi_language"
+  },
+  "ve": {
+    "639-1": "ve",
+    "639-2": "ven",
+    "colors": ["#E1392D", "#007847", "#01168A"],
+    "family": "Niger–Congo",
+    "name": "Venda",
+    "nativeName": "Tshivenḓa",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Venda_language"
+  },
+  "kw": {
+    "639-1": "kw",
+    "639-2": "cor",
+    "colors": ["#000000", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Cornish",
+    "nativeName": "Kernewek",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Cornish_language"
+  },
+  "rm": {
+    "639-1": "rm",
+    "639-2": "roh",
+    "colors": ["#FF2600", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Romansh",
+    "nativeName": "rumantsch grischun",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Romansh_language"
+  },
+  "hi": {
+    "639-1": "hi",
+    "639-2": "hin",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Hindi",
+    "nativeName": "हिन्दी, हिंदी",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Hindi"
+  },
+  "ty": {
+    "639-1": "ty",
+    "639-2": "tah",
+    "colors": ["#CF1D21", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Tahitian",
+    "nativeName": "Reo Tahiti",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Tahitian_language"
+  },
+  "gd": {
+    "639-1": "gd",
+    "639-2": "gla",
+    "colors": ["#005DB9", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Scottish Gaelic, Gaelic",
+    "nativeName": "Gàidhlig",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Scottish_Gaelic_language"
+  },
+  "io": {
+    "639-1": "io",
+    "639-2": "ido",
+    "colors": ["#127EC9", "#FFFFFF"],
+    "family": "Constructed",
+    "name": "Ido",
+    "nativeName": "Ido",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Ido_(language)"
+  },
+  "th": {
+    "639-1": "th",
+    "639-2": "tha",
+    "colors": ["#A6162D", "#FFFFFF", "#2A2549"],
+    "family": "Tai–Kadai",
+    "name": "Thai",
+    "nativeName": "ไทย",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Thai_language"
+  },
+  "ie": {
+    "639-1": "ie",
+    "639-2": "ile",
+    "colors": ["#FFFB01", "#000000"],
+    "family": "Constructed",
+    "name": "Interlingue",
+    "nativeName": "Originally called Occidental; then Interlingue after WWII",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Interlingue_language"
+  },
+  "dz": {
+    "639-1": "dz",
+    "639-2": "dzo",
+    "colors": ["#FED51F", "#FFFFFF", "#FF4E12"],
+    "family": "Sino-Tibetan",
+    "name": "Dzongkha",
+    "nativeName": "རྫོང་ཁ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Dzongkha_language"
+  },
+  "la": {
+    "639-1": "la",
+    "639-2": "lat",
+    "colors": ["#FFE100", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Latin",
+    "nativeName": "latine, lingua latina",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Latin"
+  },
+  "os": {
+    "639-1": "os",
+    "639-2": "oss",
+    "colors": ["#FFFFFF", "#0036A7", "#D62718"],
+    "family": "Indo-European",
+    "name": "Ossetian, Ossetic",
+    "nativeName": "ирон æвзаг",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Ossetic_language"
+  },
+  "oj": {
+    "639-1": "oj",
+    "639-2": "oji",
+    "colors": ["#D62718", "#FFFFFF", "#D62718"],
+    "family": "Algonquian",
+    "name": "Ojibwe, Ojibwa",
+    "nativeName": "ᐊᓂᔑᓈᐯᒧᐎᓐ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Ojibwe_language"
+  },
+  "sk": {
+    "639-1": "sk",
+    "639-2": "slk",
+    "639-2/B": "slo",
+    "colors": ["#FFFFFF", "#0C4EA2", "#EE2325"],
+    "family": "Indo-European",
+    "name": "Slovak",
+    "nativeName": "slovenčina, slovenský jazyk",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Slovak_language"
+  },
+  "sw": {
+    "639-1": "sw",
+    "639-2": "swa",
+    "colors": ["#17B737", "#000000", "#00A4DE"],
+    "family": "Niger–Congo",
+    "name": "Swahili",
+    "nativeName": "Kiswahili",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Swahili_language"
+  },
+  "wa": {
+    "639-1": "wa",
+    "639-2": "wln",
+    "colors": ["#FCDE02", "#DC1F13"],
+    "family": "Indo-European",
+    "name": "Walloon",
+    "nativeName": "walon",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Walloon_language"
+  },
+  "lo": {
+    "639-1": "lo",
+    "639-2": "lao",
+    "colors": ["#CF1D21", "#002368", "#FFFFFF"],
+    "family": "Tai–Kadai",
+    "name": "Lao",
+    "nativeName": "ພາສາລາວ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Lao_language"
+  },
+  "tr": {
+    "639-1": "tr",
+    "639-2": "tur",
+    "colors": ["#E32118", "#FFFFFF"],
+    "family": "Turkic",
+    "name": "Turkish",
+    "nativeName": "Türkçe",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Turkish_language"
+  },
+  "sg": {
+    "639-1": "sg",
+    "639-2": "sag",
+    "colors": ["#002C83", "#239823", "#D31F32"],
+    "family": "Creole",
+    "name": "Sango",
+    "nativeName": "yângâ tî sängö",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sango_language"
+  },
+  "ak": {
+    "639-1": "ak",
+    "639-2": "aka",
+    "colors": ["#CF0822", "#FBD210", "#006B3C"],
+    "family": "Niger–Congo",
+    "name": "Akan",
+    "nativeName": "Akan",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Akan_language"
+  },
+  "es": {
+    "639-1": "es",
+    "639-2": "spa",
+    "colors": ["#DE3B30", "#F8C433", "#DE3B30"],
+    "family": "Indo-European",
+    "name": "Spanish",
+    "nativeName": "Español",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Spanish_language"
+  },
+  "ky": {
+    "639-1": "ky",
+    "639-2": "kir",
+    "colors": ["#FF2600", "#FFFB01"],
+    "family": "Turkic",
+    "name": "Kyrgyz",
+    "nativeName": "Кыргызча, Кыргыз тили",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Kyrgyz_language"
+  },
+  "wo": {
+    "639-1": "wo",
+    "639-2": "wol",
+    "colors": ["#00863D", "#FDF03F", "#E4211E"],
+    "family": "Niger–Congo",
+    "name": "Wolof",
+    "nativeName": "Wollof",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Wolof_language"
+  },
+  "sa": {
+    "639-1": "sa",
+    "639-2": "san",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "Sanskrit (Saṁskṛta)",
+    "nativeName": "संस्कृतम्",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sanskrit"
+  },
+  "qu": {
+    "639-1": "qu",
+    "639-2": "que",
+    "colors": ["#DA1F1E", "#FFFFFF", "#DA1F1E"],
+    "family": "Quechuan",
+    "name": "Quechua",
+    "nativeName": "Runa Simi, Kichwa",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Quechua_language"
+  },
+  "fi": {
+    "639-1": "fi",
+    "639-2": "fin",
+    "colors": ["#012F6C", "#FFFFFF"],
+    "family": "Uralic",
+    "name": "Finnish",
+    "nativeName": "suomi, suomen kieli",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Finnish_language"
+  },
+  "ka": {
+    "639-1": "ka",
+    "639-2": "kat",
+    "639-2/B": "geo",
+    "colors": ["#FFFFFF", "#FF2600"],
+    "family": "South Caucasian",
+    "name": "Georgian",
+    "nativeName": "ქართული",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Georgian_language"
+  },
+  "ms": {
+    "639-1": "ms",
+    "639-2": "msa",
+    "639-2/B": "may",
+    "colors": ["#FF2600", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Malay",
+    "nativeName": "bahasa Melayu, بهاس ملايو‎",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Malay_language"
+  },
+  "en": {
+    "639-1": "en",
+    "639-2": "eng",
+    "colors": ["#3B3B6D", "#B42F34"],
+    "family": "Indo-European",
+    "name": "English",
+    "nativeName": "English",
+    "wikiUrl": "https://en.wikipedia.org/wiki/English_language"
+  },
+  "ii": {
+    "639-1": "ii",
+    "639-2": "iii",
+    "colors": ["#EF2321", "#FFFB01"],
+    "family": "Sino-Tibetan",
+    "name": "Nuosu",
+    "nativeName": "ꆈꌠ꒿ Nuosuhxop",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Nuosu_language"
+  },
+  "vi": {
+    "639-1": "vi",
+    "639-2": "vie",
+    "colors": ["#DB1F18", "#FFFF00"],
+    "family": "Austroasiatic",
+    "name": "Vietnamese",
+    "nativeName": "Tiếng Việt",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Vietnamese_language"
+  },
+  "am": {
+    "639-1": "am",
+    "639-2": "amh",
+    "colors": ["#088930", "#FCDD0B", "#DA131A"],
+    "family": "Afro-Asiatic",
+    "name": "Amharic",
+    "nativeName": "አማርኛ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Amharic_language"
+  },
+  "bi": {
+    "639-1": "bi",
+    "639-2": "bis",
+    "colors": ["#D30831", "#FDCF09", "#009641"],
+    "family": "Creole",
+    "name": "Bislama",
+    "nativeName": "Bislama",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Bislama_language"
+  },
+  "fr": {
+    "639-1": "fr",
+    "639-2": "fra",
+    "639-2/B": "fre",
+    "colors": ["#00267F", "#E93F33"],
+    "family": "Indo-European",
+    "name": "French",
+    "nativeName": "français, langue française",
+    "wikiUrl": "https://en.wikipedia.org/wiki/French_language"
+  },
+  "de": {
+    "639-1": "de",
+    "639-2": "deu",
+    "639-2/B": "ger",
+    "colors": ["#000000", "#DE3B30", "#FACD33"],
+    "family": "Indo-European",
+    "name": "German",
+    "nativeName": "Deutsch",
+    "wikiUrl": "https://en.wikipedia.org/wiki/German_language"
+  },
+  "li": {
+    "639-1": "li",
+    "639-2": "lim",
+    "colors": ["#FFFFFF", "#29548F", "#F6C603"],
+    "family": "Indo-European",
+    "name": "Limburgish, Limburgan, Limburger",
+    "nativeName": "Limburgs",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Limburgish_language"
+  },
+  "pa": {
+    "639-1": "pa",
+    "639-2": "pan",
+    "colors": ["#F19733", "#46890E"],
+    "family": "Indo-European",
+    "name": "(Eastern) Punjabi",
+    "nativeName": "ਪੰਜਾਬੀ",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Eastern_Punjabi_language"
+  },
+  "lt": {
+    "639-1": "lt",
+    "639-2": "lit",
+    "colors": ["#FDB914", "#016A44", "#C1272C"],
+    "family": "Indo-European",
+    "name": "Lithuanian",
+    "nativeName": "lietuvių kalba",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Lithuanian_language"
+  },
+  "yi": {
+    "639-1": "yi",
+    "639-2": "yid",
+    "colors": ["#FFFFFF", "#0139A6", "#d52a1e"],
+    "family": "Indo-European",
+    "name": "Yiddish",
+    "nativeName": "ייִדיש",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Yiddish_language"
+  },
+  "vo": {
+    "639-1": "vo",
+    "639-2": "vol",
+    "colors": ["#661466", "#FFF560"],
+    "family": "Constructed",
+    "name": "Volapük",
+    "nativeName": "Volapük",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Volap%C3%BCk"
+  },
+  "pl": {
+    "639-1": "pl",
+    "639-2": "pol",
+    "colors": ["#FFFFFF", "#DC143C"],
+    "family": "Indo-European",
+    "name": "Polish",
+    "nativeName": "język polski, polszczyzna",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Polish_language"
+  },
+  "se": {
+    "639-1": "se",
+    "639-2": "sme",
+    "colors": ["#BB1A2B", "#FFFFFF", "#001B5B"],
+    "family": "Uralic",
+    "name": "Northern Sami",
+    "nativeName": "Davvisámegiella",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Northern_Sami"
+  },
+  "na": {
+    "639-1": "na",
+    "639-2": "nau",
+    "colors": ["#002780", "#FFC719", "#FFFFFF"],
+    "family": "Austronesian",
+    "name": "Nauruan",
+    "nativeName": "Dorerin Naoero",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Nauruan_language"
+  },
+  "sd": {
+    "639-1": "sd",
+    "639-2": "snd",
+    "colors": ["#00411D", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Sindhi",
+    "nativeName": "सिन्धी, سنڌي، سندھی‎",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Sindhi_language"
+  },
+  "lv": {
+    "639-1": "lv",
+    "639-2": "lav",
+    "colors": ["#9E303A", "#FFFFFF"],
+    "family": "Indo-European",
+    "name": "Latvian",
+    "nativeName": "latviešu valoda",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Latvian_language"
+  }
+}

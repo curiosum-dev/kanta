@@ -15,6 +15,8 @@ defmodule Kanta.Query do
     quote do
       import Ecto.Query
 
+      alias Kanta.Repo
+
       # Returns the base for resource query with binding.
       #
       # ## Examples
@@ -25,6 +27,43 @@ defmodule Kanta.Query do
       @spec base :: Ecto.Query.t()
       def base do
         from(_ in unquote(opts[:module]), as: unquote(opts[:binding]))
+      end
+
+      def one(query \\ base()) do
+        Repo.get_repo().one(query)
+      end
+
+      def paginate(query, page \\ 1, per_page \\ 15)
+      def paginate(query, nil, nil), do: paginate(query, 1, 15)
+
+      def paginate(query, page, per_page) do
+        %{
+          entries: entries,
+          page_number: page_number,
+          page_size: page_size,
+          total_pages: total_pages,
+          total_entries: total_entries
+        } =
+          Scrivener.paginate(
+            query,
+            %Scrivener.Config{
+              caller: self(),
+              module: Repo.get_repo(),
+              page_number: page || 1,
+              page_size: per_page || 15,
+              options: []
+            }
+          )
+
+        %{
+          entries: entries,
+          metadata: %{
+            page_number: page_number,
+            page_size: page_size,
+            total_pages: total_pages,
+            total_entries: total_entries
+          }
+        }
       end
 
       @doc """
@@ -134,15 +173,80 @@ defmodule Kanta.Query do
             try do
               field_name = maybe_convert_to_atom(field_name)
 
-              if is_list(value) do
-                from(s in q, where: field(s, ^field_name) in ^value)
-              else
-                from(s in q, where: field(s, ^field_name) == ^value)
-              end
+              get_query_operation(q, value, field_name)
             rescue
-              _e -> q
+              _e ->
+                q
             end
         end)
+      end
+
+      defp get_query_operation(query, value, field_name) do
+        query
+        |> maybe_inclusion(value, field_name)
+        |> maybe_greater_than(value, field_name)
+        |> maybe_greater_or_equal_than(value, field_name)
+        |> maybe_lower_than(value, field_name)
+        |> maybe_lower_or_equal_than(value, field_name)
+        |> maybe_equality(value, field_name)
+      end
+
+      defp maybe_inclusion(q, value, field_name) do
+        if is_list(value) do
+          if Enum.all?(value, &String.match?(&1, ~r/(>|>=|<|<=).*/)) do
+            Enum.reduce(value, q, fn value_element, query ->
+              get_query_operation(query, value_element, field_name)
+            end)
+          else
+            from(s in q, where: field(s, ^field_name) in ^value)
+          end
+        else
+          q
+        end
+      end
+
+      defp maybe_greater_than(q, value, field_name) do
+        if is_binary(value) && String.starts_with?(value, ">") do
+          value = String.trim_leading(value, ">")
+          from(s in q, where: field(s, ^field_name) > ^value)
+        else
+          q
+        end
+      end
+
+      defp maybe_greater_or_equal_than(q, value, field_name) do
+        if is_binary(value) && String.starts_with?(value, ">=") do
+          value = String.trim_leading(value, ">=")
+          from(s in q, where: field(s, ^field_name) >= ^value)
+        else
+          q
+        end
+      end
+
+      defp maybe_lower_than(q, value, field_name) do
+        if is_binary(value) && String.starts_with?(value, "<") do
+          value = String.trim_leading(value, "<")
+          from(s in q, where: field(s, ^field_name) < ^value)
+        else
+          q
+        end
+      end
+
+      defp maybe_lower_or_equal_than(q, value, field_name) do
+        if is_binary(value) && String.starts_with?(value, "<=") do
+          value = String.trim_leading(value, "<=")
+          from(s in q, where: field(s, ^field_name) <= ^value)
+        else
+          q
+        end
+      end
+
+      defp maybe_equality(q, value, field_name) do
+        if (is_binary(value) && String.match?(value, ~r/(>|>=|<|<=).*/)) || is_list(value) do
+          q
+        else
+          from(s in q, where: field(s, ^field_name) == ^value)
+        end
       end
 
       defp get_field_name(value, current_query, field_name) when is_binary(field_name) do
@@ -204,6 +308,14 @@ defmodule Kanta.Query do
       @spec order_query(Ecto.Query.t(), keyword()) :: Ecto.Query.t()
       def order_query(query \\ base(), order) do
         order_by(query, [{unquote(opts[:binding]), resource}], ^order)
+      end
+
+      @spec undeleted_query(Ecto.Query.t()) :: Ecto.Query.t()
+      def undeleted_query(query \\ base()) do
+        from(q in unquote(opts[:module]),
+          where: is_nil(q.deleted_at),
+          where: is_nil(q.deleted_by)
+        )
       end
     end
   end
