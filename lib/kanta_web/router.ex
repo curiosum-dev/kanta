@@ -31,6 +31,7 @@ defmodule KantaWeb.Router do
 
               scope "/contexts", Translations do
                 live "/", ContextsLive, :index, route_opts
+                live "/:id", ContextLive, :index, route_opts
               end
 
               scope "/domains", Translations do

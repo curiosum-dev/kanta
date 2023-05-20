@@ -12,7 +12,12 @@ defmodule KantaWeb.Translations.DomainsTable do
   def handle_event("edit_domain", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to: unverified_url(socket, "/kanta/domains/#{id}")
+       to:
+         unverified_path(
+           socket,
+           Kanta.Router,
+           "/kanta/domains/#{id}"
+         )
      )}
   end
 end
