@@ -10,7 +10,7 @@
     <div class="col-span-1 my-1 w-full">
       <div>
         <div class="w-full">
-          <.link navigate={unverified_url(@socket, "/kanta/locales/#{locale.id}/translations")}>
+          <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/locales/#{locale.id}/translations")}>
             <div class="w-full bg-white dark:bg-stone-900 dark:border dark:border-accent-dark transition-all hover:bg-slate-100 overflow-hidden shadow rounded-lg items-center cursor-pointer">
               <div class="flex flex-row justify-start px-4 py-5 sm:p-6 font-medium text-md text-slate-700">
                 <div class="relative w-12 h-12">
