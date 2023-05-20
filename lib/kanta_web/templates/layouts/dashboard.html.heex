@@ -43,19 +43,19 @@
                   </div>
                   <div class="border-b border-slate-50 opacity-50" />
                   <nav class="mt-5 flex-1 px-2 space-y-3">
-                    <%= link to: unverified_url(@conn, "/kanta/dashboard"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/dashboard"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                       <Lucide.inspect class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                       Dashboard
                     <% end %>
-                    <%= link to: unverified_url(@conn, "/kanta/locales"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/locales"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                       <Lucide.languages class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                       Locales
                     <% end %>
-                    <%= link to: unverified_url(@conn, "/kanta/domains"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/domains"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                       <Lucide.album class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                         Domains
                     <% end %>
-                    <%= link to: unverified_url(@conn, "/kanta/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                       <Lucide.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                         Contexts
                     <% end %>
@@ -88,19 +88,19 @@
                 </div>
                 <div class="border-b border-slate-50 opacity-50" />
                 <nav class="mt-5 flex-1 px-2 pb-2 space-y-3">
-                  <%= link to: unverified_url(@conn, "/kanta/dashboard"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                  <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/dashboard"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                     <Lucide.inspect class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                     Dashboard
                   <% end %>
-                  <%= link to: unverified_url(@conn, "/kanta/locales"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                  <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/locales"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                     <Lucide.languages class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                     Locales
                   <% end %>
-                  <%= link to: unverified_url(@conn, "/kanta/domains"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                  <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/domains"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                     <Lucide.album class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                       Domains
                   <% end %>
-                  <%= link to: unverified_url(@conn, "/kanta/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                  <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                     <Lucide.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                       Contexts
                   <% end %>
