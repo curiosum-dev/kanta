@@ -1,4 +1,8 @@
 defmodule KantaWeb.Components.Shared.Select do
+  @moduledoc """
+  Shared select component
+  """
+
   use KantaWeb, :live_component
 
   def update(assigns, socket) do

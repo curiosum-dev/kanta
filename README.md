@@ -78,7 +78,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.1.0"},
+    {:kanta, "~> 0.1.1"},
     {:gettext, git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext"}
   ]
 end
@@ -95,7 +95,7 @@ Add to `config/config.exs` file:
 config :kanta,
   endpoint: KantaTestWeb.Endpoint, # Your app Endpoint module
   repo: KantaTest.Repo, # Your app Repo module
-  project_root: File.cwd!(), # Project root directory
+  otp_name: :kanta_text, # Name of your OTP app
   plugins: []
 ```
 

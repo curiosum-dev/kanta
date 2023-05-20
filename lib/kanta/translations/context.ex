@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Context do
+  @moduledoc """
+  Gettext Context DB model
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -10,6 +14,8 @@ defmodule Kanta.Translations.Context do
     field :color, :string
 
     has_many :messages, Message
+
+    timestamps()
   end
 
   def changeset(struct, params) do

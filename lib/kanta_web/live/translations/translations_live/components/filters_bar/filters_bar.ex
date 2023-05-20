@@ -1,4 +1,8 @@
 defmodule KantaWeb.Translations.Components.FiltersBar do
+  @moduledoc """
+  Messages filters bar component
+  """
+
   use KantaWeb, :live_component
 
   alias Kanta.Translations

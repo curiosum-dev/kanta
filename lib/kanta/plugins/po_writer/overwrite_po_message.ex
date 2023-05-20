@@ -1,9 +1,12 @@
 defmodule Kanta.Plugins.POWriter.OverwritePoMessage do
+  @moduledoc """
+  POWriter plugin main module for overwriting .po files
+  """
+
   alias Kanta.Translations
-  @default_priv "priv/gettext"
 
   def singular(translation, locale, message) do
-    priv = Application.get_env(:kanta, :priv, @default_priv)
+    priv = :code.priv_dir(Kanta.config().otp_name)
 
     {:ok, domain} = Translations.get_domain(filter: [id: message.domain_id])
 
@@ -26,7 +29,8 @@ defmodule Kanta.Plugins.POWriter.OverwritePoMessage do
   end
 
   def plural(translation, nplural_index, locale, message) do
-    priv = Application.get_env(:kanta, :priv, @default_priv)
+    priv = :code.priv_dir(Kanta.config().otp_name)
+
     {:ok, domain} = Translations.get_domain(filter: [id: message.domain_id])
     original_file_path = Path.join(priv, "#{locale.iso639_code}/LC_MESSAGES/#{domain.name}.po")
     copy_file_path = "#{original_file_path}.copy"
@@ -37,16 +41,8 @@ defmodule Kanta.Plugins.POWriter.OverwritePoMessage do
       messages
       |> Enum.map(fn expo_message ->
         case expo_message do
-          %Expo.Message.Plural{msgid_plural: plural_ids} = po_message ->
-            if message.msgid in plural_ids do
-              Map.replace!(
-                po_message,
-                :msgstr,
-                Map.replace!(po_message.msgstr, nplural_index, [translation])
-              )
-            else
-              po_message
-            end
+          %Expo.Message.Plural{} = po_message ->
+            maybe_replace_plural_form(message, nplural_index, translation, po_message)
 
           po_message ->
             po_message
@@ -58,5 +54,17 @@ defmodule Kanta.Plugins.POWriter.OverwritePoMessage do
     File.write!(copy_file_path, Expo.PO.compose(po_file))
     File.rm(original_file_path)
     File.rename(copy_file_path, original_file_path)
+  end
+
+  defp maybe_replace_plural_form(message, nplural_index, translation, po_message) do
+    if message.msgid in po_message.plural_ids do
+      Map.replace!(
+        po_message,
+        :msgstr,
+        Map.replace!(po_message.msgstr, nplural_index, [translation])
+      )
+    else
+      po_message
+    end
   end
 end

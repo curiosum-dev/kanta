@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.SingularTranslations do
+  @moduledoc """
+  Singular translations Kanta subcontext
+  """
+
   alias Kanta.Translations.SingularTranslations.Finders.GetSingularTranslation
 
   alias Kanta.Cache

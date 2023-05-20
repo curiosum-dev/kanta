@@ -1,6 +1,9 @@
 defmodule Kanta.POFiles.MessagesExtractor do
-  @default_priv "priv/gettext"
-  @po_wildcard "*/LC_MESSAGES/*.po"
+  @moduledoc """
+  Handler responsible for extracting data from .po files
+  """
+
+  @po_wildcard "**/*.po"
 
   alias Expo.{Messages, PO}
 
@@ -8,12 +11,11 @@ defmodule Kanta.POFiles.MessagesExtractor do
 
   def call do
     opts = [
-      project_root: Kanta.config().project_root,
-      priv: @default_priv,
+      otp_name: Kanta.config().otp_name,
       allowed_locales: Application.get_env(:kanta, :allowed_locales)
     ]
 
-    priv = Path.join(opts[:project_root], opts[:priv])
+    priv = :code.priv_dir(opts[:otp_name])
     all_po_files = po_files_in_priv(priv)
     known_po_files = known_po_files(all_po_files, opts)
 

@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Domains.Finders.ListDomains do
+  @moduledoc """
+  Query module aka Finder responsible for listing gettext domains
+  """
+
   use Kanta.Query,
     module: Kanta.Translations.Domain,
     binding: :domain

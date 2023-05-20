@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Messages do
+  @moduledoc """
+  Kanta Messages subcontext
+  """
+
   alias Kanta.Repo
 
   alias Kanta.Translations.Message

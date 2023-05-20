@@ -1,4 +1,8 @@
 defmodule KantaWeb.Components.Shared.Pagination do
+  @moduledoc """
+  Shared pagination component
+  """
+
   use Phoenix.Component
 
   def render(assigns) do

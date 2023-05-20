@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Locale.Services.CreateLocaleFromIsoCode do
+  @moduledoc """
+  Service for mapping locale iso639 code to the Kanta locale
+  """
+
   alias Kanta.Repo
 
   alias Kanta.Translations.Locale

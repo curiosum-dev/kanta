@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Locale do
+  @moduledoc """
+  Locale DB model
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Kanta.Translations.SingularTranslation
@@ -16,6 +20,8 @@ defmodule Kanta.Translations.Locale do
     field :colors, {:array, :string}
 
     has_many :singular_translations, SingularTranslation
+
+    timestamps()
   end
 
   def changeset(struct, params) do

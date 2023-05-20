@@ -1,7 +1,13 @@
 defmodule KantaWeb.Components.Shared.SearchInput do
+  @moduledoc """
+  Simple search input component
+  """
+
   use Phoenix.Component
 
   attr :label, :string, required: true
+  attr :name, :any
+  attr :value, :any
   attr :rest, :global
 
   def render(assigns) do

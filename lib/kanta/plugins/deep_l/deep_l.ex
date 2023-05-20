@@ -1,4 +1,8 @@
 defmodule Kanta.Plugins.DeepL do
+  @moduledoc """
+  Kanta DeepL integration plugin
+  """
+
   use GenServer
 
   alias Kanta.Plugins.DeepL.Adapter

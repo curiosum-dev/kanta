@@ -1,4 +1,8 @@
 defmodule Kanta.PoFiles.Services.ExtractMessage do
+  @moduledoc """
+  Service responsible for extracting gettext messages from .po files
+  """
+
   alias Kanta.Repo
 
   alias Kanta.Translations

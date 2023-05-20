@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Domains do
+  @moduledoc """
+  Gettext domains Kanta subcontext
+  """
+
   alias Kanta.Repo
 
   alias Kanta.Translations.Domain

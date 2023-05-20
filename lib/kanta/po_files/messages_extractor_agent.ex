@@ -1,4 +1,8 @@
 defmodule Kanta.POFiles.MessagesExtractorAgent do
+  @moduledoc """
+  GenServer responsible for extracting messages and translations from .po files
+  """
+
   use GenServer
   alias Kanta.POFiles.MessagesExtractor
 
