@@ -14,7 +14,12 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
   def handle_event("edit_message", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to: unverified_url(socket, "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}")
+       to:
+         unverified_path(
+           socket,
+           Kanta.Router,
+           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}"
+         )
      )}
   end
 

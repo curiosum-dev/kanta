@@ -12,7 +12,12 @@ defmodule KantaWeb.Translations.ContextsTable do
   def handle_event("edit_context", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to: unverified_url(socket, "/kanta/contexts/#{id}")
+       to:
+         unverified_path(
+           socket,
+           Kanta.Router,
+           "/kanta/contexts/#{id}"
+         )
      )}
   end
 end
