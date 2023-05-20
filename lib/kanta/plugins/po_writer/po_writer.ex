@@ -1,4 +1,8 @@
 defmodule Kanta.Plugins.POWriter do
+  @moduledoc """
+  Kanta .po files overwriting plugin
+  """
+
   use GenServer
 
   def start_link(opts) do

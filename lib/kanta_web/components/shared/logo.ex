@@ -1,4 +1,8 @@
 defmodule KantaWeb.Components.Shared.Logo do
+  @moduledoc """
+  Kanta Logo component
+  """
+
   use Phoenix.Component
 
   def render(assigns) do

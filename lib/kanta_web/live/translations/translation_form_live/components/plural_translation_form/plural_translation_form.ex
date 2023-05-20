@@ -1,4 +1,8 @@
 defmodule KantaWeb.Translations.PluralTranslationForm do
+  @moduledoc """
+  Plural translation form component
+  """
+
   use KantaWeb, :live_component
 
   alias Kanta.Translations
@@ -55,7 +59,6 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
         form["nplural_index"] == String.to_integer(nplural_index)
       end)
 
-    # TODO: Add source language select
     case Adapter.request_translation(
            "EN",
            String.upcase(locale.iso639_code),
@@ -123,6 +126,6 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply,
-     push_redirect(socket, to: path(socket, ~p"/kanta/locales/#{locale.id}/translations"))}
+     push_redirect(socket, to: unverified_url(socket, "/kanta/locales/#{locale.id}/translations"))}
   end
 end

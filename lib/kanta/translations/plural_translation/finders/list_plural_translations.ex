@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.PluralTranslations.Finders.ListPluralTranslations do
+  @moduledoc """
+  Query module aka Finder responsible for listing plural translations
+  """
+
   use Kanta.Query,
     module: Kanta.Translations.PluralTranslation,
     binding: :plural_translation

@@ -1,4 +1,8 @@
 defmodule Kanta.Plugins.DeepL.Adapter do
+  @moduledoc """
+  DeepL API adapter
+  """
+
   use Tesla
 
   plug Tesla.Middleware.BaseUrl, "https://api-free.deepl.com"

@@ -10,11 +10,12 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   def mount(%{"locale_id" => locale_id}, _session, socket) do
     socket =
-      with {:ok, locale} <- Translations.get_locale(filter: [id: locale_id]) do
-        socket
-        |> assign(:locale, locale)
-        |> assign(:filters, %{})
-      else
+      case Translations.get_locale(filter: [id: locale_id]) do
+        {:ok, locale} ->
+          socket
+          |> assign(:locale, locale)
+          |> assign(:filters, %{})
+
         _ ->
           socket
       end
@@ -60,6 +61,33 @@ defmodule KantaWeb.Translations.TranslationsLive do
      )}
   end
 
+  def handle_event("navigate", %{"to" => to}, socket) do
+    {:noreply, push_redirect(socket, to: "/kanta" <> to)}
+  end
+
+  def handle_event("page_changed", %{"index" => page_number}, socket) do
+    socket =
+      socket
+      |> assign(
+        :filters,
+        Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
+      )
+
+    query =
+      UriQuery.params(
+        format_filters(
+          Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
+        )
+      )
+
+    {:noreply,
+     push_patch(socket,
+       to:
+         "/kanta/locales/#{socket.assigns.locale.id}/translations?" <>
+           URI.encode_query(query)
+     )}
+  end
+
   defp format_filters(filters) do
     filters
     |> Map.take(@available_filters)
@@ -87,32 +115,5 @@ defmodule KantaWeb.Translations.TranslationsLive do
           )
       end
     end)
-  end
-
-  def handle_event("navigate", %{"to" => to}, socket) do
-    {:noreply, push_redirect(socket, to: "/kanta" <> to)}
-  end
-
-  def handle_event("page_changed", %{"index" => page_number}, socket) do
-    socket =
-      socket
-      |> assign(
-        :filters,
-        Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
-      )
-
-    query =
-      UriQuery.params(
-        format_filters(
-          Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
-        )
-      )
-
-    {:noreply,
-     push_patch(socket,
-       to:
-         "/kanta/locales/#{socket.assigns.locale.id}/translations?" <>
-           URI.encode_query(query)
-     )}
   end
 end

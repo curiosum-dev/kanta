@@ -1,4 +1,8 @@
 defmodule Kanta.Cache do
+  @moduledoc """
+  Kanta Cache for minimalizing calls to DB
+  """
+
   use Nebulex.Cache,
     otp_app: :kanta,
     adapter: Nebulex.Adapters.Partitioned,

@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Locale.Finders.GetLocaleTranslationProgress do
+  @moduledoc """
+  Query module aka Finder responsible for getting translation progress for given locale
+  """
+
   import Ecto.Query, only: [from: 2]
 
   alias Kanta.Translations.{PluralTranslation, SingularTranslation}

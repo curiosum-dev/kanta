@@ -1,4 +1,8 @@
 defmodule Kanta.Validator do
+  @moduledoc """
+  Kanta configuration validator
+  """
+
   def validate(parent_key \\ nil, opts, validator)
 
   def validate(_parent_key, opts, validator) when is_list(opts) and is_function(validator, 1) do

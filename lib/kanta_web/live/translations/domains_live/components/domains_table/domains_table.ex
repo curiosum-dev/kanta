@@ -1,4 +1,8 @@
 defmodule KantaWeb.Translations.DomainsTable do
+  @moduledoc """
+  Gettext domains table component
+  """
+
   use KantaWeb, :live_component
 
   def update(socket, assigns) do
@@ -8,7 +12,7 @@ defmodule KantaWeb.Translations.DomainsTable do
   def handle_event("edit_domain", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to: path(socket, ~p"/kanta/domains/#{id}")
+       to: unverified_url(socket, "/kanta/domains/#{id}")
      )}
   end
 end

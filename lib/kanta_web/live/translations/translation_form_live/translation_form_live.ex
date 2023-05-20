@@ -71,7 +71,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
              message_id: message.id
            ]
          ) do
-      %{entries: entries} = page when length(entries) > 0 ->
+      %{entries: entries} when entries != [] ->
         {:ok, entries}
 
       _ ->

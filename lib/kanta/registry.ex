@@ -1,4 +1,8 @@
 defmodule Kanta.Registry do
+  @moduledoc """
+  Kanta Registry
+  """
+
   def child_spec(_arg) do
     [keys: :unique, name: __MODULE__]
     |> Registry.child_spec()
@@ -59,17 +63,9 @@ defmodule Kanta.Registry do
 
       Kanta.Registry.whereis(Kanta)
 
-  Get a supervised module's pid:
-
-      Kanta.Registry.whereis(Kanta, Kanta.Notifier)
-
   Get the pid for a plugin:
 
       Kanta.Registry.whereis(Kanta, {:plugin, MyApp.Kanta.Plugin})
-
-  Get the pid for a queue's producer:
-
-      Kanta.Registry.whereis(Kanta, {:producer, "default"})
   """
   def whereis(kanta_name, role \\ nil) do
     kanta_name

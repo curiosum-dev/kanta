@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Contexts.Finders.GetContext do
+  @moduledoc """
+  Query module aka Finder responsible for finding gettext context
+  """
+
   use Kanta.Query,
     module: Kanta.Translations.Context,
     binding: :context

@@ -1,4 +1,8 @@
 defmodule Kanta.Migrations.Postgresql.V01 do
+  @moduledoc """
+  Kanta V1 Migrations
+  """
+
   use Ecto.Migration
 
   @kanta_locales "kanta_locales"

@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Message do
+  @moduledoc """
+  Gettext message DB model
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -17,6 +21,8 @@ defmodule Kanta.Translations.Message do
 
     has_many :singular_translations, SingularTranslation
     has_many :plural_translations, PluralTranslation
+
+    timestamps()
   end
 
   def changeset(struct, params) do

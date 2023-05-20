@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.PluralTranslations do
+  @moduledoc """
+  Plural translations Kanta subcontext
+  """
+
   alias Kanta.Cache
   alias Kanta.Repo
   alias Kanta.Translations.PluralTranslation

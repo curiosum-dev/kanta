@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.SingularTranslation do
+  @moduledoc """
+  Singular translation DB model
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Kanta.Translations.{Locale, Message}
@@ -12,6 +16,8 @@ defmodule Kanta.Translations.SingularTranslation do
 
     belongs_to :locale, Locale
     belongs_to :message, Message
+
+    timestamps()
   end
 
   def changeset(struct, attrs \\ %{}) do

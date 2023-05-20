@@ -1,4 +1,8 @@
 defmodule Kanta.PoFiles.Services.ExtractPluralTranslation do
+  @moduledoc """
+  Service for extracting plural messages and translations from .po files
+  """
+
   alias Kanta.Repo
   alias Kanta.Translations
   alias Kanta.PoFiles.Services.ExtractMessage
@@ -9,9 +13,8 @@ defmodule Kanta.PoFiles.Services.ExtractPluralTranslation do
     Repo.get_repo().transaction(fn ->
       with attrs <- Map.put(attrs, :message_type, :plural),
            {:ok, message} <- ExtractMessage.call(attrs),
-           {:ok, locale} <- get_or_create_locale(attrs[:locale_name]),
-           {:ok, translations} <- create_or_update_plural_translations(attrs, message, locale) do
-        {:ok, translations}
+           {:ok, locale} <- get_or_create_locale(attrs[:locale_name]) do
+        create_or_update_plural_translations(attrs, message, locale)
       end
     end)
   end

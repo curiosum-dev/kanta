@@ -6,8 +6,11 @@ defmodule Kanta.MixProject do
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
       package: package(),
-      version: "0.1.0",
-      elixir: "~> 1.13",
+      version: "0.1.1",
+      elixir: "~> 1.14",
+      elixirc_options: [
+        warnings_as_errors: true
+      ],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -25,26 +28,26 @@ defmodule Kanta.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:gettext,
        git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext", only: [:dev, :test]},
-      {:expo, "~> 0.3.0"},
-      {:ecto, "~> 3.9"},
-      {:ecto_sql, "~> 3.9"},
+      {:expo, "~> 0.3"},
+      {:ecto, "~> 3.10"},
+      {:ecto_sql, "~> 3.10"},
       {:phoenix, "~> 1.7.0"},
-      {:jason, "~> 1.0"},
       {:phoenix_live_view, "~> 0.18"},
       {:phoenix_view, "~> 2.0"},
-      {:esbuild, "~> 0.5", only: :dev},
-      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:lucide_live_view, "~> 0.1.0"},
-      {:nebulex, "~> 2.4"},
+      {:jason, "~> 1.0"},
+      {:nebulex, "~> 2.5"},
       {:shards, "~> 1.0"},
       {:tesla, "~> 1.4"},
-      {:finch, "~> 0.15"},
+      {:finch, "~> 0.16"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 2.0"},
       {:uri_query, "~> 0.1.1"},
+      {:esbuild, "~> 0.7", only: :dev},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
     ]
   end

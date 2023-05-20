@@ -1,14 +1,17 @@
 defmodule Kanta.Config do
+  @moduledoc """
+  Kanta configuration helper
+  """
   @type t :: %__MODULE__{
           name: Kanta.name(),
-          project_root: false | String.t(),
+          otp_name: atom(),
           repo: module(),
           endpoint: module(),
           plugins: false | [module() | {module() | Keyword.t()}]
         }
 
   defstruct name: Kanta,
-            project_root: nil,
+            otp_name: nil,
             repo: nil,
             endpoint: nil,
             plugins: []
@@ -61,11 +64,11 @@ defmodule Kanta.Config do
     end
   end
 
-  defp validate_opt(_opts, {:project_root, project_root}) do
-    unless is_nil(project_root) do
+  defp validate_opt(_opts, {:otp_name, otp_name}) do
+    if is_atom(otp_name) do
       :ok
     else
-      {:error, "expected project_root to be set"}
+      {:error, "expected otp_name to be set"}
     end
   end
 

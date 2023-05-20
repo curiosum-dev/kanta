@@ -1,4 +1,8 @@
 defmodule Kanta.Translations do
+  @moduledoc """
+  Main Kanta Translations context
+  """
+
   alias Kanta.Translations.{
     Contexts,
     Domains,

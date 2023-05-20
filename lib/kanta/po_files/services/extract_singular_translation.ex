@@ -1,4 +1,8 @@
 defmodule Kanta.PoFiles.Services.ExtractSingularTranslation do
+  @moduledoc """
+  Service for extracting singular messages and translations from .po files
+  """
+
   alias Kanta.Repo
   alias Kanta.Translations
   alias Kanta.PoFiles.Services.ExtractMessage

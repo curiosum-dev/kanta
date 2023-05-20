@@ -1,4 +1,8 @@
 defmodule KantaWeb.Translations.SingularTranslationForm do
+  @moduledoc """
+  Singular translation form component
+  """
+
   use KantaWeb, :live_component
 
   alias Kanta.Translations
@@ -31,7 +35,6 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     locale = socket.assigns.locale
     message = socket.assigns.message
 
-    # TODO: Add source language select
     case Adapter.request_translation("EN", String.upcase(locale.iso639_code), message.msgid) do
       {:ok, translations} ->
         %{"text" => translated_text} = List.first(translations)
@@ -54,6 +57,6 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     Translations.update_singular_translation(translation, %{"translated_text" => translated})
 
     {:noreply,
-     push_redirect(socket, to: path(socket, ~p"/kanta/locales/#{locale.id}/translations"))}
+     push_redirect(socket, to: unverified_url(socket, "/kanta/locales/#{locale.id}/translations"))}
   end
 end
