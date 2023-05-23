@@ -47,7 +47,7 @@
   </div>
   <.form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="bg-white dark:bg-stone-900 shadow rounded-md mt-4 px-4 py-4 space-y-4">
     <div class="grid grid-cols-2 gap-4 lg:gap-8">
-      <div class="col-span-2 lg:col-span-1 space-y-4">
+      <div class="col-span-2 space-y-4">
         <div>
           <label for="original_text" class="block text-sm font-bold text-slate-700 dark:text-content-light">Message ID</label>
           <div class="my-4 font-bold text-md text-primary-dark dark:text-accent-dark">
@@ -67,19 +67,6 @@
           </div>
         </div>
       </div>
-      <div class=" bg-slate-50 dark:bg-base-dark rounded-lg shadow-md px-4 py-4 col-span-2 lg:col-span-1 space-y-2">
-        <div class="text-slate-600 dark:text-content-light font-semibold text-lg mb-4">Extensions</div>
-        <%= if Kanta.plugin_enabled?(Kanta.Plugins.POWriter) do %>
-          <button phx-click="overwrite_po" phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
-            Overwrite PO file text
-          </button>
-        <% end %>
-        <%= if Kanta.plugin_enabled?(Kanta.Plugins.DeepL) do %>
-          <button phx-click="translate_via_deep_l" phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
-            Translate via DeepL
-          </button>
-        <% end %>
-      </div>
       <div class="col-span-2">
         <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
           Save
@@ -87,4 +74,12 @@
       </div>
     </div>
   </.form>
+  <%= if length(Kanta.config().plugins) > 0 do %>
+    <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
+    <div class=" mt-4 bg-white dark:bg-stone-900 rounded-lg shadow-md px-4 py-4 col-span-2 lg:col-span-1 space-y-2">
+      <%= for {plugin_name, _} <- Kanta.config().plugins do %>
+        <%= live_component(Module.concat(plugin_name, FormComponent), id: plugin_name, message: @message, locale: @locale, translation: @translation) %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

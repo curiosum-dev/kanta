@@ -6,7 +6,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
   use KantaWeb, :live_component
 
   alias Kanta.Translations
-  alias Kanta.Plugins.DeepL.Adapter
+  alias Kanta.DeepL.Adapter
 
   def update(assigns, socket) do
     forms =

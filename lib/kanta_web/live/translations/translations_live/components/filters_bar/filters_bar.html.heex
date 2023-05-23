@@ -3,9 +3,9 @@
     <div class="col-span-5 sm:col-span-5 xl:col-span-2">
       <SearchInput.render 
         type="text" 
-        id={form[:search].id} 
-        name={form[:search].name} 
-        value={form[:search].value}
+        id={form["search"].id} 
+        name={form["search"].name} 
+        value={form["search"].value}
         phx-debounce={800}
         label="Search" 
       />
@@ -16,7 +16,7 @@
         module={Select} 
         id={"domain_id"} 
         label="Domain" 
-        field={form[:domain_id]} 
+        field={form["domain_id"]} 
         options={[%{color: "#c3c3c3", label: "All", value: nil}] ++ Enum.map(@domains, & %{color: &1.color, label: &1.name, value: &1.id})} 
       />
     </div>
@@ -26,7 +26,7 @@
         module={Select} 
         id={"context_id"} 
         label="Context" 
-        field={form[:context_id]} 
+        field={form["context_id"]} 
         options={[%{color: "#c3c3c3", label: "All", value: nil}] ++ Enum.map(@contexts, & %{color: &1.color, label: &1.name, value: &1.id})} 
       />
     </div>
@@ -36,7 +36,7 @@
         module={Toggle} 
         id={"not_translated"} 
         label="Not translated" 
-        field={form[:not_translated]}
+        field={form["not_translated"]}
       />
     </div>
   </.form>

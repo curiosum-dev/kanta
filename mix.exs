@@ -28,27 +28,24 @@ defmodule Kanta.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gettext,
-       git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext", only: [:dev, :test]},
       {:expo, "~> 0.3"},
       {:ecto, "~> 3.10"},
       {:ecto_sql, "~> 3.10"},
       {:phoenix, "~> 1.7.0"},
       {:phoenix_live_view, "~> 0.18"},
-      {:phoenix_view, "~> 2.0"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
-      {:lucide_live_view, "~> 0.1.0"},
       {:jason, "~> 1.0"},
       {:nebulex, "~> 2.5"},
       {:shards, "~> 1.0"},
-      {:tesla, "~> 1.4"},
-      {:finch, "~> 0.16"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 2.0"},
       {:uri_query, "~> 0.1.1"},
+      # DEV
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false}
+      {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
+      {:gettext,
+       git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext", only: [:dev, :test]}
     ]
   end
 
