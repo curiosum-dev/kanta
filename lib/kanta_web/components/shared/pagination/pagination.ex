@@ -5,6 +5,8 @@ defmodule KantaWeb.Components.Shared.Pagination do
 
   use Phoenix.Component
 
+  alias KantaWeb.Components.Icons
+
   def render(assigns) do
     ~H"""
       <nav class="border-t border-gray-200 px-4 mb-4 flex items-center justify-between sm:px-0">
@@ -17,7 +19,7 @@ defmodule KantaWeb.Components.Shared.Pagination do
               "border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-gray-500 dark:text-content-light",
             ]}
           >
-            <Lucide.arrow_left class="mr-3 h-5 w-5" />
+            <Icons.arrow_left class="mr-3 h-5 w-5" />
             Previous
           </a>
         </div>
@@ -42,7 +44,7 @@ defmodule KantaWeb.Components.Shared.Pagination do
             ]}
           >
             Next
-            <Lucide.arrow_right class="ml-3 h-5 w-5" />
+            <Icons.arrow_right class="ml-3 h-5 w-5" />
           </a>
         </div>
       </nav>

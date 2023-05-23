@@ -84,7 +84,7 @@ defmodule Kanta.Registry do
 
   For a plugin:
 
-      Kanta.Registry.via(Kanta, {:plugin, Kanta.Plugins.DeepL})
+      Kanta.Registry.via(Kanta, {:plugin, Kanta.DeepL.Plugin})
   """
   def via(kanta_name, role \\ nil, value \\ nil)
   def via(kanta_name, role, nil), do: {:via, Registry, {__MODULE__, key(kanta_name, role)}}

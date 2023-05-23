@@ -46,5 +46,23 @@ defmodule Kanta.Translations.PluralTranslations do
   def update_plural_translation(translation, attrs) do
     PluralTranslation.changeset(translation, attrs)
     |> Repo.get_repo().update()
+    |> case do
+      {:ok, translation} ->
+        cache_key =
+          Cache.generate_cache_key("plural_translation",
+            filter: [
+              nplural_index: translation.nplural_index,
+              locale_id: translation.locale_id,
+              message_id: translation.message_id
+            ]
+          )
+
+        Cache.put(cache_key, translation)
+
+        {:ok, translation}
+
+      error ->
+        error
+    end
   end
 end

@@ -38,5 +38,22 @@ defmodule Kanta.Translations.SingularTranslations do
   def update_singular_translation(translation, attrs) do
     SingularTranslation.changeset(translation, attrs)
     |> Repo.get_repo().update()
+    |> case do
+      {:ok, translation} ->
+        cache_key =
+          Cache.generate_cache_key("singular_translation",
+            filter: [
+              locale_id: translation.locale_id,
+              message_id: translation.message_id
+            ]
+          )
+
+        Cache.put(cache_key, translation)
+
+        {:ok, translation}
+
+      error ->
+        error
+    end
   end
 end

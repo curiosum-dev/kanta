@@ -5,6 +5,8 @@ defmodule KantaWeb.Components.Shared.Select do
 
   use KantaWeb, :live_component
 
+  alias KantaWeb.Components.Icons
+
   def update(assigns, socket) do
     %{field: field, options: options} = assigns
 

@@ -9,8 +9,7 @@ defmodule Kanta.Application do
   def start(_type, _args) do
     children = [
       Kanta.Registry,
-      Kanta.Cache,
-      {Finch, name: Kanta.Finch}
+      Kanta.Cache
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

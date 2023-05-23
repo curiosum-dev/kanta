@@ -207,7 +207,7 @@ config :kanta,
 
 ## DeepL
 
-Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `Kanta.Plugins.DeepL` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
+Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `Kanta.DeepL.Plugin` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
 
 <img style="margin-top: 1rem; margin-bottom: 1rem;" src="./plural.png" alt="plural">
 
@@ -216,7 +216,7 @@ Not all of us are polyglots, and sometimes we need the help of machine translati
 config :kanta,
   ...
   plugins: [
-    {Kanta.Plugins.DeepL, api_key: "YOUR_DEEPL_API_KEY"}
+    {Kanta.DeepL.Plugin, api_key: "YOUR_DEEPL_API_KEY"}
   ]
 ```
 
