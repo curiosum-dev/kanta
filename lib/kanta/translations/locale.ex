@@ -7,7 +7,7 @@ defmodule Kanta.Translations.Locale do
   import Ecto.Changeset
   alias Kanta.Translations.SingularTranslation
 
-  @all_fields ~w(iso639_code name native_name family wiki_url colors)a
+  @all_fields ~w(iso639_code name plurals_header native_name family wiki_url colors)a
   @required_fields ~w(iso639_code name native_name)a
 
   schema "kanta_locales" do
@@ -16,6 +16,7 @@ defmodule Kanta.Translations.Locale do
     field :native_name, :string
     field :family, :string
     field :wiki_url, :string
+    field :plurals_header, :string
 
     field :colors, {:array, :string}
 

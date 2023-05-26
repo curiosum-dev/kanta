@@ -45,45 +45,39 @@
       </div>
     </div>
   </div>
-  <%= for form <- Enum.sort_by(@forms, & &1["nplural_index"]) do %>
-    <.form for={form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="space-y-2">
-      <div class="mt-8 pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
-        <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">
-          Plural form <%= form["nplural_index"] %>
-        </h3>
-      </div>
-      <div class="grid grid-cols-6 gap-4">
-        <div class="col-span-6 lg:col-span-4 space-y-2">
-          <div class="mt-4">
-            <label for={"original_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Original text</label>
-            <div class="mt-1">
-              <textarea disabled name={"original_text.#{form["nplural_index"]}"} id={"original_text.#{form["nplural_index"]}"} class="text-content-dark dark:text-content-light bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= form["original_text"] %></textarea>
-            </div>
-          </div>
-          <div class="mt-4">
-            <label for={"translated_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Translated text</label>
-            <div class="mt-1">
-              <textarea name={"translated_text.#{form["nplural_index"]}"} id={"translated_text.#{form["nplural_index"]}"} class="bg-white dark:bg-base-dark text-content-dark dark:text-content-light shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= form["translated_text"] %></textarea>
-            </div>
+  <.live_component module={Tabs} id="tabs" tabs={@tabs} current_url={"/kanta/locales/#{@locale.id}/translations/#{@message.id}"} current_tab={@current_tab} />
+  <.form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="space-y-2">
+    <div class="mt-8 pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
+      <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">
+        <span class="opacity-80 mr-4">Form for quantity of i.e</span> <%= plural_examples(@locale, String.to_integer(@current_tab) - 1) %>
+      </h3>
+    </div>
+    <div class="grid grid-cols-6 gap-4">
+      <div class="col-span-6 space-y-2">
+        <div class="mt-4">
+          <label for={"original_text"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Original text</label>
+          <div class="mt-1">
+            <textarea disabled name={"original_text"} id={"original_text"} class="text-content-dark dark:text-content-light bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= @form["original_text"] %></textarea>
           </div>
         </div>
-        <div class="mt-10 bg-slate-50 dark:bg-stone-900 rounded-lg shadow-md px-4 py-4 col-span-6 lg:col-span-2 space-y-2">
-          <div class="text-slate-600 dark:text-content-light font-semibold text-lg mb-4">Extensions</div>
-          <%= if Kanta.plugin_enabled?(Kanta.Plugins.POWriter) do %>
-            <button phx-click="overwrite_po" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
-              Overwrite PO file text
-            </button>
-          <% end %>
-          <%= if Kanta.plugin_enabled?(Kanta.DeepL.Plugin) do %>
-            <button phx-click="translate_via_deep_l" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
-              Translate via DeepL
-            </button>
-          <% end %>
+        <div class="mt-4">
+          <label for={"translated_text"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Translated text</label>
+          <div class="mt-1">
+            <textarea name={"translated_text"} id={"translated_text"} class="bg-white dark:bg-base-dark text-content-dark dark:text-content-light shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= @form["translated_text"] %></textarea>
+          </div>
         </div>
-        <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
+        <button type="submit" class="col-span-6 w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
           Save
         </button>
       </div>
-    </.form>
+    </div>
+  </.form>
+  <%= if length(Kanta.config().plugins) > 0 do %>
+    <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
+    <div class=" mt-4 bg-white dark:bg-stone-900 rounded-lg shadow-md px-4 py-4 col-span-2 lg:col-span-1 space-y-2">
+      <%= for {plugin_name, _} <- Kanta.config().plugins do %>
+        <%= live_component(Module.concat(plugin_name, FormComponent), id: plugin_name, message: @message, locale: @locale, translation: @translation) %>
+      <% end %>
+    </div>
   <% end %>
 </div>

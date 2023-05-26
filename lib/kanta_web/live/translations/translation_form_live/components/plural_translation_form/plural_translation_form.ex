@@ -4,25 +4,39 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
   """
 
   use KantaWeb, :live_component
+  alias KantaWeb.Components.Shared.Tabs
 
   alias Kanta.Translations
-  alias Kanta.DeepL.Adapter
 
   def update(assigns, socket) do
-    forms =
+    tabs =
+      Enum.map(
+        assigns.translations,
+        &%{
+          index: &1.nplural_index + 1,
+          label: "Form #{&1.nplural_index + 1}"
+        }
+      )
+
+    translation =
       assigns.translations
-      |> Enum.map(fn translation ->
-        %{
+      |> Enum.find(&(&1.nplural_index == String.to_integer(assigns.current_tab) - 1))
+
+    form =
+      if is_nil(translation),
+        do: nil,
+        else: %{
           "id" => translation.id,
           "nplural_index" => translation.nplural_index,
           "original_text" => translation.original_text,
           "translated_text" => translation.translated_text
         }
-      end)
 
     socket =
       socket
-      |> assign(:forms, forms)
+      |> assign(:tabs, tabs)
+      |> assign(:translation, translation)
+      |> assign(:form, form)
 
     {:ok, assign(socket, assigns)}
   end
@@ -49,40 +63,6 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply, socket}
-  end
-
-  def handle_event("translate_via_deep_l", %{"nplural_index" => nplural_index}, socket) do
-    %{forms: forms, locale: locale, message: message} = socket.assigns
-
-    form =
-      Enum.find(forms, fn form ->
-        form["nplural_index"] == String.to_integer(nplural_index)
-      end)
-
-    case Adapter.request_translation(
-           "EN",
-           String.upcase(locale.iso639_code),
-           message.msgid
-         ) do
-      {:ok, translations} ->
-        %{"text" => translated_text} = List.first(translations)
-
-        form = Map.put(form, "translated_text", translated_text)
-
-        {:noreply,
-         update(
-           socket,
-           :forms,
-           &(&1
-             |> Enum.reject(fn f ->
-               Map.get(f, "nplural_index") == Map.get(form, "nplural_index")
-             end)
-             |> Enum.concat([form]))
-         )}
-
-      _ ->
-        {:noreply, socket}
-    end
   end
 
   def handle_event(
@@ -134,5 +114,13 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
            "/kanta/locales/#{locale.id}/translations"
          )
      )}
+  end
+
+  def plural_examples(locale, index) do
+    forms_struct = Expo.PluralForms.parse!(locale.plurals_header)
+
+    Enum.group_by(0..30, &Expo.PluralForms.index(forms_struct, &1), & &1)
+    |> Map.fetch!(index)
+    |> Enum.join(", ")
   end
 end

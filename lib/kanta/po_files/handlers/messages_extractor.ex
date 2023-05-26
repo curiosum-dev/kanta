@@ -105,9 +105,12 @@ defmodule Kanta.POFiles.MessagesExtractor do
   end
 
   defp get_plurals_header(messages, locale) do
-    plurals_header = Expo.Messages.get_header(messages, "Plural-Forms") |> List.first()
+    case Expo.PluralForms.plural_form(locale) do
+      {:ok, plural_forms} ->
+        Expo.PluralForms.to_string(plural_forms)
 
-    plurals_header ||
-      Expo.PluralForms.plural_form(locale) |> elem(1) |> Expo.PluralForms.to_string()
+      :error ->
+        Expo.Messages.get_header(messages, "Plural-Forms") |> List.first()
+    end
   end
 end

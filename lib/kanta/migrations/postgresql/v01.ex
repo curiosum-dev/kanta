@@ -38,6 +38,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
       add(:family, :string)
       add(:wiki_url, :string)
       add(:colors, {:array, :string})
+      add(:plurals_header, :string)
       timestamps()
     end
 
@@ -81,7 +82,6 @@ defmodule Kanta.Migrations.Postgresql.V01 do
     create_if_not_exists table(@kanta_messages) do
       add(:msgid, :text)
       add(:message_type, :gettext_message_type, null: false)
-      add(:plurals_header, :string)
       add(:domain_id, references(@kanta_domains), null: true)
       add(:context_id, references(@kanta_contexts), null: true)
       timestamps()

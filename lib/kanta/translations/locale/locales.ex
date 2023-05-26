@@ -3,6 +3,9 @@ defmodule Kanta.Translations.Locales do
   Locales Kanta subcontext
   """
 
+  alias Kanta.Repo
+
+  alias Kanta.Translations.Locale
   alias Kanta.Translations.Locale.Finders.{GetLocale, ListLocales}
 
   def list_locales(params \\ []) do
@@ -11,5 +14,10 @@ defmodule Kanta.Translations.Locales do
 
   def get_locale(params \\ []) do
     GetLocale.find(params)
+  end
+
+  def update_locale(locale, attrs \\ %{}) do
+    Locale.changeset(locale, attrs)
+    |> Repo.get_repo().update()
   end
 end

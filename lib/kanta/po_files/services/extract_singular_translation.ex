@@ -23,7 +23,7 @@ defmodule Kanta.PoFiles.Services.ExtractSingularTranslation do
   defp get_or_create_locale(iso639_code) do
     case Translations.get_locale(filter: [iso639_code: iso639_code]) do
       {:ok, locale} -> {:ok, locale}
-      {:error, :locale, :not_found} -> CreateLocaleFromIsoCode.call(iso639_code)
+      {:error, :locale, :not_found} -> CreateLocaleFromIsoCode.call(iso639_code, nil)
     end
   end
 

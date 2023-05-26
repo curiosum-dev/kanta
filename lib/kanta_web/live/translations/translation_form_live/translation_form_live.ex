@@ -19,6 +19,13 @@ defmodule KantaWeb.Translations.TranslationFormLive do
   end
 
   def render(%{message: %Message{message_type: :plural}} = assigns) do
+    assigns =
+      if is_map_key(assigns, :tab) do
+        assigns
+      else
+        assign(assigns, :tab, "1")
+      end
+
     ~H"""
       <.live_component
         module={PluralTranslationForm}
@@ -26,6 +33,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         translations={@translations}
         message={@message}
         locale={@locale}
+        current_tab={@tab}
       />
     """
   end
@@ -34,7 +42,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
     socket =
       with {:ok, locale} <- Translations.get_locale(filter: [id: locale_id]),
            {:ok, message} <- Translations.get_message(filter: [id: message_id]),
-           {:ok, translations} <- get_translations(message, locale_id) do
+           {:ok, translations} <- get_translations(message, locale) do
         socket
         |> assign(:locale, locale)
         |> assign(:message, message)
@@ -44,10 +52,20 @@ defmodule KantaWeb.Translations.TranslationFormLive do
     {:ok, socket}
   end
 
-  defp get_translations(%Message{message_type: :singular} = message, locale_id) do
+  def handle_params(%{"tab" => tab}, _uri, socket) do
+    {:noreply,
+     socket
+     |> assign(:tab, tab)}
+  end
+
+  def handle_params(_params, _uri, socket) do
+    {:noreply, socket}
+  end
+
+  defp get_translations(%Message{message_type: :singular} = message, locale) do
     case Translations.get_singular_translation(
            filter: [
-             locale_id: locale_id,
+             locale_id: locale.id,
              message_id: message.id
            ]
          ) do
@@ -58,16 +76,16 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         Translations.create_singular_translation(%{
           original_text: nil,
           translated_text: nil,
-          locale_id: locale_id,
+          locale_id: locale.id,
           message_id: message.id
         })
     end
   end
 
-  defp get_translations(%Message{message_type: :plural} = message, locale_id) do
+  defp get_translations(%Message{message_type: :plural} = message, locale) do
     case Translations.list_plural_translations(
            filter: [
-             locale_id: locale_id,
+             locale_id: locale.id,
              message_id: message.id
            ]
          ) do
@@ -75,7 +93,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         {:ok, entries}
 
       _ ->
-        with {:ok, %{nplurals: plurals_count}} <- Expo.PluralForms.parse(message.plurals_header) do
+        with {:ok, %{nplurals: plurals_count}} <- Expo.PluralForms.parse(locale.plurals_header) do
           {
             :ok,
             Enum.map(0..plurals_count, fn index ->
@@ -84,7 +102,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
                   nplural_index: index,
                   original_text: nil,
                   translated_text: nil,
-                  locale_id: locale_id,
+                  locale_id: locale.id,
                   message_id: message.id
                 })
               ) do
