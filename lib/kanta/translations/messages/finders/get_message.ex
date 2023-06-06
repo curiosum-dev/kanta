@@ -39,6 +39,7 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
     |> filter_query(params[:filter])
     |> search_query(params[:search])
     |> preload_resources(params[:preloads] || [])
+    |> limit(1)
     |> one()
     |> case do
       %Message{} = message -> {:ok, message}
