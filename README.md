@@ -92,10 +92,10 @@ Add to `config/config.exs` file:
 
 ```elixir
 # config/config.exs
-config :kanta,
-  endpoint: KantaTestWeb.Endpoint, # Your app Endpoint module
-  repo: KantaTest.Repo, # Your app Repo module
-  otp_name: :kanta_text, # Name of your OTP app
+config :my_app, Kanta,
+  endpoint: MyAppWeb.Endpoint, # Your app Endpoint module
+  repo: MyApp.Repo, # Your app Repo module
+  otp_name: :my_app, # Name of your OTP app
   plugins: []
 ```
 
@@ -116,11 +116,11 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 1)
+    Kanta.Migration.up(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 
   def down do
-    Kanta.Migration.down(version: 1)
+    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
@@ -147,7 +147,7 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
   def start(_type, _args) do
     children = [
       ...
-      {Kanta, Application.fetch_env!(:kanta_test, Kanta)}
+      {Kanta, Application.fetch_env!(:my_app, Kanta)}
       ...
     ]
     ...

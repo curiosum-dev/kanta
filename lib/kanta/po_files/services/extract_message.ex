@@ -52,8 +52,8 @@ defmodule Kanta.PoFiles.Services.ExtractMessage do
     end
   end
 
-  defp get_or_create_message(attrs, nil, %Domain{id: domain_id}) do
-    case Translations.get_message(filter: [msgid: attrs[:msgid], domain_id: domain_id]) do
+  defp get_or_create_message(%{msgid: msgid} = attrs, nil, %Domain{id: domain_id}) do
+    case Translations.get_message(filter: [msgid: msgid, domain_id: domain_id]) do
       {:ok, message} ->
         {:ok, message}
 
