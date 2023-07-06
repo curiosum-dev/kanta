@@ -5,6 +5,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
 
   use Ecto.Migration
 
+  @default_prefix "public"
   @kanta_locales "kanta_locales"
   @kanta_domains "kanta_domains"
   @kanta_contexts "kanta_contexts"
@@ -74,6 +75,8 @@ defmodule Kanta.Migrations.Postgresql.V01 do
   end
 
   defp up_messages(opts) do
+    prefix = Keyword.get(opts, :prefix, @default_prefix)
+
     create_if_not_exists_message_type_query = "
       DO $$ BEGIN
           CREATE TYPE gettext_message_type AS ENUM ('singular', 'plural');
@@ -94,7 +97,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
     end
 
     execute """
-      ALTER TABLE #{prefix()}.#{@kanta_messages}
+      ALTER TABLE #{prefix}.#{@kanta_messages}
         ADD COLUMN searchable tsvector
         GENERATED ALWAYS AS (
           setweight(to_tsvector('english', coalesce(msgid, '')), 'A')
@@ -102,7 +105,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
     """
 
     execute """
-      CREATE INDEX #{@kanta_messages}_searchable_idx ON #{prefix()}.#{@kanta_messages} USING gin(searchable);
+      CREATE INDEX #{@kanta_messages}_searchable_idx ON #{prefix}.#{@kanta_messages} USING gin(searchable);
     """
 
     create_if_not_exists unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])
