@@ -27,12 +27,12 @@ defmodule Kanta.Migrations.Postgresql.V01 do
 
   def down(opts) do
     [
-      &down_locales/1,
+      &down_plural_translations/1,
+      &down_singular_translations/1,
+      &down_messages/1,
       &down_domains/1,
       &down_contexts/1,
-      &down_messages/1,
-      &down_singular_translations/1,
-      &down_plural_translations/1
+      &down_locales/1
     ]
     |> Enum.each(&apply(&1, [opts]))
   end
