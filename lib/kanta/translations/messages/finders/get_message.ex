@@ -8,6 +8,7 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
     binding: :message
 
   alias Kanta.Cache
+  alias Kanta.Repo
   alias Kanta.Translations.Message
 
   def find(params \\ []) do
@@ -34,15 +35,34 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
     end
   end
 
-  defp find_in_database(params) do
+  defp find_in_database(params, opts \\ []) do
     base()
     |> filter_query(params[:filter])
     |> search_query(params[:search])
     |> preload_resources(params[:preloads] || [])
-    |> one()
+    |> limit(1)
+    |> one(opts)
     |> case do
       %Message{} = message -> {:ok, message}
       _ -> {:error, :message, :not_found}
     end
+    |> database_fallback_public_prefix(params, opts)
+  end
+
+  defp database_fallback_public_prefix({:error, :message, :not_found} = result, params, repo_opts) do
+    if public_prefix?(repo_opts) do
+      result
+    else
+      opts = Keyword.put(repo_opts, :prefix, "public")
+      find_in_database(params, opts)
+    end
+  end
+
+  defp database_fallback_public_prefix(result, _, _), do: result
+
+  defp public_prefix?(repo_opts) do
+    config_prefix = Repo.get_repo().default_options(:all) |> Keyword.get(:prefix, :unset)
+    opts_prefix = Keyword.get(repo_opts, :prefix, :unset)
+    config_prefix in [nil, "public"] or opts_prefix in [nil, "public"]
   end
 end

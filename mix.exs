@@ -45,8 +45,7 @@ defmodule Kanta.MixProject do
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
-      {:gettext,
-       git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext", only: [:dev, :test]}
+      {:gettext, github: "bamorim/gettext", branch: "runtime-gettext", only: [:dev, :test]}
     ]
   end
 
