@@ -84,6 +84,8 @@ defmodule KantaWeb.Router do
         %{} = keys -> Map.take(keys, [:img, :style, :script])
       end
 
+    on_mount = Keyword.get(options, :on_mount)
+
     session_args = [
       csp_nonce_assign_key
     ]
@@ -92,7 +94,8 @@ defmodule KantaWeb.Router do
       options[:live_session_name] || :kanta_dashboard,
       [
         session: {__MODULE__, :__session__, session_args},
-        root_layout: {KantaWeb.LayoutView, :dashboard}
+        root_layout: {KantaWeb.LayoutView, :dashboard},
+        on_mount: on_mount
       ],
       [
         private: %{live_socket_path: live_socket_path, csp_nonce_assign_key: csp_nonce_assign_key},
