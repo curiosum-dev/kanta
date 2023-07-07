@@ -75,7 +75,7 @@ defmodule Kanta.Migrations.Postgresql.V01 do
   end
 
   defp up_messages(opts) do
-    prefix = Keyword.get(opts, :prefix, @default_prefix)
+    prefix = Map.get(opts, :prefix, @default_prefix)
 
     create_if_not_exists_message_type_query = "
       DO $$ BEGIN
