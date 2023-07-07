@@ -29,8 +29,8 @@ defmodule Kanta.Query do
         from(_ in unquote(opts[:module]), as: unquote(opts[:binding]))
       end
 
-      def one(query \\ base()) do
-        Repo.get_repo().one(query)
+      def one(query \\ base(), opts \\ []) do
+        Repo.get_repo().one(query, opts)
       end
 
       def paginate(query, page \\ 1, per_page \\ 15)
