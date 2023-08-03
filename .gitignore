@@ -32,3 +32,4 @@ kanta-*.tar
 /.direnv/
 /.nix-mix/
 /.nix-hex/
+.DS_Store

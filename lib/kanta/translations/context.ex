@@ -8,6 +8,8 @@ defmodule Kanta.Translations.Context do
 
   alias Kanta.Translations.Message
 
+  @type t() :: Kanta.Translations.ContextSpec.t()
+
   schema "kanta_contexts" do
     field :name, :string
     field :description, :string

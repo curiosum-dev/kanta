@@ -76,7 +76,9 @@
     <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
     <div class=" mt-4 bg-white dark:bg-stone-900 rounded-lg shadow-md px-4 py-4 col-span-2 lg:col-span-1 space-y-2">
       <%= for {plugin_name, _} <- Kanta.config().plugins do %>
-        <%= live_component(Module.concat(plugin_name, FormComponent), id: plugin_name, message: @message, locale: @locale, translation: @translation) %>
+        <%= if plugin_name |> Module.concat(FormComponent) |> module_exists?() do %>
+          <%= live_component(Module.concat(plugin_name, FormComponent), id: plugin_name, message: @message, locale: @locale, translation: @translation) %>
+        <% end %>
       <% end %>
     </div>
   <% end %>

@@ -8,6 +8,8 @@ defmodule Kanta.Translations.Domain do
 
   alias Kanta.Translations.Message
 
+  @type t() :: Kanta.Translations.DomainSpec.t()
+
   schema "kanta_domains" do
     field :name, :string
     field :description, :string

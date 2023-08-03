@@ -11,6 +11,8 @@ defmodule Kanta.Translations.PluralTranslation do
   @all_fields ~w(nplural_index original_text translated_text locale_id message_id)a
   @required_fields ~w(nplural_index message_id locale_id)a
 
+  @type t() :: Kanta.Translations.PluralTranslationSpec.t()
+
   schema "kanta_plural_translations" do
     field :nplural_index, :integer
     field :original_text, :string
