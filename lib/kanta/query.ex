@@ -16,6 +16,7 @@ defmodule Kanta.Query do
       import Ecto.Query
 
       alias Kanta.Repo
+      alias Kanta.Migrations.Postgresql
 
       # Returns the base for resource query with binding.
       #
@@ -293,6 +294,28 @@ defmodule Kanta.Query do
       def search_query(query, ""), do: query
 
       def search_query(query, search) do
+        repo = Repo.get_repo()
+        if Postgresql.migrated_version(%{repo: repo}) >= 2 do
+          search_query_fuzzy(query, search)
+        else
+          search_query_legacy(query, search)
+        end
+      end
+
+      defp search_query_fuzzy(query, search) do
+        from(s in unquote(opts[:module]),
+          where:
+            fragment(
+              "msgid ILIKE ? OR (SOUNDEX(msgid) = SOUNDEX(?) AND LEVENSHTEIN(?, msgid) <= 3)",
+              ^("%" <> search <> "%"), ^search, ^search
+            ),
+          order_by: [
+            asc: fragment("LEVENSHTEIN(?, msgid)", ^search)
+          ]
+        )
+      end
+
+      defp search_query_legacy(query, search) do
         from(s in unquote(opts[:module]),
           where:
             fragment(

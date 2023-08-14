@@ -6,7 +6,7 @@ defmodule Kanta.Migrations.Postgresql do
   use Ecto.Migration
 
   @initial_version 1
-  @current_version 1
+  @current_version 2
   @default_prefix "public"
 
   @doc false
@@ -43,10 +43,10 @@ defmodule Kanta.Migrations.Postgresql do
   end
 
   @impl Kanta.Migration
-  def migrated_version(opts) do
+  def migrated_version(opts \\ %{}) do
     opts = with_defaults(opts, @initial_version)
 
-    repo = Map.get_lazy(opts, :repo, fn -> repo() end)
+    repo = Map.get_lazy(opts, :repo, &repo/0)
     escaped_prefix = Map.fetch!(opts, :escaped_prefix)
 
     query = """
