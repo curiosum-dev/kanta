@@ -295,6 +295,7 @@ defmodule Kanta.Query do
 
       def search_query(query, search) do
         repo = Repo.get_repo()
+
         if Postgresql.migrated_version(%{repo: repo}) >= 2 do
           search_query_fuzzy(query, search)
         else
@@ -307,7 +308,9 @@ defmodule Kanta.Query do
           where:
             fragment(
               "msgid ILIKE ? OR (SOUNDEX(msgid) = SOUNDEX(?) AND LEVENSHTEIN(?, msgid) <= 3)",
-              ^("%" <> search <> "%"), ^search, ^search
+              ^("%" <> search <> "%"),
+              ^search,
+              ^search
             ),
           order_by: [
             asc: fragment("LEVENSHTEIN(?, msgid)", ^search)

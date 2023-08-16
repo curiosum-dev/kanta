@@ -78,7 +78,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.1.1"},
+    {:kanta, "~> 0.1.4"},
     {:gettext, git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext"}
   ]
 end
