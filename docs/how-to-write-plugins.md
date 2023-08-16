@@ -1,6 +1,17 @@
 # How to write plugins?
 
-Unlock the full potential of Kanta's translation management with our powerful plugins, designed to elevate your experience like never before. But why stop there? With Kanta, you have the creative freedom to craft your own unique plugins and share them with a thriving community, catering to even the most sophisticated requirements!
+Kanta allows you to expand its core features using plugins.
+
+A plugin refers to any module that initiates a process and exposes a `start_link/1` function. During startup, Kanta automatically inserts each plugin into its supervision tree.
+
+Plugins have the capability to enhance Kanta's user interface by defining their own Phoenix components.
+
+At Curiosum, we currently maintain two plugins:
+
+- [DeepL Plugin](https://github.com/curiosum-dev/kanta_deep_l_plugin)
+- [PO Writer Plugin](https://github.com/curiosum-dev/kanta_po_writer_plugin)
+
+Feel welcome to explore their code for a deeper understanding of their setup.
 
 ## Getting started
 
@@ -239,6 +250,4 @@ end
 
 ## Kanta internal API
 
-At the heart of Kanta lies the finders, handlers, services, and values pattern, which streamlines your coding experience. Learn more about this robust pattern here: [Four Patterns to Save your Codebase and your Sanity](https://remote.com/blog/introducing-phx_gen_solid#finders-handlers-services-and-values). In a nutshell, finders expose the `find` function, returning stored values, while handlers unveil the `call` function to modify cache or DB. Harmoniously intertwined, they create an unmatched synergy.
-
-To embark on an enlightening exploration of Kanta's documentation and uncover the vast possibilities, dive right in!
+Kanta revolves around the finders, handlers, services, and values pattern. This pattern boosts coding efficiency. Learn more: [Four Patterns to Save your Codebase and your Sanity](https://remote.com/blog/introducing-phx_gen_solid#finders-handlers-services-and-values).
