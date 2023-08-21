@@ -22,7 +22,7 @@ defmodule Kanta.Registry do
 
       Kanta.Registry.config(MyApp.Kanta)
   """
-  @spec config(Kanta.name()) :: Kanta.Config.t()
+  @spec config(atom()) :: Kanta.Config.t()
   def config(kanta_name) do
     case lookup(kanta_name) do
       {_pid, config} ->

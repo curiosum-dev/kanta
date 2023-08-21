@@ -8,7 +8,7 @@ defmodule KantaWeb.Translations.DomainLive do
     domain =
       case Translations.get_domain(filter: [id: id]) do
         {:ok, %Domain{} = domain} -> domain
-        {:error, _} -> nil
+        {:error, _, _reason} -> nil
       end
 
     socket = socket |> assign(:domain, domain)

@@ -1,5 +1,6 @@
 defmodule KantaWeb.Router do
   use Phoenix.Router
+  @dialyzer {:no_return, {:call, 2}}
 
   defmacro kanta_dashboard(path, opts \\ []) do
     opts =

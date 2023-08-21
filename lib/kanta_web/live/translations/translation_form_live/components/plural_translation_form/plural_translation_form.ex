@@ -4,9 +4,10 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
   """
 
   use KantaWeb, :live_component
-  alias KantaWeb.Components.Shared.Tabs
 
+  alias Kanta.Plugins.POWriter.OverwritePoMessage
   alias Kanta.Translations
+  alias KantaWeb.Components.Shared.Tabs
 
   def update(assigns, socket) do
     tabs =
@@ -51,7 +52,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
         form["nplural_index"] == nplural_index
       end)
 
-    Kanta.Plugins.POWriter.OverwritePoMessage.plural(
+    OverwritePoMessage.plural(
       form["translated_text"],
       nplural_index,
       locale,

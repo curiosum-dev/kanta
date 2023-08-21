@@ -7,7 +7,7 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
     module: Kanta.Translations.Message,
     binding: :message
 
-  alias Kanta.Translations.{SingularTranslation, PluralTranslation}
+  alias Kanta.Translations.{PluralTranslation, SingularTranslation}
 
   @available_filters ~w(domain_id context_id)
 

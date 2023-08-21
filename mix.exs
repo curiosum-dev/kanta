@@ -14,6 +14,7 @@ defmodule Kanta.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      dialyzer: dialyzer(),
       docs: [
         extras: ["docs/how-to-write-plugins.md"],
         assets: "docs/assets"
@@ -51,6 +52,7 @@ defmodule Kanta.MixProject do
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
       {:gettext, github: "bamorim/gettext", branch: "runtime-gettext", only: [:dev, :test]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.3", only: :dev, runtime: false}
     ]
   end
 
@@ -69,6 +71,13 @@ defmodule Kanta.MixProject do
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/curiosum-dev/kanta"},
       files: ~w(lib priv dist CHANGELOG.md LICENSE.md mix.exs README.md)
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_file:
+        {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"}
     ]
   end
 end

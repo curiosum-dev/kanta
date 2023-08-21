@@ -20,13 +20,13 @@ defmodule Kanta.Translations do
   # DOMAINS
   defdelegate list_domains(params \\ []), to: Domains
   defdelegate get_domain(params \\ []), to: Domains
-  defdelegate create_domain(params \\ []), to: Domains
+  defdelegate create_domain(attrs), to: Domains
 
   # MESSAGES
   defdelegate list_messages(params \\ []), to: Messages
   defdelegate get_message(params \\ []), to: Messages
   defdelegate get_messages_count(), to: Messages
-  defdelegate create_message(params \\ []), to: Messages
+  defdelegate create_message(attrs), to: Messages
 
   # LOCALES
   defdelegate list_locales(params \\ []), to: Locales
