@@ -45,7 +45,7 @@ defmodule KantaWeb.Components.Shared.Select do
 
   defp value_to_integer(value) do
     String.to_integer(value)
-  catch
-    _ -> nil
+  rescue
+    _ in ArgumentError -> nil
   end
 end
