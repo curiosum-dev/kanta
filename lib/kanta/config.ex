@@ -3,7 +3,7 @@ defmodule Kanta.Config do
   Kanta configuration helper
   """
   @type t :: %__MODULE__{
-          name: Kanta.name(),
+          name: atom(),
           otp_name: atom(),
           repo: module(),
           endpoint: module(),
@@ -29,7 +29,6 @@ defmodule Kanta.Config do
 
       Kanta.Config.new(repo: Kanta.Test.Repo)
   """
-  @spec new([Kanta.option()]) :: t()
   def new(opts) when is_list(opts) do
     opts = normalize(opts)
 

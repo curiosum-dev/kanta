@@ -1,6 +1,9 @@
 # The directory Mix will write compiled artifacts to.
 /_build/
 
+# If you run "mix dialyzer", PLT files will be written to this directory.
+/.dialyzer/
+
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
 
@@ -32,3 +35,4 @@ kanta-*.tar
 /.direnv/
 /.nix-mix/
 /.nix-hex/
+.DS_Store

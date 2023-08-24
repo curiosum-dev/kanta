@@ -3,10 +3,9 @@ defmodule Kanta.PoFiles.Services.ExtractSingularTranslation do
   Service for extracting singular messages and translations from .po files
   """
 
+  alias Kanta.PoFiles.Services.ExtractMessage
   alias Kanta.Repo
   alias Kanta.Translations
-  alias Kanta.PoFiles.Services.ExtractMessage
-
   alias Kanta.Translations.Locale.Services.CreateLocaleFromIsoCode
 
   def call(attrs) do

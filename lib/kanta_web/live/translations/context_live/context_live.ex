@@ -8,7 +8,7 @@ defmodule KantaWeb.Translations.ContextLive do
     context =
       case Translations.get_context(filter: [id: id]) do
         {:ok, %Context{} = context} -> context
-        {:error, _} -> nil
+        {:error, _, _reason} -> nil
       end
 
     socket = socket |> assign(:context, context)

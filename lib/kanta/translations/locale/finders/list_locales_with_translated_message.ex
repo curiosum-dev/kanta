@@ -7,7 +7,7 @@ defmodule Kanta.Translations.Locale.Finders.ListLocalesWithTranslatedMessage do
 
   alias Kanta.Repo
 
-  alias Kanta.Translations.{Locale, Message, SingularTranslation, PluralTranslation}
+  alias Kanta.Translations.{Locale, Message, PluralTranslation, SingularTranslation}
 
   def find(%Message{id: message_id, message_type: :singular}) do
     query =

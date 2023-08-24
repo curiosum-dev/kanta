@@ -1,4 +1,4 @@
-defmodule Kanta.Plugins.POWriter.OverwritePoMessage do
+defmodule Kanta.Plugins.POWriter.OverwritePOMessage do
   @moduledoc """
   POWriter plugin main module for overwriting .po files
   """

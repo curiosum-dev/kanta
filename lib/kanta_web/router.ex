@@ -1,6 +1,9 @@
 defmodule KantaWeb.Router do
   use Phoenix.Router
 
+  # deps/phoenix/lib/phoenix/router.ex:2:no_return Function call/2 has no local return.
+  @dialyzer {:no_return, {:call, 2}}
+
   defmacro kanta_dashboard(path, opts \\ []) do
     opts =
       if Macro.quoted_literal?(opts) do

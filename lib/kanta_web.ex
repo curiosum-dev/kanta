@@ -108,6 +108,8 @@ defmodule KantaWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import Kanta.Utils.ModuleUtils
+
       alias KantaWeb.Router.Helpers, as: Routes
       unquote(verified_routes())
     end

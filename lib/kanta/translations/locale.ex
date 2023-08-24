@@ -10,6 +10,8 @@ defmodule Kanta.Translations.Locale do
   @all_fields ~w(iso639_code name plurals_header native_name family wiki_url colors)a
   @required_fields ~w(iso639_code name native_name)a
 
+  @type t() :: Kanta.Translations.LocaleSpec.t()
+
   schema "kanta_locales" do
     field :iso639_code, :string
     field :name, :string
