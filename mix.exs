@@ -50,7 +50,7 @@ defmodule Kanta.MixProject do
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
-      {:gettext, github: "bamorim/gettext", branch: "runtime-gettext", only: [:dev, :test]},
+      {:gettext, github: "ravensiris/gettext", branch: "runtime-gettext", only: [:dev, :test]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:dialyxir, "~> 1.3", only: :dev, runtime: false}
     ]
