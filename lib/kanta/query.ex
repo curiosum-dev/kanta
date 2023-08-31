@@ -15,6 +15,7 @@ defmodule Kanta.Query do
     quote do
       import Ecto.Query
 
+      alias Kanta.Migrations.Postgresql
       alias Kanta.Repo
 
       # Returns the base for resource query with binding.
@@ -132,6 +133,39 @@ defmodule Kanta.Query do
           [{unquote(opts[:binding]), resource}],
           field(resource, ^column) |> count()
         )
+      end
+
+      @doc """
+      Joins resource with another resource.
+
+      *Important!* The joining has to be defined by join_resource/2 function. Example:
+      ```
+      defp join_resource(query, :articles) do
+        query
+        |> join(:left, [user: u], _ in assoc(u, :articles), as: :article)
+      end
+      ```
+
+      First argument is a query and second argument is pattern-matched atom.
+
+      ## Examples
+
+          iex> Kanta.Accounts.UserQueries.with_join(:articles)
+          #Ecto.Query<from u0 in Kanta.Accounts.User, as: :user,
+            left_join: u1 in assoc(u0, :articles), as: :article>
+
+      """
+      @spec with_join(Ecto.Query.t(), atom()) :: Ecto.Query.t()
+      def with_join(query \\ base(), resource_name, opts \\ nil) when is_atom(resource_name) do
+        if has_named_binding?(query, resource_name) do
+          query
+        else
+          if is_nil(opts) do
+            join_resource(query, resource_name)
+          else
+            join_resource(query, resource_name, opts)
+          end
+        end
       end
 
       @doc """
@@ -292,18 +326,59 @@ defmodule Kanta.Query do
       def search_query(query, nil), do: query
       def search_query(query, ""), do: query
 
-      def search_query(query, search) do
+      def search_query(query, search_term) do
+        repo = Repo.get_repo()
+
+        if Postgresql.migrated_version(%{repo: repo}) >= 2 do
+          search_query_fuzzy(query, search_term)
+        else
+          search_query_legacy(query, search_term)
+        end
+      end
+
+      defmacrop form_search_query(search_term) do
+        quote do
+          fragment(
+            "SELECT to_tsquery(string_agg(unaccent(lexeme) || ':*', ' & ' order by positions)) FROM unnest(to_tsvector(?))",
+            unquote(search_term)
+          )
+        end
+      end
+
+      defmacrop ts_rank(left, right) do
+        quote do
+          fragment("ts_rank(?, ?)", unquote(left), unquote(right))
+        end
+      end
+
+      defp search_query_fuzzy(query, search_term) do
+        query
+        |> or_where(
+          [{unquote(opts[:binding]), resource}],
+          fragment("? @@ ?", resource.searchable, form_search_query(^search_term))
+        )
+        |> order_by(
+          [{unquote(opts[:binding]), resource}],
+          desc:
+            ts_rank(
+              resource.searchable,
+              form_search_query(^search_term)
+            )
+        )
+      end
+
+      defp search_query_legacy(query, search_term) do
         from(s in unquote(opts[:module]),
           where:
             fragment(
               "searchable @@ websearch_to_tsquery(?)",
-              ^search
+              ^search_term
             ),
           order_by: {
             :desc,
             fragment(
               "ts_rank_cd(searchable, websearch_to_tsquery(?), 4)",
-              ^search
+              ^search_term
             )
           }
         )
@@ -321,6 +396,18 @@ defmodule Kanta.Query do
           where: is_nil(q.deleted_by)
         )
       end
+
+      @spec join_resource(Ecto.Query.t(), atom()) :: no_return()
+      @spec join_resource(Ecto.Query.t(), atom(), any()) :: no_return()
+
+      defp join_resource(_query, _), do: join_resource_raise()
+      defp join_resource(_query, _, _opts), do: join_resource_raise()
+
+      defp join_resource_raise do
+        raise(ArgumentError, message: "wrong join criteria")
+      end
+
+      defoverridable join_resource: 2, join_resource: 3
     end
   end
 end

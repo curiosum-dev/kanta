@@ -78,7 +78,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.1.1"},
+    {:kanta, "~> 0.1.4"},
     {:gettext, git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext"}
   ]
 end
@@ -116,11 +116,11 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.up(version: 2, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 
   def down do
-    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.down(version: 2, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
