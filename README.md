@@ -10,7 +10,7 @@
   <p style="margin-top: 3rem; font-size: 14pt;" align="center">
     User-friendly translations manager for Elixir/Phoenix projects.
     <br />
-    <a href="https://kanta.munasoft.pl">View Demo</a>
+    <a href="https://kanta.curiosum.com">View Demo</a>
     ·
     <a href="https://github.com/curiosum-dev/kanta/issues">Report Bug</a>
     ·
