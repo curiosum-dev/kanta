@@ -18,6 +18,20 @@
   </p>
 </div>
 
+<div>
+  <a href="https://github.com/curiosum-dev/kanta/actions/workflows/development.yml">
+    <img alt="CI Status" src="https://github.com/curiosum-dev/kanta/actions/workflows/development.yml/badge.svg">
+  </a>
+  <a href="https://hex.pm/packages/kanta">
+    <img alt="Hex Version" src="https://img.shields.io/hexpm/v/kanta.svg">
+  </a>
+  <a href="https://hexdocs.pm/kanta">
+    <img alt="Hex Docs" src="http://img.shields.io/badge/hex.pm-docs-green.svg?style=flat">
+  </a>
+</div>
+
+<br/>
+
 <ul style="margin-top: 3rem; margin-bottom: 3rem;">
   <li>
     <a href="#about-the-project">About The Project</a>
@@ -56,6 +70,16 @@
   <li><a href="#acknowledgments">Acknowledgments</a></li>
 </ul>
 
+---
+
+_Note: Official documentation for Kanta library is [available on hexdocs][hexdoc]._
+
+[hexdoc]: https://hexdocs.pm/kanta
+
+---
+
+<br />
+
 # About The Project
 
 If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
@@ -78,7 +102,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.2.0"},
+    {:kanta, "~> 0.2.1"},
     {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
