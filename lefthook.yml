@@ -1,0 +1,17 @@
+pre-push:
+  commands:
+    packages-audit:
+      tags: security
+      run: mix hex.audit
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      run: mix format
+    credo:
+      run: mix credo
+    commit-msg:
+      scripts:
+        "commitlint.sh":
+          runner: bash

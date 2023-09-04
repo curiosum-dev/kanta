@@ -1,4 +1,8 @@
 defmodule Redirect do
+  @moduledoc """
+    Simple plug for redirecting to Kanta UI
+  """
+
   import Plug.Conn
   alias Phoenix.Controller
 
@@ -9,9 +13,8 @@ defmodule Redirect do
       true -> raise ArgumentError, "expected :to or :external option"
     end
 
-    cond do
-      opts[:type] -> nil
-      true -> raise ArgumentError, "expected :type option"
+    unless opts[:type] do
+      raise ArgumentError, "expected :type option"
     end
 
     case opts[:type] do

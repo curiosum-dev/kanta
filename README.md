@@ -10,7 +10,7 @@
   <p style="margin-top: 3rem; font-size: 14pt;" align="center">
     User-friendly translations manager for Elixir/Phoenix projects.
     <br />
-    <a href="https://kanta.munasoft.pl">View Demo</a>
+    <a href="https://kanta.curiosum.com">View Demo</a>
     ·
     <a href="https://github.com/curiosum-dev/kanta/issues">Report Bug</a>
     ·
@@ -78,8 +78,8 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.1.0"},
-    {:gettext, git: "git@github.com:bamorim/gettext.git", branch: "runtime-gettext"}
+    {:kanta, "~> 0.1.1"},
+    {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
 ```
@@ -92,10 +92,10 @@ Add to `config/config.exs` file:
 
 ```elixir
 # config/config.exs
-config :kanta,
-  endpoint: KantaTestWeb.Endpoint, # Your app Endpoint module
-  repo: KantaTest.Repo, # Your app Repo module
-  project_root: File.cwd!(), # Project root directory
+config :my_app, Kanta,
+  endpoint: MyAppWeb.Endpoint, # Your app Endpoint module
+  repo: MyApp.Repo, # Your app Repo module
+  otp_name: :my_app, # Name of your OTP app
   plugins: []
 ```
 
@@ -116,11 +116,11 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 1)
+    Kanta.Migration.up(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 
   def down do
-    Kanta.Migration.down(version: 1)
+    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
@@ -147,7 +147,7 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
   def start(_type, _args) do
     children = [
       ...
-      {Kanta, Application.fetch_env!(:kanta_test, Kanta)}
+      {Kanta, Application.fetch_env!(:my_app, Kanta)}
       ...
     ]
     ...
@@ -207,16 +207,24 @@ config :kanta,
 
 ## DeepL
 
-Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `Kanta.Plugins.DeepL` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
+Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `{:kanta_deep_l_plugin, "~> 0.1.0"}` to your `deps` and append `Kanta.DeepL.Plugin` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
 
 <img style="margin-top: 1rem; margin-bottom: 1rem;" src="./plural.png" alt="plural">
+
+```elixir
+# mix.exs
+defp deps
+  ...
+  {:kanta_deep_l_plugin, "~> 0.1.0"}
+end
+```
 
 ```elixir
 # config/config.exs
 config :kanta,
   ...
   plugins: [
-    {Kanta.Plugins.DeepL, api_key: "YOUR_DEEPL_API_KEY"}
+    {Kanta.DeepL.Plugin, api_key: "YOUR_DEEPL_API_KEY"}
   ]
 ```
 

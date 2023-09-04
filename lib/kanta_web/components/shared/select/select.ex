@@ -1,5 +1,11 @@
 defmodule KantaWeb.Components.Shared.Select do
+  @moduledoc """
+  Shared select component
+  """
+
   use KantaWeb, :live_component
+
+  alias KantaWeb.Components.Icons
 
   def update(assigns, socket) do
     %{field: field, options: options} = assigns
@@ -38,10 +44,8 @@ defmodule KantaWeb.Components.Shared.Select do
   defp value_to_integer(""), do: nil
 
   defp value_to_integer(value) do
-    try do
-      String.to_integer(value)
-    catch
-      _ -> nil
-    end
+    String.to_integer(value)
+  rescue
+    _ in ArgumentError -> nil
   end
 end

@@ -1,6 +1,9 @@
 defmodule KantaWeb.Router do
   use Phoenix.Router
 
+  # deps/phoenix/lib/phoenix/router.ex:2:no_return Function call/2 has no local return.
+  @dialyzer {:no_return, {:call, 2}}
+
   defmacro kanta_dashboard(path, opts \\ []) do
     opts =
       if Macro.quoted_literal?(opts) do
@@ -31,6 +34,7 @@ defmodule KantaWeb.Router do
 
               scope "/contexts", Translations do
                 live "/", ContextsLive, :index, route_opts
+                live "/:id", ContextLive, :index, route_opts
               end
 
               scope "/domains", Translations do
@@ -83,6 +87,8 @@ defmodule KantaWeb.Router do
         %{} = keys -> Map.take(keys, [:img, :style, :script])
       end
 
+    on_mount = Keyword.get(options, :on_mount)
+
     session_args = [
       csp_nonce_assign_key
     ]
@@ -91,7 +97,8 @@ defmodule KantaWeb.Router do
       options[:live_session_name] || :kanta_dashboard,
       [
         session: {__MODULE__, :__session__, session_args},
-        root_layout: {KantaWeb.LayoutView, :dashboard}
+        root_layout: {KantaWeb.LayoutView, :dashboard},
+        on_mount: on_mount
       ],
       [
         private: %{live_socket_path: live_socket_path, csp_nonce_assign_key: csp_nonce_assign_key},

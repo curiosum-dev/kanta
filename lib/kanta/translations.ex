@@ -1,4 +1,8 @@
 defmodule Kanta.Translations do
+  @moduledoc """
+  Main Kanta Translations context
+  """
+
   alias Kanta.Translations.{
     Contexts,
     Domains,
@@ -16,17 +20,18 @@ defmodule Kanta.Translations do
   # DOMAINS
   defdelegate list_domains(params \\ []), to: Domains
   defdelegate get_domain(params \\ []), to: Domains
-  defdelegate create_domain(params \\ []), to: Domains
+  defdelegate create_domain(attrs), to: Domains
 
   # MESSAGES
   defdelegate list_messages(params \\ []), to: Messages
   defdelegate get_message(params \\ []), to: Messages
   defdelegate get_messages_count(), to: Messages
-  defdelegate create_message(params \\ []), to: Messages
+  defdelegate create_message(attrs), to: Messages
 
   # LOCALES
   defdelegate list_locales(params \\ []), to: Locales
   defdelegate get_locale(params \\ []), to: Locales
+  defdelegate update_locale(locale, attrs), to: Locales
 
   # TRANSLATIONS
   defdelegate list_plural_translations(params), to: PluralTranslations

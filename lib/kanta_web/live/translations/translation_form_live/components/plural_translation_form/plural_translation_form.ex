@@ -1,110 +1,50 @@
 defmodule KantaWeb.Translations.PluralTranslationForm do
+  @moduledoc """
+  Plural translation form component
+  """
+
   use KantaWeb, :live_component
 
   alias Kanta.Translations
-  alias Kanta.Plugins.DeepL.Adapter
+  alias KantaWeb.Components.Shared.Tabs
 
   def update(assigns, socket) do
-    forms =
+    tabs =
+      Enum.map(
+        assigns.translations,
+        &%{
+          index: &1.nplural_index + 1,
+          label: "Form #{&1.nplural_index + 1}"
+        }
+      )
+
+    translation =
       assigns.translations
-      |> Enum.map(fn translation ->
-        %{
+      |> Enum.find(&(&1.nplural_index == assigns.current_tab_index))
+
+    form =
+      if is_nil(translation),
+        do: nil,
+        else: %{
           "id" => translation.id,
           "nplural_index" => translation.nplural_index,
           "original_text" => translation.original_text,
           "translated_text" => translation.translated_text
         }
-      end)
 
     socket =
       socket
-      |> assign(:forms, forms)
+      |> assign(:tabs, tabs)
+      |> assign(:translation, translation)
+      |> assign(:form, form)
 
     {:ok, assign(socket, assigns)}
   end
 
-  def handle_event("overwrite_po", %{"nplural_index" => nplural_index}, socket) do
-    %{forms: forms, locale: locale, message: message} = socket.assigns
+  def handle_event("validate", attrs, socket) do
+    [translated] = attrs |> Map.drop(["_target"]) |> Map.values()
 
-    nplural_index = String.to_integer(nplural_index)
-
-    form =
-      Enum.find(forms, fn form ->
-        form["nplural_index"] == nplural_index
-      end)
-
-    Kanta.Plugins.POWriter.OverwritePoMessage.plural(
-      form["translated_text"],
-      nplural_index,
-      locale,
-      message
-    )
-
-    Translations.update_plural_translation(form["id"], %{
-      "original_text" => form["translated_text"]
-    })
-
-    {:noreply, socket}
-  end
-
-  def handle_event("translate_via_deep_l", %{"nplural_index" => nplural_index}, socket) do
-    %{forms: forms, locale: locale, message: message} = socket.assigns
-
-    form =
-      Enum.find(forms, fn form ->
-        form["nplural_index"] == String.to_integer(nplural_index)
-      end)
-
-    # TODO: Add source language select
-    case Adapter.request_translation(
-           "EN",
-           String.upcase(locale.iso639_code),
-           message.msgid
-         ) do
-      {:ok, translations} ->
-        %{"text" => translated_text} = List.first(translations)
-
-        form = Map.put(form, "translated_text", translated_text)
-
-        {:noreply,
-         update(
-           socket,
-           :forms,
-           &(&1
-             |> Enum.reject(fn f ->
-               Map.get(f, "nplural_index") == Map.get(form, "nplural_index")
-             end)
-             |> Enum.concat([form]))
-         )}
-
-      _ ->
-        {:noreply, socket}
-    end
-  end
-
-  def handle_event(
-        "validate",
-        %{"_target" => [target]} = attrs,
-        socket
-      ) do
-    %{forms: forms} = socket.assigns
-
-    "translated_text." <> nplural_index = target
-    translation = Map.get(attrs, target)
-
-    form =
-      Enum.find(forms, fn form ->
-        form["nplural_index"] == String.to_integer(nplural_index)
-      end)
-
-    form = Map.put(form, "translated_text", translation)
-
-    forms =
-      forms
-      |> Enum.reject(&(&1["id"] == form["id"]))
-      |> Enum.concat([form])
-
-    {:noreply, assign(socket, :forms, forms)}
+    {:noreply, update(socket, :form, &Map.merge(&1, %{"translated_text" => translated}))}
   end
 
   def handle_event("submit", attrs, socket) do
@@ -123,6 +63,21 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply,
-     push_redirect(socket, to: path(socket, ~p"/kanta/locales/#{locale.id}/translations"))}
+     push_redirect(socket,
+       to:
+         unverified_path(
+           socket,
+           Kanta.Router,
+           "/kanta/locales/#{locale.id}/translations"
+         )
+     )}
+  end
+
+  def plural_examples(locale, index) do
+    forms_struct = Expo.PluralForms.parse!(locale.plurals_header)
+
+    Enum.group_by(0..30, &Expo.PluralForms.index(forms_struct, &1), & &1)
+    |> Map.fetch!(index)
+    |> Enum.join(", ")
   end
 end

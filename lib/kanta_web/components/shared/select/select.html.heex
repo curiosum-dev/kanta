@@ -26,7 +26,7 @@
         <span class="block ml-3 truncate text-stone-900 dark:text-content-light"><%= @selected_option.label %></span>
       </span>
       <span class="absolute inset-y-0 right-0 flex items-center pr-2 ml-3 pointer-events-none">
-        <Lucide.chevrons_up_down class="w-5 h-5 text-gray-400" />
+        <Icons.chevrons_up_down class="w-5 h-5 text-gray-400" />
       </span>
     </button>
 
@@ -43,7 +43,7 @@
 
       <%= for {option, idx} <- Enum.with_index(@options)  do %>
         <li
-          class="relative py-2 pl-3 hover:bg-primary hover:dark:bg-accent-dark text-content-dark dark:text-content-light cursor-pointer select-none pr-9"
+          class="relative py-2 pl-3 hover:bg-primary hover:dark:bg-accent-dark text-content-dark dark:text-content-light hover:text-content-light cursor-pointer select-none pr-9"
           role="option"
           @click="selectedIdx = idx"
           @mouseenter={"idx = #{idx}"}

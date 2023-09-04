@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapper do
+  @moduledoc """
+  Utility for mapping locales data from iso code
+  """
+
   def get_native_name(code) do
     dictionary_file = Application.app_dir(:kanta, "priv/iso639.json")
     dictionary = Jason.decode!(File.read!(dictionary_file))

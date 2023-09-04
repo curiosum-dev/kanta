@@ -1,16 +1,16 @@
 <div>
-  <div class="mb-4">
+  <div class="mb-6">
     <div>
       <div>
         <nav class="sm:hidden" aria-label="Back">
-          <a href="#" class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
+          <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/locales/#{@locale.id}/translations")} class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
             <svg class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
             </svg>
             Back
-          </a>
+          </.link>
         </nav>
-        <nav class="hidden sm:flex" aria-label="Breadcrumb">
+        <nav class="hidden sm:flex mb-2" aria-label="Breadcrumb">
           <ol class="flex items-center space-x-4">
             <li>
               <div>
@@ -22,7 +22,7 @@
                 <svg class="flex-shrink-0 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <a phx-click="navigate" phx-value-to={"/kanta/locales/#{@locale.id}/translations"} class="cursor-pointer ml-4 text-sm font-medium text-slate-400 hover:text-slate-200"><%= @locale.name %></a>
+                <.link patch={"/kanta/locales/#{@locale.id}/translations"} class="cursor-pointer ml-4 text-sm font-medium text-slate-400 hover:text-slate-200"><%= @locale.native_name %></.link>
               </div>
             </li>
             <li>
@@ -30,7 +30,7 @@
                 <svg class="flex-shrink-0 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <a href="#" aria-current="page" class="cursor-pointer ml-4 text-sm font-medium text-slate-400 hover:text-slate-200"><%= @message.msgid %></a>
+                <a href="#" aria-current="page" class="cursor-pointer ml-4 text-sm font-medium text-slate-400 hover:text-slate-200 truncate"><%= @message.msgid %></a>
               </div>
             </li>
           </ol>
@@ -38,52 +38,56 @@
       </div>
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="text-2xl font-bold leading-7 text-primary-dark dark:text-accent-dark sm:text-3xl sm:truncate">
-            Translating '<%= @message.msgid %>' to '<%= @locale.name %>'
+          <h2 class="text-xl font-bold leading-7 text-slate-600 dark:text-content-light sm:text-2xl sm:truncate">
+            Translating <span class="text-primary-dark dark:text-accent-dark underline truncate"><%= @message.msgid %></span> to <span class="text-primary-dark dark:text-accent-dark underline"><%= @locale.native_name %></span>
           </h2>
         </div>
       </div>
     </div>
   </div>
-  <%= for form <- Enum.sort_by(@forms, & &1["nplural_index"]) do %>
-    <.form for={form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="space-y-2">
-      <div class="mt-8 pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
-        <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">
-          Plural form <%= form["nplural_index"] %>
-        </h3>
+  <.live_component module={Tabs} id="tabs" tabs={@tabs} current_url={"/kanta/locales/#{@locale.id}/translations/#{@message.id}"} current_tab={@current_tab} />
+  <.form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="bg-white dark:bg-stone-900 shadow rounded-md mt-4 px-4 py-4 space-y-4">
+    <div class="pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
+      <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">
+        <span class="opacity-80 mr-4">Form for quantity of i.e</span> <%= plural_examples(@locale, @current_tab_index) %>
+      </h3>
+    </div>
+    <div class="grid grid-cols-2 gap-4 lg:gap-8">
+      <div class="col-span-2 space-y-4">
+        <div>
+          <label for="original_text" class="block text-sm font-bold text-slate-700 dark:text-content-light">Message ID</label>
+          <div class="my-4 font-bold text-md text-primary-dark dark:text-accent-dark">
+            <%= @message.msgid %>
+          </div>
+        </div>
+        <div>
+          <label for="original_text" class="block text-sm font-bold text-slate-700 dark:text-content-light">PO file text</label>
+          <div class="mt-1">
+            <textarea disabled type="text" name="original_text" id="original_text" class="bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= @form["original_text"] %></textarea>
+          </div>
+        </div>
+        <div>
+          <label for={"translated_text.#{@current_tab_index}"} class="block text-sm font-bold text-slate-700 dark:text-content-light">Kanta translated text</label>
+          <div class="mt-1">
+            <textarea type="text" name={"translated_text.#{@current_tab_index}"} id={"translated_text.#{@current_tab_index}"} class="bg-white dark:bg-base-dark text-content-dark dark:text-content-light shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= @form["translated_text"] %></textarea>
+          </div>
+        </div>
       </div>
-      <div class="grid grid-cols-6 gap-4">
-        <div class="col-span-6 lg:col-span-4 space-y-2">
-          <div class="mt-4">
-            <label for={"original_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Original text</label>
-            <div class="mt-1">
-              <textarea disabled name={"original_text.#{form["nplural_index"]}"} id={"original_text.#{form["nplural_index"]}"} class="text-content-dark dark:text-content-light bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= form["original_text"] %></textarea>
-            </div>
-          </div>
-          <div class="mt-4">
-            <label for={"translated_text.#{form["nplural_index"]}"} class="block text-sm font-medium text-slate-700 dark:text-content-light">Translated text</label>
-            <div class="mt-1">
-              <textarea name={"translated_text.#{form["nplural_index"]}"} id={"translated_text.#{form["nplural_index"]}"} class="bg-white dark:bg-base-dark text-content-dark dark:text-content-light shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= form["translated_text"] %></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="mt-10 bg-slate-50 dark:bg-stone-900 rounded-lg shadow-md px-4 py-4 col-span-6 lg:col-span-2 space-y-2">
-          <div class="text-slate-600 dark:text-content-light font-semibold text-lg mb-4">Extensions</div>
-          <%= if Kanta.plugin_enabled?(Kanta.Plugins.POWriter) do %>
-            <button phx-click="overwrite_po" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
-              Overwrite PO file text
-            </button>
-          <% end %>
-          <%= if Kanta.plugin_enabled?(Kanta.Plugins.DeepL) do %>
-            <button phx-click="translate_via_deep_l" phx-value-nplural_index={form["nplural_index"]} phx-target={@myself} type="button" class="inline-flex items-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium  text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
-              Translate via DeepL
-            </button>
-          <% end %>
-        </div>
+      <div class="col-span-2">
         <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
           Save
         </button>
       </div>
-    </.form>
+    </div>
+  </.form>
+  <%= if length(Kanta.config().plugins) > 0 do %>
+    <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
+    <div class=" mt-4 bg-white dark:bg-stone-900 rounded-lg shadow-md px-4 py-4 col-span-2 lg:col-span-1 space-y-2">
+      <%= for {plugin_name, _} <- Kanta.config().plugins do %>
+        <%= if plugin_name |> Module.concat(FormComponent) |> module_exists?() do %>
+          <%= live_component(Module.concat(plugin_name, FormComponent), id: plugin_name, message: @message, locale: @locale, translation: @translation) %>
+        <% end %>
+      <% end %>
+    </div>
   <% end %>
 </div>

@@ -1,9 +1,13 @@
 defmodule Kanta.Translations.Messages.Finders.ListMessages do
+  @moduledoc """
+  Query module aka Finder responsible for listing gettext messages
+  """
+
   use Kanta.Query,
     module: Kanta.Translations.Message,
     binding: :message
 
-  alias Kanta.Translations.{SingularTranslation, PluralTranslation}
+  alias Kanta.Translations.{PluralTranslation, SingularTranslation}
 
   @available_filters ~w(domain_id context_id)
 

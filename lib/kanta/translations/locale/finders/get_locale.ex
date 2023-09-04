@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Locale.Finders.GetLocale do
+  @moduledoc """
+  Query module aka Finder responsible for finding locale
+  """
+
   use Kanta.Query,
     module: Kanta.Translations.Locale,
     binding: :locale

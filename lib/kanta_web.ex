@@ -92,12 +92,13 @@ defmodule KantaWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      # import KantaWeb.Gettext
     end
   end
 
   defp view_helpers do
     quote do
+      @endpoint Application.compile_env(:kanta, :endpoint)
+
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
@@ -106,6 +107,8 @@ defmodule KantaWeb do
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
+
+      import Kanta.Utils.ModuleUtils
 
       alias KantaWeb.Router.Helpers, as: Routes
       unquote(verified_routes())

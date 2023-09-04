@@ -1,4 +1,8 @@
 defmodule Kanta do
+  @moduledoc """
+  Main Kanta supervisor
+  """
+
   use Supervisor
 
   alias Kanta.{Config, Registry}

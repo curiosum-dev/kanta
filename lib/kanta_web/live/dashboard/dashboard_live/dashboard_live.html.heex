@@ -5,8 +5,8 @@
     </h2>
   </div>
 </div>
-<div class="mt-8 grid grid-cols-12 gap-2">
-  <div class="col-span-6 grid grid-cols-4 gap-4 h-fit">
+<div class="mt-8 grid grid-cols-12 gap-8">
+  <div class="col-span-6 grid grid-cols-4 gap-2 h-fit">
     <div class="col-span-1">
       <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
@@ -23,16 +23,34 @@
         </div>
       </div>
     </div>
-    <%= if Kanta.plugin_enabled?(Kanta.Plugins.DeepL) do %>
-      <div class="col-span-2">
-        <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
-          <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-            <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @deep_l_usage %>%</div>
-            <div class="text-slate-600 dark:text-content-light font-medium text-lg">DeepL Usage</div>
-          </div>
+    <div class="col-span-1">
+      <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
+        <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= length(@contexts) %></div>
+          <div class="text-slate-600 dark:text-content-light font-medium text-lg">Contexts</div>
         </div>
       </div>
-    <% end %>
+    </div>
+    <div class="col-span-1">
+      <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
+        <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= length(@domains) %></div>
+          <div class="text-slate-600 dark:text-content-light font-medium text-lg">Domains</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-6">
+      <%= if length(Kanta.config().plugins) > 0 do %>
+        <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
+        <div class="grid grid-cols-4 gap-4">
+          <%= for {plugin_name, _} <- Kanta.config().plugins do %>
+            <%= if plugin_name |> Module.concat(DashboardComponent) |> module_exists?() do %>
+              <%= live_component(Module.concat(plugin_name, DashboardComponent), id: plugin_name) %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
   <div class="col-span-6">
     <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">

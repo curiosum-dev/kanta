@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.SingularTranslations.Finders.GetSingularTranslation do
+  @moduledoc """
+  Query module aka Finder responsible for finding singular translations
+  """
+
   use Kanta.Query,
     module: Kanta.Translations.SingularTranslation,
     binding: :singular_translation

@@ -1,9 +1,13 @@
 defmodule KantaWeb.Translations.Components.FiltersBar do
+  @moduledoc """
+  Messages filters bar component
+  """
+
   use KantaWeb, :live_component
 
   alias Kanta.Translations
 
-  alias KantaWeb.Components.Shared.{Select, SearchInput, Toggle}
+  alias KantaWeb.Components.Shared.{SearchInput, Select, Toggle}
 
   def update(assigns, socket) do
     %{entries: contexts, metadata: _contexts_metadata} = Translations.list_contexts()

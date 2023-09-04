@@ -68,12 +68,12 @@ defmodule Kanta.Gettext.Repo do
       ) do
     default_locale = Application.get_env(:kanta, :default_locale) || "en"
 
-    with {:ok, %Locale{id: locale_id}} <-
+    with {:ok, %Locale{id: locale_id, plurals_header: plurals_header}} <-
            Translations.get_locale(filter: [iso639_code: locale]),
          {:ok, %Domain{id: domain_id}} <-
            Translations.get_domain(filter: [name: domain]),
          {:ok, context_id} <- maybe_get_context_id(msgctxt),
-         {:ok, %Message{id: message_id, plurals_header: plurals_header}} <-
+         {:ok, %Message{id: message_id}} <-
            Translations.get_message(
              filter: [
                msgid: msgid_plural,

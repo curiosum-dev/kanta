@@ -1,0 +1,25 @@
+<div id={@id}>
+  <div class="sm:hidden">
+    <label for="tabs" class="sr-only">Select a tab</label>
+    <select phx-change="tab_clicked" phx-target={@myself} id="tabs" name="tabs" class="bg-base-light text-base-light dark:bg-base-dark block w-full focus:ring-primary focus:border-primary border-gray-300 rounded-md">
+        <%= for tab <- Enum.sort_by(@tabs, & &1.index) do %>
+            <option><%= tab.label %></option>
+        <% end %>
+    </select>
+  </div>
+  <div class="hidden sm:block">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex" aria-label="Tabs">
+        <%= for tab <- Enum.sort_by(@tabs, & &1.index) do %>
+          <div phx-click="tab_clicked" phx-target={@myself} phx-value-index={tab.index} 
+          class={[
+            "cursor-pointer flex flex-1",
+            "#{if String.to_integer(@current_tab) == tab.index, do: "border-primary dark:border-accent-dark text-primary dark:text-accent-dark w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm"}"
+            ]}>
+            <%= tab.label %>
+          </div>
+        <% end %>
+      </nav>
+    </div>
+  </div>
+</div>

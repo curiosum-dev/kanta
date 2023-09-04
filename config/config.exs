@@ -3,11 +3,8 @@ import Config
 config :kanta, Kanta.Cache,
   primary: [
     gc_interval: :timer.hours(24),
-    backend: :shards,
-    partitions: 2
+    backend: :shards
   ]
-
-config :tesla, :adapter, {Tesla.Adapter.Finch, name: Kanta.Finch}
 
 config :phoenix, :json_library, Jason
 config :phoenix, :stacktrace_depth, 20

@@ -29,8 +29,8 @@ defmodule Kanta.Query do
         from(_ in unquote(opts[:module]), as: unquote(opts[:binding]))
       end
 
-      def one(query \\ base()) do
-        Repo.get_repo().one(query)
+      def one(query \\ base(), opts \\ []) do
+        Repo.get_repo().one(query, opts)
       end
 
       def paginate(query, page \\ 1, per_page \\ 15)
@@ -194,15 +194,19 @@ defmodule Kanta.Query do
       defp maybe_inclusion(q, value, field_name) do
         if is_list(value) do
           if Enum.all?(value, &String.match?(&1, ~r/(>|>=|<|<=).*/)) do
-            Enum.reduce(value, q, fn value_element, query ->
-              get_query_operation(query, value_element, field_name)
-            end)
+            combine_inclusion_filters(q, value, field_name)
           else
             from(s in q, where: field(s, ^field_name) in ^value)
           end
         else
           q
         end
+      end
+
+      defp combine_inclusion_filters(q, value, field_name) do
+        Enum.reduce(value, q, fn value_element, query ->
+          get_query_operation(query, value_element, field_name)
+        end)
       end
 
       defp maybe_greater_than(q, value, field_name) do

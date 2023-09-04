@@ -1,4 +1,8 @@
 defmodule KantaWeb.Translations.Components.MessagesTable do
+  @moduledoc """
+  Gettext messages table component
+  """
+
   use KantaWeb, :live_component
 
   alias Kanta.Translations.{Message, SingularTranslation}
@@ -10,7 +14,12 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
   def handle_event("edit_message", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to: path(socket, ~p"/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}")
+       to:
+         unverified_path(
+           socket,
+           Kanta.Router,
+           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}"
+         )
      )}
   end
 
@@ -35,18 +44,20 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
       translations ->
         translations
-        |> Enum.map(fn translation ->
-          case get_in(translation, [Access.key!(source)]) do
-            nil ->
-              false
+        |> Enum.map(&is_plural_form_translated(&1, source))
+    end
+  end
 
-            "" ->
-              false
+  defp is_plural_form_translated(translation, source) do
+    case get_in(translation, [Access.key!(source)]) do
+      nil ->
+        false
 
-            _text ->
-              true
-          end
-        end)
+      "" ->
+        false
+
+      _text ->
+        true
     end
   end
 
@@ -71,7 +82,7 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
         case get_in(translation, [Access.key!(source)]) do
           nil -> "Missing"
           "" -> "Missing"
-          text -> if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
+          text -> truncate_translation(text)
         end
     end
   end
@@ -85,17 +96,7 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
         translations ->
           translations
           |> Enum.map(fn translation ->
-            text =
-              case get_in(translation, [Access.key!(source)]) do
-                nil ->
-                  "Missing"
-
-                "" ->
-                  "Missing"
-
-                text ->
-                  if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
-              end
+            text = get_plural_form_text(translation, source)
 
             %{index: translation.nplural_index, text: text}
           end)
@@ -116,5 +117,22 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
     else
       "Missing"
     end
+  end
+
+  defp get_plural_form_text(translation, source) do
+    case get_in(translation, [Access.key!(source)]) do
+      nil ->
+        "Missing"
+
+      "" ->
+        "Missing"
+
+      text ->
+        truncate_translation(text)
+    end
+  end
+
+  defp truncate_translation(text) do
+    if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
   end
 end

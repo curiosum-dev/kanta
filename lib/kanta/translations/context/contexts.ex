@@ -1,4 +1,8 @@
 defmodule Kanta.Translations.Contexts do
+  @moduledoc """
+  Gettext Contexts Kanta subcontext
+  """
+
   alias Kanta.Translations.Context
   alias Kanta.Translations.Contexts.Finders.{GetContext, ListContexts}
 

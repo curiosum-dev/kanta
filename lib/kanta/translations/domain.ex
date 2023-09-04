@@ -1,8 +1,14 @@
 defmodule Kanta.Translations.Domain do
+  @moduledoc """
+  Gettext domain DB model
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 
   alias Kanta.Translations.Message
+
+  @type t() :: Kanta.Translations.DomainSpec.t()
 
   schema "kanta_domains" do
     field :name, :string
@@ -10,6 +16,8 @@ defmodule Kanta.Translations.Domain do
     field :color, :string
 
     has_many :messages, Message
+
+    timestamps()
   end
 
   def changeset(struct, params) do
