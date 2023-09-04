@@ -6,7 +6,7 @@ defmodule Kanta.MixProject do
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
       package: package(),
-      version: "0.1.3",
+      version: "0.2.0",
       elixir: "~> 1.14",
       elixirc_options: [
         warnings_as_errors: true
@@ -17,7 +17,8 @@ defmodule Kanta.MixProject do
       dialyzer: dialyzer(),
       docs: [
         extras: ["docs/how-to-write-plugins.md"],
-        assets: "docs/assets"
+        assets: "docs/assets",
+        main: "Kanta"
       ]
     ]
   end
