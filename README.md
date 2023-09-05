@@ -102,7 +102,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.2.1"},
+    {:kanta, "~> 0.2.2"},
     {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
@@ -216,22 +216,9 @@ Kanta tracks the progress of your application's translation into other languages
 
 # Plugins
 
-## PO Writer
-
-Kanta was created to allow easy management of static text translations in the application, however, for various reasons like wanting a backup or parallel use of other tools like TMS etc. you may want to overwrite .po files with translations entered in Kanta. All you need to do is add `Kanta.Plugins.POWriter` to the list of plugins, and new functions will appear in the Kanta UI to allow writing to .po files.
-
-```elixir
-# config/config.exs
-config :kanta,
-  ...
-  plugins: [
-    Kanta.Plugins.POWriter
-  ]
-```
-
 ## DeepL
 
-Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `{:kanta_deep_l_plugin, "~> 0.1.0"}` to your `deps` and append `Kanta.DeepL.Plugin` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
+Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `{:kanta_deep_l_plugin, "~> 0.1.1"}` to your `deps` and append `Kanta.DeepL.Plugin` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
 
 <img style="margin-top: 1rem; margin-bottom: 1rem;" src="./plural.png" alt="plural">
 
@@ -239,7 +226,7 @@ Not all of us are polyglots, and sometimes we need the help of machine translati
 # mix.exs
 defp deps
   ...
-  {:kanta_deep_l_plugin, "~> 0.1.0"}
+  {:kanta_deep_l_plugin, "~> 0.1.1"}
 end
 ```
 
@@ -249,6 +236,27 @@ config :kanta,
   ...
   plugins: [
     {Kanta.DeepL.Plugin, api_key: "YOUR_DEEPL_API_KEY"}
+  ]
+```
+
+## PO Writer
+
+Kanta was created to allow easy management of static text translations in the application, however, for various reasons like wanting a backup or parallel use of other tools like TMS etc. you may want to overwrite .po files with translations entered in Kanta. To install it append `{:kanta_po_writer_plugin, git: "https://github.com/curiosum-dev/kanta_po_writer_plugin"}` to your `deps` list. Currently, it's not on Hex because it's in a pre-release version. Then add `Kanta.Plugins.POWriter` to the list of plugins, and new functions will appear in the Kanta UI to allow writing to .po files.
+
+```elixir
+# mix.exs
+defp deps
+  ...
+  {:kanta_po_writer_plugin, git: "https://github.com/curiosum-dev/kanta_po_writer_plugin"},
+end
+```
+
+```elixir
+# config/config.exs
+config :kanta,
+  ...
+  plugins: [
+    Kanta.POWriter.Plugin
   ]
 ```
 
