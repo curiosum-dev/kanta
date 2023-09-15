@@ -183,6 +183,8 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
 Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
 
 ```elixir
+import KantaWeb.Router
+
 scope "/" do
   pipe_through :browser
 
