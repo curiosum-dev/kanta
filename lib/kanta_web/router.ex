@@ -71,6 +71,26 @@ defmodule KantaWeb.Router do
     end
   end
 
+  defmacro kanta_api(path) do
+    quote bind_quoted: binding() do
+      pipeline :kanta_api_pipeline do
+        plug :accepts, ["json"]
+        plug KantaWeb.APIAuthPlug
+      end
+
+      scope path, alias: false, as: false do
+        scope "/", KantaWeb.Api do
+          pipe_through :kanta_api_pipeline
+          get "/", KantaApiController, :index
+
+          scope "/translations" do
+            put "/", KantaApiController, :put_translations
+          end
+        end
+      end
+    end
+  end
+
   defp expand_alias({:__aliases__, _, _} = alias, env),
     do: Macro.expand(alias, %{env | function: {:kanta_dashboard, 2}})
 

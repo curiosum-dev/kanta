@@ -36,6 +36,9 @@ defmodule Kanta.Translations.SingularTranslations do
   end
 
   def update_singular_translation(translation, attrs) do
+    IO.inspect(translation)
+    IO.inspect(attrs)
+
     SingularTranslation.changeset(translation, attrs)
     |> Repo.get_repo().update()
     |> case do
