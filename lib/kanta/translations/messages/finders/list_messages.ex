@@ -17,36 +17,29 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
     |> filter_query(Map.take(params[:filter] || %{}, @available_filters))
     |> not_translated_query(params[:filter])
     |> search_subquery(params[:filter], params[:search])
+    |> distinct(true)
     |> preload_resources(params[:preloads] || [])
     |> paginate(String.to_integer(params[:page] || "1"), params[:per_page])
   end
 
   defp not_translated_query(query, %{"locale_id" => locale_id, "not_translated" => "true"}) do
-    singular_messages_query =
-      query
-      |> with_join(:singular_translations, %{"locale_id" => locale_id})
-      |> where(
-        [singular_translation: st],
-        (is_nil(st.translated_text) or
-           st.translated_text == "") and
-          (is_nil(st.original_text) or
-             st.original_text == "")
-      )
-
-    plural_messages_query =
-      query
-      |> with_join(:plural_translations, %{"locale_id" => locale_id})
-      |> where(
-        [plural_translation: pt],
-        (is_nil(pt.translated_text) or
-           pt.translated_text == "") and
-          (is_nil(pt.original_text) or
-             pt.original_text == "")
-      )
-
-    union_query = union_all(singular_messages_query, ^plural_messages_query)
-
-    from(_ in subquery(union_query), as: :message)
+    query
+    |> with_join(:singular_translations, %{"locale_id" => locale_id})
+    |> where(
+      [singular_translation: st],
+      (is_nil(st.translated_text) or
+         st.translated_text == "") and
+        (is_nil(st.original_text) or
+           st.original_text == "")
+    )
+    |> with_join(:plural_translations, %{"locale_id" => locale_id})
+    |> where(
+      [plural_translation: pt],
+      (is_nil(pt.translated_text) or
+         pt.translated_text == "") and
+        (is_nil(pt.original_text) or
+           pt.original_text == "")
+    )
   end
 
   defp not_translated_query(query, _), do: query
