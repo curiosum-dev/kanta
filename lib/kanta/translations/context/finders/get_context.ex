@@ -37,7 +37,6 @@ defmodule Kanta.Translations.Contexts.Finders.GetContext do
   defp find_in_database(params) do
     base()
     |> filter_query(params[:filter])
-    |> search_query(params[:search])
     |> preload_resources(params[:preloads] || [])
     |> one()
     |> case do
