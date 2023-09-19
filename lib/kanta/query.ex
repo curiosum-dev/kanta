@@ -138,9 +138,9 @@ defmodule Kanta.Query do
       @doc """
       Joins resource with another resource.
 
-      *Important!* The joining has to be defined by join_resource/2 function. Example:
+      *Important!* The joining has to be defined by join_resource/3 function. Example:
       ```
-      defp join_resource(query, :articles) do
+      defp join_resource(query, :articles, opts) do
         query
         |> join(:left, [user: u], _ in assoc(u, :articles), as: :article)
       end
@@ -156,15 +156,12 @@ defmodule Kanta.Query do
 
       """
       @spec with_join(Ecto.Query.t(), atom()) :: Ecto.Query.t()
-      def with_join(query \\ base(), resource_name, opts \\ nil) when is_atom(resource_name) do
+      @spec with_join(Ecto.Query.t(), atom(), keyword()) :: Ecto.Query.t()
+      def with_join(query \\ base(), resource_name, opts \\ []) when is_atom(resource_name) do
         if has_named_binding?(query, resource_name) do
           query
         else
-          if is_nil(opts) do
-            join_resource(query, resource_name)
-          else
-            join_resource(query, resource_name, opts)
-          end
+          join_resource(query, resource_name, opts)
         end
       end
 
@@ -397,17 +394,18 @@ defmodule Kanta.Query do
         )
       end
 
-      @spec join_resource(Ecto.Query.t(), atom()) :: no_return()
-      @spec join_resource(Ecto.Query.t(), atom(), any()) :: no_return()
+      defmacro null_or_empty(field) do
+        quote do
+          fragment("(? = '') IS NOT FALSE", unquote(field))
+        end
+      end
 
-      defp join_resource(_query, _), do: join_resource_raise()
-      defp join_resource(_query, _, _opts), do: join_resource_raise()
-
-      defp join_resource_raise do
+      @spec join_resource(Ecto.Query.t(), atom(), keyword()) :: no_return()
+      defp join_resource(_query, _, _opts) do
         raise(ArgumentError, message: "wrong join criteria")
       end
 
-      defoverridable join_resource: 2, join_resource: 3
+      defoverridable join_resource: 3
     end
   end
 end

@@ -14,9 +14,9 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
 
   def find(params \\ []) do
     base()
-    |> filter_query(Map.take(params[:filter] || %{}, @available_filters))
+    |> filter_query(Map.take(params[:filter], @available_filters))
     |> not_translated_query(params[:filter])
-    |> search_subquery(params[:filter], params[:search])
+    |> search_subquery([locale_id: params[:filter]["locale_id"]], params[:search])
     |> distinct(true)
     |> preload_resources(params[:preloads] || [])
     |> paginate(String.to_integer(params[:page] || "1"), params[:per_page])
@@ -24,21 +24,15 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
 
   defp not_translated_query(query, %{"locale_id" => locale_id, "not_translated" => "true"}) do
     query
-    |> with_join(:singular_translations, %{"locale_id" => locale_id})
+    |> with_join(:singular_translations, locale_id: locale_id)
     |> where(
       [singular_translation: st],
-      (is_nil(st.translated_text) or
-         st.translated_text == "") and
-        (is_nil(st.original_text) or
-           st.original_text == "")
+      null_or_empty(st.translated_text) and null_or_empty(st.original_text)
     )
-    |> with_join(:plural_translations, %{"locale_id" => locale_id})
+    |> with_join(:plural_translations, locale_id: locale_id)
     |> where(
       [plural_translation: pt],
-      (is_nil(pt.translated_text) or
-         pt.translated_text == "") and
-        (is_nil(pt.original_text) or
-           pt.original_text == "")
+      null_or_empty(pt.translated_text) and null_or_empty(pt.original_text)
     )
   end
 
@@ -60,14 +54,18 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
     join(query, :inner, [message: m], sq in ^sub, on: sq.id == m.id)
   end
 
-  def join_resource(query, :singular_translations, %{"locale_id" => locale_id}) do
+  def join_resource(query, :singular_translations, opts) do
+    locale_id = opts[:locale_id]
+
     join(query, :left, [message: m], st in assoc(m, :singular_translations),
       as: :singular_translation,
       on: st.message_id == m.id and st.locale_id == ^locale_id
     )
   end
 
-  def join_resource(query, :plural_translations, %{"locale_id" => locale_id}) do
+  def join_resource(query, :plural_translations, opts) do
+    locale_id = opts[:locale_id]
+
     join(query, :left, [message: m], pt in assoc(m, :plural_translations),
       as: :plural_translation,
       on: pt.message_id == m.id and pt.locale_id == ^locale_id
