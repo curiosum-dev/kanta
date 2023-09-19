@@ -34,6 +34,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         message={@message}
         locale={@locale}
         current_tab={@tab}
+        current_tab_index={String.to_integer(@tab) - 1}
       />
     """
   end

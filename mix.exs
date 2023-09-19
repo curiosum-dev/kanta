@@ -6,7 +6,7 @@ defmodule Kanta.MixProject do
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
       package: package(),
-      version: "0.1.4",
+      version: "0.2.2",
       elixir: "~> 1.14",
       elixirc_options: [
         warnings_as_errors: true
@@ -17,7 +17,8 @@ defmodule Kanta.MixProject do
       dialyzer: dialyzer(),
       docs: [
         extras: ["docs/how-to-write-plugins.md"],
-        assets: "docs/assets"
+        assets: "docs/assets",
+        main: "Kanta"
       ]
     ]
   end
@@ -50,7 +51,7 @@ defmodule Kanta.MixProject do
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
-      {:gettext, github: "bamorim/gettext", branch: "runtime-gettext", only: [:dev, :test]},
+      {:gettext, github: "ravensiris/gettext", branch: "runtime-gettext", only: [:dev, :test]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:dialyxir, "~> 1.3", only: :dev, runtime: false}
     ]
