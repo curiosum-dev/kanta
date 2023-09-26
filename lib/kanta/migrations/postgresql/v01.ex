@@ -98,14 +98,14 @@ defmodule Kanta.Migrations.Postgresql.V01 do
 
     execute """
       ALTER TABLE #{prefix}.#{@kanta_messages}
-        ADD COLUMN searchable tsvector
+        ADD COLUMN IF NOT EXISTS searchable tsvector
         GENERATED ALWAYS AS (
           setweight(to_tsvector('english', coalesce(msgid, '')), 'A')
         ) STORED;
     """
 
     execute """
-      CREATE INDEX #{@kanta_messages}_searchable_idx ON #{prefix}.#{@kanta_messages} USING gin(searchable);
+      CREATE INDEX IF NOT EXISTS #{@kanta_messages}_searchable_idx ON #{prefix}.#{@kanta_messages} USING gin(searchable);
     """
 
     create_if_not_exists unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])

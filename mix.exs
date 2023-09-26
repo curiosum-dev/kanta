@@ -6,7 +6,7 @@ defmodule Kanta.MixProject do
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
       package: package(),
-      version: "0.2.2",
+      version: "0.3.0",
       elixir: "~> 1.14",
       elixirc_options: [
         warnings_as_errors: true
@@ -39,7 +39,7 @@ defmodule Kanta.MixProject do
       {:ecto_sql, "~> 3.10"},
       {:phoenix, "~> 1.7.0"},
       {:phoenix_view, "~> 2.0"},
-      {:phoenix_live_view, "~> 0.18"},
+      {:phoenix_live_view, "~> 0.20"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
       {:nebulex, "~> 2.5"},
