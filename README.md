@@ -140,11 +140,11 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.up(version: 2, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 
   def down do
-    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.down(version: 2, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
@@ -183,6 +183,8 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
 Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
 
 ```elixir
+import KantaWeb.Router
+
 scope "/" do
   pipe_through :browser
 

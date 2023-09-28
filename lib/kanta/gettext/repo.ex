@@ -1,6 +1,4 @@
 defmodule Kanta.Gettext.Repo do
-  # @behaviour Gettext.Repo
-
   alias Kanta.Translations.{
     Context,
     Domain,
@@ -12,12 +10,10 @@ defmodule Kanta.Gettext.Repo do
 
   alias Kanta.Translations
 
-  # @impl Gettext.Repo
   def init(_) do
     __MODULE__
   end
 
-  # @impl Gettext.Repo
   def get_translation(locale, domain, msgctxt, msgid, opts) do
     default_locale = Application.get_env(:kanta, :default_locale) || "en"
 
@@ -56,7 +52,6 @@ defmodule Kanta.Gettext.Repo do
     end
   end
 
-  # @impl Gettext.Repo
   def get_plural_translation(
         locale,
         domain,

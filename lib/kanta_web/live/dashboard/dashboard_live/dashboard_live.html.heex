@@ -45,7 +45,7 @@
         <div class="grid grid-cols-4 gap-4">
           <%= for {plugin_name, _} <- Kanta.config().plugins do %>
             <%= if plugin_name |> Module.concat(DashboardComponent) |> module_exists?() do %>
-              <%= live_component(Module.concat(plugin_name, DashboardComponent), id: plugin_name) %>
+              <.live_component module={Module.concat(plugin_name, DashboardComponent)} id={plugin_name} />
             <% end %>
           <% end %>
         </div>
