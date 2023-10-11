@@ -14,12 +14,12 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
 
   def find(params \\ []) do
     base()
-    |> filter_query(Map.take(params[:filter], @available_filters))
+    |> filter_query(Map.take(params[:filter] || %{}, @available_filters))
     |> not_translated_query(params[:filter])
-    |> search_subquery([locale_id: params[:filter]["locale_id"]], params[:search])
+    |> search_subquery(params[:filter], params[:search])
     |> distinct(true)
     |> preload_resources(params[:preloads] || [])
-    |> paginate(String.to_integer(params[:page] || "1"), params[:per_page])
+    |> paginate(params[:page], params[:per_page])
   end
 
   defp not_translated_query(query, %{"locale_id" => locale_id, "not_translated" => "true"}) do
@@ -40,6 +40,12 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
 
   defp search_subquery(query, _, nil), do: query
   defp search_subquery(query, _, ""), do: query
+
+  defp search_subquery(query, %{"locale_id" => locale_id}, search) do
+    search_subquery(query, [locale_id: locale_id], search)
+  end
+
+  defp search_subquery(query, filter, _) when is_map(filter), do: query
 
   defp search_subquery(query, filter, search) do
     sub =

@@ -12,6 +12,8 @@ defmodule Kanta.Translations.Locale do
 
   @type t() :: Kanta.Translations.LocaleSpec.t()
 
+  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+
   schema "kanta_locales" do
     field :iso639_code, :string
     field :name, :string

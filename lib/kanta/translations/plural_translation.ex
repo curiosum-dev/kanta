@@ -13,6 +13,8 @@ defmodule Kanta.Translations.PluralTranslation do
 
   @type t() :: Kanta.Translations.PluralTranslationSpec.t()
 
+  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+
   schema "kanta_plural_translations" do
     field :nplural_index, :integer
     field :original_text, :string

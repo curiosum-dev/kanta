@@ -9,6 +9,7 @@ defmodule Kanta.Translations.Locale.Finders.ListLocales do
 
   def find(params \\ []) do
     base()
+    |> order_by(:id)
     |> filter_query(params[:filter])
     |> preload_resources(params[:preloads] || [])
     |> paginate(params[:page], params[:per_page])

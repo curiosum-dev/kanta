@@ -12,6 +12,8 @@ defmodule Kanta.Translations.SingularTranslation do
 
   @type t() :: Kanta.Translations.SingularTranslationSpec.t()
 
+  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+
   schema "kanta_singular_translations" do
     field :original_text, :string
     field :translated_text, :string

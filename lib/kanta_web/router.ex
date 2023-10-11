@@ -4,7 +4,7 @@ defmodule KantaWeb.Router do
   # deps/phoenix/lib/phoenix/router.ex:2:no_return Function call/2 has no local return.
   @dialyzer {:no_return, {:call, 2}}
 
-  defmacro kanta_dashboard(path, opts \\ []) do
+  defmacro kanta_dashboard(path \\ "/kanta", opts \\ []) do
     opts =
       if Macro.quoted_literal?(opts) do
         Macro.prewalk(opts, &expand_alias(&1, __CALLER__))
@@ -71,7 +71,7 @@ defmodule KantaWeb.Router do
     end
   end
 
-  defmacro kanta_api(path) do
+  defmacro kanta_api(path \\ "/kanta-api") do
     quote bind_quoted: binding() do
       pipeline :kanta_api_pipeline do
         plug :accepts, ["json"]
@@ -83,9 +83,15 @@ defmodule KantaWeb.Router do
           pipe_through :kanta_api_pipeline
           get "/", KantaApiController, :index
 
-          scope "/translations" do
-            put "/", KantaApiController, :put_translations
-          end
+          resources "/contexts", ContextsController, only: [:index, :update]
+          resources "/domains", DomainsController, only: [:index, :update]
+          resources "/locales", LocalesController, only: [:index, :update]
+          resources "/messages", MessagesController, only: [:index, :update]
+
+          resources "/singular_translations", SingularTranslationsController,
+            only: [:index, :update]
+
+          resources "/plural_translations", PluralTranslationsController, only: [:index, :update]
         end
       end
     end

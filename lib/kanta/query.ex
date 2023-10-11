@@ -34,8 +34,10 @@ defmodule Kanta.Query do
         Repo.get_repo().one(query, opts)
       end
 
-      def paginate(query, page \\ 1, per_page \\ 15)
-      def paginate(query, nil, nil), do: paginate(query, 1, 15)
+      @default_page_size 100
+
+      def paginate(query, page \\ 1, per_page \\ @default_page_size)
+      def paginate(query, nil, nil), do: paginate(query, 1, @default_page_size)
 
       def paginate(query, page, per_page) do
         %{
@@ -51,7 +53,7 @@ defmodule Kanta.Query do
               caller: self(),
               module: Repo.get_repo(),
               page_number: page || 1,
-              page_size: per_page || 15,
+              page_size: per_page || @default_page_size,
               options: []
             }
           )

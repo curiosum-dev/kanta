@@ -8,7 +8,12 @@ defmodule Kanta.Translations.Domain do
 
   alias Kanta.Translations.Message
 
+  @all_fields ~w(name description color)a
+  @required_fields ~w(name)a
+
   @type t() :: Kanta.Translations.DomainSpec.t()
+
+  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
 
   schema "kanta_domains" do
     field :name, :string
@@ -22,7 +27,7 @@ defmodule Kanta.Translations.Domain do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [:name, :description, :color])
-    |> validate_required([:name])
+    |> cast(params, @all_fields)
+    |> validate_required(@required_fields)
   end
 end
