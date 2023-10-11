@@ -1,4 +1,6 @@
 defmodule KantaWeb.APIAuthPlug do
+  @moduledoc false
+
   import Plug.Conn
 
   @kanta_secret_token "KANTA_SECRET_TOKEN"
