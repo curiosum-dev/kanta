@@ -7,14 +7,16 @@ defmodule Kanta.Config do
           otp_name: atom(),
           repo: module(),
           endpoint: module(),
-          plugins: false | [module() | {module() | Keyword.t()}]
+          plugins: false | [module() | {module() | Keyword.t()}],
+          disable_api_authorization: boolean()
         }
 
   defstruct name: Kanta,
             otp_name: nil,
             repo: nil,
             endpoint: nil,
-            plugins: []
+            plugins: [],
+            disable_api_authorization: false
 
   alias Kanta.Validator
 
@@ -68,6 +70,15 @@ defmodule Kanta.Config do
       :ok
     else
       {:error, "expected otp_name to be set"}
+    end
+  end
+
+  defp validate_opt(_opts, {:disable_api_authorization, disable_api_authorization}) do
+    if is_boolean(disable_api_authorization) do
+      :ok
+    else
+      {:error,
+       "expected :disable_api_authorization to be a boolean, got: #{inspect(disable_api_authorization)}"}
     end
   end
 

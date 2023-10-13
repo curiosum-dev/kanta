@@ -34,10 +34,21 @@ defmodule Kanta.Query do
         Repo.get_repo().one(query, opts)
       end
 
-      def paginate(query, page \\ 1, per_page \\ 15)
-      def paginate(query, nil, nil), do: paginate(query, 1, 15)
+      @default_page_size 100
+      @minimum_per_page 10
+
+      @spec paginate(Ecto.Query.t(), integer() | nil, integer() | nil) :: map()
+      @spec paginate(Ecto.Query.t(), integer() | nil) :: map()
+      @spec paginate(Ecto.Query.t()) :: map()
+
+      def paginate(query, page \\ 1, per_page \\ @default_page_size)
 
       def paginate(query, page, per_page) do
+        page = if is_number(page), do: max(page, 1), else: 1
+
+        per_page =
+          if is_number(per_page), do: max(per_page, @minimum_per_page), else: @default_page_size
+
         %{
           entries: entries,
           page_number: page_number,
@@ -51,7 +62,7 @@ defmodule Kanta.Query do
               caller: self(),
               module: Repo.get_repo(),
               page_number: page || 1,
-              page_size: per_page || 15,
+              page_size: per_page || @default_page_size,
               options: []
             }
           )

@@ -102,7 +102,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.3.0"},
+    {:kanta, "~> 0.3.1"},
     {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
@@ -180,9 +180,9 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
 
 ## Kanta UI
 
-Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
+Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro. 
 
-```elixir
+```elixir 
 import KantaWeb.Router
 
 scope "/" do
@@ -226,7 +226,7 @@ Not all of us are polyglots, and sometimes we need the help of machine translati
 
 ```elixir
 # mix.exs
-defp deps
+defp deps do 
   ...
   {:kanta_deep_l_plugin, "~> 0.1.1"}
 end
@@ -240,6 +240,35 @@ config :kanta,
     {Kanta.DeepL.Plugin, api_key: "YOUR_DEEPL_API_KEY"}
   ]
 ```
+
+## KantaSync 
+
+The [KantaSync plugin](https://github.com/curiosum-dev/kanta_sync_plugin) allows you to synchronize translations between your production and staging/dev environments. It ensures that any changes made to translations in one are reflected in the others, helping you maintain consistency across different stages of development.
+
+```elixir 
+# mix.exs 
+defp deps do 
+  ...
+  {:kanta_sync_plugin, "~> 0.1.0"}
+end
+```
+
+You need to have Kanta API configured by using kanta_api macro. 
+
+```elixir
+# router.ex 
+import KantaWeb.Router
+
+scope "/" do 
+  kanta_api("/kanta-api")
+end 
+```
+
+### Authorization
+
+Set `KANTA_SECRET_TOKEN` environment variable for restricting API access. It should be generated with `mix phx.gen.secret 256` and both environments must have the same `KANTA_SECRET_TOKEN` environment variables.
+
+You can also disable default authorization mechanism and use your own, by passing `disable_api_authorization: true` option into Kanta's config.
 
 ## PO Writer
 
