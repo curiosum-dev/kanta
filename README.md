@@ -102,7 +102,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.2.2"},
+    {:kanta, "~> 0.3.1"},
     {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
@@ -256,6 +256,7 @@ end
 You need to have Kanta API configured by using kanta_api macro. 
 
 ```elixir
+# router.ex 
 import KantaWeb.Router
 
 scope "/" do 
@@ -263,7 +264,11 @@ scope "/" do
 end 
 ```
 
-The next step is to set `KANTA_SECRET_TOKEN` environment variable for restricting API access. It should be generated with `mix phx.gen.secret 256` and both environments must have the same `KANTA_SECRET_TOKEN` environment variables.
+### Authorization
+
+Set `KANTA_SECRET_TOKEN` environment variable for restricting API access. It should be generated with `mix phx.gen.secret 256` and both environments must have the same `KANTA_SECRET_TOKEN` environment variables.
+
+You can also disable default authorization mechanism and use your own, by passing `disable_api_authorization: true` option into Kanta's config.
 
 ## PO Writer
 

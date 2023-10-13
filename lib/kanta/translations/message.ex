@@ -8,12 +8,12 @@ defmodule Kanta.Translations.Message do
 
   alias Kanta.Translations.{Context, Domain, PluralTranslation, SingularTranslation}
 
-  @all_fields ~w(msgid message_type domain_id context_id)a
   @required_fields ~w(msgid message_type)a
+  @optional_fields ~w(domain_id context_id)a
 
   @type t() :: Kanta.Translations.MessageSpec.t()
 
-  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+  @derive {Jason.Encoder, only: [:id] ++ @required_fields ++ @optional_fields}
 
   schema "kanta_messages" do
     field :msgid, :string
@@ -30,7 +30,7 @@ defmodule Kanta.Translations.Message do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, @all_fields)
+    |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
   end
 end

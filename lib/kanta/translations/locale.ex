@@ -7,12 +7,12 @@ defmodule Kanta.Translations.Locale do
   import Ecto.Changeset
   alias Kanta.Translations.SingularTranslation
 
-  @all_fields ~w(iso639_code name plurals_header native_name family wiki_url colors)a
   @required_fields ~w(iso639_code name native_name)a
+  @optional_fields ~w(plurals_header family wiki_url colors)a
 
   @type t() :: Kanta.Translations.LocaleSpec.t()
 
-  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+  @derive {Jason.Encoder, only: [:id] ++ @required_fields ++ @optional_fields}
 
   schema "kanta_locales" do
     field :iso639_code, :string
@@ -31,7 +31,7 @@ defmodule Kanta.Translations.Locale do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, @all_fields)
+    |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
   end
 end

@@ -8,7 +8,7 @@ defmodule KantaWeb.APIAuthPlug do
   def init(_opts), do: %{}
 
   def call(conn, _opts) do
-    if is_bearer_token_valid?(conn) do
+    if api_authorization_disabled?() or is_bearer_token_valid?(conn) do
       conn
     else
       conn
@@ -54,5 +54,9 @@ defmodule KantaWeb.APIAuthPlug do
   defp sha256(token) do
     :crypto.hash(:sha256, token)
     |> Base.encode64()
+  end
+
+  defp api_authorization_disabled? do
+    Kanta.config().disable_api_authorization
   end
 end

@@ -13,10 +13,13 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
   @available_filters ~w(domain_id context_id)
 
   def find(params \\ []) do
+    filters = params[:filter] || %{}
+    query_filters = Map.take(filters, @available_filters)
+
     base()
-    |> filter_query(Map.take(params[:filter] || %{}, @available_filters))
-    |> not_translated_query(params[:filter])
-    |> search_subquery(params[:filter], params[:search])
+    |> filter_query(query_filters)
+    |> not_translated_query(filters)
+    |> search_subquery(filters, params[:search])
     |> distinct(true)
     |> preload_resources(params[:preloads] || [])
     |> paginate(params[:page], params[:per_page])

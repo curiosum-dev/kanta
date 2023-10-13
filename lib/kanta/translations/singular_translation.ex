@@ -7,12 +7,12 @@ defmodule Kanta.Translations.SingularTranslation do
   import Ecto.Changeset
   alias Kanta.Translations.{Locale, Message}
 
-  @all_fields ~w(original_text translated_text locale_id message_id)a
   @required_fields ~w(message_id locale_id)a
+  @optional_fields ~w(original_text translated_text)a
 
   @type t() :: Kanta.Translations.SingularTranslationSpec.t()
 
-  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+  @derive {Jason.Encoder, only: [:id] ++ @required_fields ++ @optional_fields}
 
   schema "kanta_singular_translations" do
     field :original_text, :string
@@ -26,7 +26,7 @@ defmodule Kanta.Translations.SingularTranslation do
 
   def changeset(struct, attrs \\ %{}) do
     struct
-    |> cast(attrs, @all_fields)
+    |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> foreign_key_constraint(:locale_id)
     |> foreign_key_constraint(:message_id)

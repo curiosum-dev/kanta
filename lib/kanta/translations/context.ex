@@ -8,12 +8,12 @@ defmodule Kanta.Translations.Context do
 
   alias Kanta.Translations.Message
 
-  @all_fields ~w(name description color)a
   @required_fields ~w(name)a
+  @optional_fields ~w(description color)a
 
   @type t() :: Kanta.Translations.ContextSpec.t()
 
-  @derive {Jason.Encoder, only: [:id] ++ @all_fields}
+  @derive {Jason.Encoder, only: [:id] ++ @required_fields ++ @optional_fields}
 
   schema "kanta_contexts" do
     field :name, :string
@@ -27,7 +27,7 @@ defmodule Kanta.Translations.Context do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, @all_fields)
+    |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
   end
 end
