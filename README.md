@@ -61,6 +61,7 @@
     <ul>
       <li><a href="#po-writer">PO Writer</a></li>
       <li><a href="#deepl">DeepL</a></li>
+      <li><a href="#kantasync">Translation synchronization</a></li>
     </ul>
   </li>
   <li><a href="#roadmap">Roadmap</a></li>
