@@ -337,6 +337,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
+[Curiosum](https://curiosum.com)
+
 Michał Buszkiewicz - michal@curiosum.com
 
 Krzysztof Janiec - krzysztof.janiec@curiosum.com
