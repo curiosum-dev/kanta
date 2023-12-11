@@ -35,21 +35,21 @@ defmodule Kanta.POFiles.MessagesExtractor do
 
     messages
     |> Stream.map(fn
-      %Expo.Message.Singular{msgctxt: nil, msgid: [msgid], msgstr: [text]} ->
+      %Expo.Message.Singular{msgctxt: nil, msgid: [msgid], msgstr: texts} ->
         ExtractSingularTranslation.call(%{
           msgid: msgid,
           locale_name: locale,
           domain_name: domain,
-          original_text: text
+          original_text: Enum.join(texts)
         })
 
-      %Expo.Message.Singular{msgctxt: [msgctxt], msgid: [msgid], msgstr: [text]} ->
+      %Expo.Message.Singular{msgctxt: [msgctxt], msgid: [msgid], msgstr: texts} ->
         ExtractSingularTranslation.call(%{
           msgid: msgid,
           context_name: msgctxt,
           locale_name: locale,
           domain_name: domain,
-          original_text: text
+          original_text: Enum.join(texts)
         })
 
       %Expo.Message.Plural{msgctxt: nil, msgid_plural: [msgid], msgstr: plurals_map} ->
