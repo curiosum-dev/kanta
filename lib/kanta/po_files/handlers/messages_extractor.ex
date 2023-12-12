@@ -16,8 +16,8 @@ defmodule Kanta.POFiles.MessagesExtractor do
     ]
 
     priv = :code.priv_dir(opts[:otp_name])
-    all_po_files = po_files_in_priv(priv)
-    known_po_files = known_po_files(all_po_files, opts)
+    priv_gettext_po_files = po_files_in_priv(priv)
+    known_po_files = known_po_files(priv_gettext_po_files, opts)
 
     extract_translations(known_po_files)
   end
@@ -82,6 +82,7 @@ defmodule Kanta.POFiles.MessagesExtractor do
 
   defp po_files_in_priv(priv) do
     priv
+    |> Path.join("gettext")
     |> Path.join(@po_wildcard)
     |> Path.wildcard()
   end
