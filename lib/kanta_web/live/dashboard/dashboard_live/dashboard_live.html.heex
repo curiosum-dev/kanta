@@ -47,6 +47,9 @@
             <%= if plugin_name |> Module.concat(DashboardComponent) |> module_exists?() do %>
               <.live_component module={Module.concat(plugin_name, DashboardComponent)} id={plugin_name} />
             <% end %>
+            <%= if plugin_name |> Module.concat(DashboardLive) |> module_exists?() do %>
+              <%= live_render(@socket, Module.concat(plugin_name, DashboardLive), id: plugin_name) %>
+            <% end %>
           <% end %>
         </div>
       <% end %>

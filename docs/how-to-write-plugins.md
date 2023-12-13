@@ -116,6 +116,38 @@ end
 
 ![Preview of plugin's panel added to the Kanta dashboard](assets/images/dashboard.png)
 
+#### Need async or more control over the process?
+You can use `DashboardLive` instead. Which would render as a child live view.
+This way you can write async code and have a separate process for your component.
+**lib/dashboard_live**:
+
+```elixir
+defmodule YourPluginName.DashboardLive do
+  @moduledoc """
+  Phoenix child live view for Kanta dashboard
+  """
+
+  use Phoenix.LiveView, container: {:div, style: "grid-column: 1 / -1;"}
+
+  @impl true
+  def render(assigns) do
+   ~H""" 
+    <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
+      <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+        <div class="text-3xl font-bold text-primary dark:text-accent-light">status: <%= @status %></div>
+        <div class="text-slate-600 dark:text-content-light font-medium text-lg">YourPluginName</div>
+      </div>
+    </div>
+    """
+  end
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok, socket}
+  end
+end
+```
+
 ### Adding custom form to translation edit view
 
 Enhance the translation edit view with a touch of personalization, by creating a component named `YourPluginName.FormComponent`.
