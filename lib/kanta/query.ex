@@ -44,7 +44,7 @@ defmodule Kanta.Query do
       def paginate(query, page \\ 1, per_page \\ @default_page_size)
 
       def paginate(query, page, per_page) do
-        page = if is_number(page), do: max(page, 1), else: 1
+        page = parse_page(page)
 
         per_page =
           if is_number(per_page), do: max(per_page, @minimum_per_page), else: @default_page_size
@@ -61,7 +61,7 @@ defmodule Kanta.Query do
             %Scrivener.Config{
               caller: self(),
               module: Repo.get_repo(),
-              page_number: page || 1,
+              page_number: page,
               page_size: per_page || @default_page_size,
               options: []
             }
@@ -417,6 +417,29 @@ defmodule Kanta.Query do
       end
 
       defoverridable join_resource: 3
+
+      @spec parse_page(page :: any()) :: integer()
+      defp parse_page(page) when is_binary(page) do
+        case Integer.parse(page) do
+          {n, _} ->
+            parse_page(n)
+
+          :error ->
+            1
+        end
+      end
+
+      defp parse_page(page) when is_integer(page) do
+        max(page, 1)
+      end
+
+      defp parse_page(page) when is_float(page) do
+        page
+        |> floor()
+        |> parse_page()
+      end
+
+      defp parse_page(_), do: 1
     end
   end
 end
