@@ -1,4 +1,6 @@
 defmodule Kanta.Gettext.Repo do
+  alias Kanta.Utils.Compilation
+
   alias Kanta.Translations.{
     Context,
     Domain,
@@ -15,6 +17,14 @@ defmodule Kanta.Gettext.Repo do
   end
 
   def get_translation(locale, domain, msgctxt, msgid, opts) do
+    if Compilation.compiling?() do
+      msgid
+    else
+      do_get_translation(locale, domain, msgctxt, msgid, opts)
+    end
+  end
+
+  defp do_get_translation(locale, domain, msgctxt, msgid, opts) do
     default_locale = Application.get_env(:kanta, :default_locale) || "en"
 
     with {:ok, %Locale{id: locale_id}} <-
@@ -39,7 +49,7 @@ defmodule Kanta.Gettext.Repo do
            ) do
       if is_nil(text) do
         if locale != default_locale do
-          get_translation(default_locale, domain, msgctxt, msgid, opts)
+          do_get_translation(default_locale, domain, msgctxt, msgid, opts)
         else
           :not_found
         end
@@ -61,6 +71,30 @@ defmodule Kanta.Gettext.Repo do
         plural_form,
         opts
       ) do
+    if Compilation.compiling?() do
+      if plural_form == 1, do: msgid, else: msgid_plural
+    else
+      do_get_plural_translation(
+        locale,
+        domain,
+        msgctxt,
+        msgid,
+        msgid_plural,
+        plural_form,
+        opts
+      )
+    end
+  end
+
+  defp do_get_plural_translation(
+         locale,
+         domain,
+         msgctxt,
+         msgid,
+         msgid_plural,
+         plural_form,
+         opts
+       ) do
     default_locale = Application.get_env(:kanta, :default_locale) || "en"
 
     with {:ok, %Locale{id: locale_id, plurals_header: plurals_header}} <-
@@ -88,7 +122,7 @@ defmodule Kanta.Gettext.Repo do
            ) do
       if is_nil(text) do
         if locale != default_locale do
-          get_plural_translation(
+          do_get_plural_translation(
             default_locale,
             domain,
             msgctxt,
