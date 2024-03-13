@@ -11,8 +11,6 @@ defmodule Kanta.Gettext.Repo do
   alias Kanta.Utils.Compilation
   alias Kanta.Translations
 
-  require Logger
-
   def init(_) do
     __MODULE__
   end
