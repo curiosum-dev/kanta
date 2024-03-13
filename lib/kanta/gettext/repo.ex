@@ -1,4 +1,6 @@
 defmodule Kanta.Gettext.Repo do
+  alias Kanta.Utils.Compilation
+
   alias Kanta.Translations.{
     Context,
     Domain,
@@ -8,7 +10,6 @@ defmodule Kanta.Gettext.Repo do
     SingularTranslation
   }
 
-  alias Kanta.Utils.Compilation
   alias Kanta.Translations
 
   def init(_) do
