@@ -1,6 +1,8 @@
 defmodule KantaWeb.Translations.TranslationFormLive do
   use KantaWeb, :live_view
 
+  import Kanta.Utils.ParamParsers, only: [parse_id_filter: 1]
+
   alias Kanta.Translations
   alias Kanta.Translations.Message
 
@@ -41,13 +43,15 @@ defmodule KantaWeb.Translations.TranslationFormLive do
 
   def mount(%{"message_id" => message_id, "locale_id" => locale_id}, _session, socket) do
     socket =
-      with {:ok, locale} <- Translations.get_locale(filter: [id: locale_id]),
-           {:ok, message} <- Translations.get_message(filter: [id: message_id]),
+      with {:ok, locale} <- get_locale(locale_id),
+           {:ok, message} <- get_message(message_id),
            {:ok, translations} <- get_translations(message, locale) do
         socket
         |> assign(:locale, locale)
         |> assign(:message, message)
         |> assign(:translations, translations)
+      else
+        _ -> redirect(socket, to: "/kanta/locales/#{locale_id}/translations")
       end
 
     {:ok, socket}
@@ -114,6 +118,20 @@ defmodule KantaWeb.Translations.TranslationFormLive do
             |> Enum.reject(&is_nil/1)
           }
         end
+    end
+  end
+
+  defp get_locale(locale_id) do
+    case parse_id_filter(locale_id) do
+      nil -> nil
+      id -> Translations.get_locale(filter: [id: id])
+    end
+  end
+
+  defp get_message(message_id) do
+    case parse_id_filter(message_id) do
+      nil -> nil
+      id -> Translations.get_message(filter: [id: id])
     end
   end
 end
