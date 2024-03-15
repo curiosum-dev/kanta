@@ -2,7 +2,7 @@
   id={"#{@id}-wrapper"}
   class="flex items-center"
   phx-hook="Toggle"
-  x-data="{ on: false }"
+  x-data={"{ on: #{@default_value} }"}
   x-init={"() => { $watch('on', val => $dispatch('toggle-change', { id: '##{@id}', state: val }) ) }"}
 >
   <%= hidden_input @form, @field.name %>
