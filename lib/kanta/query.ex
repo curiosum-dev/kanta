@@ -337,10 +337,20 @@ defmodule Kanta.Query do
       def search_query(query, search_term) do
         repo = Repo.get_repo()
 
-        if Postgresql.migrated_version(%{repo: repo}) >= 2 do
-          search_query_fuzzy(query, search_term)
-        else
-          search_query_legacy(query, search_term)
+        case repo.__adapter__() do
+          Ecto.Adapters.Postgres ->
+            if Postgresql.migrated_version(%{repo: repo}) >= 2 do
+              search_query_fuzzy(query, search_term)
+            else
+              search_query_legacy(query, search_term)
+            end
+
+          _ ->
+            or_where(
+              query,
+              [{unquote(opts[:binding]), resource}],
+              like(resource.searchable, ^"%#{search_term}%")
+            )
         end
       end
 

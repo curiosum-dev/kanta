@@ -46,10 +46,15 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
       %Message{} = message -> {:ok, message}
       _ -> {:error, :message, :not_found}
     end
-    |> database_fallback_public_prefix(params, opts)
+    |> database_fallback_public_prefix(params, opts, Repo.get_repo().__adapter__())
   end
 
-  defp database_fallback_public_prefix({:error, :message, :not_found} = result, params, repo_opts) do
+  defp database_fallback_public_prefix(
+         {:error, :message, :not_found} = result,
+         params,
+         repo_opts,
+         Ecto.Adapters.Postgres
+       ) do
     if public_prefix?(repo_opts) do
       result
     else
@@ -58,7 +63,7 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
     end
   end
 
-  defp database_fallback_public_prefix(result, _, _), do: result
+  defp database_fallback_public_prefix(result, _, _, _), do: result
 
   defp public_prefix?(repo_opts) do
     config_prefix = Repo.get_repo().default_options(:all) |> Keyword.get(:prefix, :unset)
