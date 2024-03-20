@@ -3,7 +3,7 @@ defmodule Kanta.Translations.Domain do
   Gettext domain DB model
   """
 
-  use Ecto.Schema
+  use Kanta.Schema
   import Ecto.Changeset
 
   alias Kanta.Translations.Message

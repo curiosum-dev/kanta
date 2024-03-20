@@ -15,7 +15,8 @@ defmodule KantaWeb.Components.Shared.Select do
         if is_nil(field) do
           List.first(options)
         else
-          Enum.find(options, &(&1.value == value_to_integer(field.value))) || List.first(options)
+          Enum.find(options, &(parse_select_value(&1.value) == field.value)) ||
+            List.first(options)
         end
       else
         assigns.selected_option
@@ -40,12 +41,7 @@ defmodule KantaWeb.Components.Shared.Select do
     }
   end
 
-  defp value_to_integer(nil), do: nil
-  defp value_to_integer(""), do: nil
-
-  defp value_to_integer(value) do
-    String.to_integer(value)
-  rescue
-    _ in ArgumentError -> nil
-  end
+  defp parse_select_value(nil), do: nil
+  defp parse_select_value(""), do: nil
+  defp parse_select_value(value), do: to_string(value)
 end

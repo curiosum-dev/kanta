@@ -3,7 +3,7 @@ defmodule Kanta.Translations.SingularTranslation do
   Singular translation DB model
   """
 
-  use Ecto.Schema
+  use Kanta.Schema
   import Ecto.Changeset
   alias Kanta.Translations.{Locale, Message}
 

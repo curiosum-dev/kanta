@@ -3,7 +3,7 @@ defmodule Kanta.Translations.Locale do
   Locale DB model
   """
 
-  use Ecto.Schema
+  use Kanta.Schema
   import Ecto.Changeset
   alias Kanta.Translations.SingularTranslation
 

@@ -1,7 +1,7 @@
 <div
   id={"#{@id}-wrapper"}
   phx-hook="Select"
-  x-data={"{ open: false, idx: -1, selectedIdx: #{Enum.find_index(@options, & &1.value == @field.value or &1.value == value_to_integer(@field.value)) || 0}, max: #{length(@options) - 1} }"}
+  x-data={"{ open: false, idx: -1, selectedIdx: #{Enum.find_index(@options, & parse_select_value(&1.value) == @field.value) || 0}, max: #{length(@options) - 1} }"}
   x-init={"() => { $watch('selectedIdx', val => $dispatch('selected-change', { selectedIdx: val, id: '##{@id}' }) ) }"}
   x-on:reset="open = false"
 >
