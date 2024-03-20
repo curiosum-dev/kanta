@@ -26,8 +26,4 @@ defmodule Kanta.Utils.ParamParsers do
   defp run_parse_function({module, parse_function, 1}, id) do
     apply(module, parse_function, [id])
   end
-
-  defp run_parse_function(_, _) do
-    raise "Invalid id_parse_function provided in Kanta's config"
-  end
 end

@@ -84,13 +84,18 @@ defmodule Kanta.Config do
     end
   end
 
-  defp validate_opt(_opts, {:id_parse_function, {module, function, _arity} = id_parse_function}) do
+  defp validate_opt(_opts, {:id_parse_function, {module, function, 1} = id_parse_function}) do
     if Code.ensure_loaded?(module) and Kernel.function_exported?(module, function, 1) do
       :ok
     else
       {:error,
        "expected :id_parse_function to be a function with arity of 1, got: #{inspect(id_parse_function)}"}
     end
+  end
+
+  defp validate_opt(_opts, {:id_parse_function, {_module, _function, _arity} = id_parse_function}) do
+    {:error,
+     "expected :id_parse_function to be a function with arity of 1, got: #{inspect(id_parse_function)}"}
   end
 
   defp validate_opt(_opts, {:id_parse_function, id_parse_function}) do
