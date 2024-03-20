@@ -79,14 +79,12 @@ defmodule KantaWeb.Translations.TranslationsLive do
       socket
       |> assign(
         :filters,
-        Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
+        Map.merge(socket.assigns.filters, %{"page" => parse_page(page_number)})
       )
 
     query =
       UriQuery.params(
-        format_filters(
-          Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
-        )
+        format_filters(Map.merge(socket.assigns.filters, %{"page" => parse_page(page_number)}))
       )
 
     {:noreply,
@@ -99,8 +97,8 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   defp get_locale(id) do
     case parse_id_filter(id) do
-      nil -> nil
-      _ -> Translations.get_locale(filter: [id: id])
+      {:ok, id} -> Translations.get_locale(filter: [id: id])
+      _ -> {:error, :id, :invalid}
     end
   end
 
@@ -125,8 +123,8 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
         filter_key ->
           case parse_id_filter(value) do
-            nil -> acc
-            id -> Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, filter_key, id))
+            {:ok, id} -> Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, filter_key, id))
+            _ -> acc
           end
       end
     end)
@@ -165,16 +163,10 @@ defmodule KantaWeb.Translations.TranslationsLive do
   defp parse_filters(filters) do
     Enum.reduce(filters, %{}, fn {key, value}, acc ->
       case key do
-        "context_id" ->
+        filter_key when filter_key in ["context_id", "domain_id", "locale_id"] ->
           case parse_id_filter(value) do
-            nil -> acc
-            id -> Map.put(acc, key, id)
-          end
-
-        "domain_id" ->
-          case parse_id_filter(value) do
-            nil -> acc
-            id -> Map.put(acc, key, id)
+            {:ok, id} -> Map.put(acc, filter_key, id)
+            _ -> acc
           end
 
         filter_key ->

@@ -123,15 +123,15 @@ defmodule KantaWeb.Translations.TranslationFormLive do
 
   defp get_locale(locale_id) do
     case parse_id_filter(locale_id) do
-      nil -> nil
-      id -> Translations.get_locale(filter: [id: id])
+      {:ok, id} -> Translations.get_locale(filter: [id: id])
+      _ -> {:error, :id, :invalid}
     end
   end
 
   defp get_message(message_id) do
     case parse_id_filter(message_id) do
-      nil -> nil
-      id -> Translations.get_message(filter: [id: id])
+      {:ok, id} -> Translations.get_message(filter: [id: id])
+      _ -> {:error, :id, :invalid}
     end
   end
 end

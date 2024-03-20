@@ -8,7 +8,8 @@ defmodule Kanta.Config do
           repo: module(),
           endpoint: module(),
           plugins: false | [module() | {module() | Keyword.t()}],
-          disable_api_authorization: boolean()
+          disable_api_authorization: boolean(),
+          id_parse_function: mfa() | (term() -> {:ok, term()} | term())
         }
 
   defstruct name: Kanta,
@@ -16,7 +17,8 @@ defmodule Kanta.Config do
             repo: nil,
             endpoint: nil,
             plugins: [],
-            disable_api_authorization: false
+            disable_api_authorization: false,
+            id_parse_function: {Kanta.Utils.ParamParsers, :default_id_parser, 1}
 
   alias Kanta.Validator
 
@@ -79,6 +81,24 @@ defmodule Kanta.Config do
     else
       {:error,
        "expected :disable_api_authorization to be a boolean, got: #{inspect(disable_api_authorization)}"}
+    end
+  end
+
+  defp validate_opt(_opts, {:id_parse_function, {module, function, _arity} = id_parse_function}) do
+    if Code.ensure_loaded?(module) and Kernel.function_exported?(module, function, 1) do
+      :ok
+    else
+      {:error,
+       "expected :id_parse_function to be a function with arity of 1, got: #{inspect(id_parse_function)}"}
+    end
+  end
+
+  defp validate_opt(_opts, {:id_parse_function, id_parse_function}) do
+    if is_function(id_parse_function, 1) do
+      :ok
+    else
+      {:error,
+       "expected :id_parse_function to be a function with arity of 1, got: #{inspect(id_parse_function)}"}
     end
   end
 

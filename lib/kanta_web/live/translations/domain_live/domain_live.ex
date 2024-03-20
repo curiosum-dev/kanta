@@ -18,8 +18,8 @@ defmodule KantaWeb.Translations.DomainLive do
 
   defp get_domain(id) do
     case parse_id_filter(id) do
-      nil -> {:error, :id, :invalid}
-      id -> Translations.get_domain(filter: [id: id])
+      {:ok, id} -> Translations.get_domain(filter: [id: id])
+      _ -> {:error, :id, :invalid}
     end
   end
 end
