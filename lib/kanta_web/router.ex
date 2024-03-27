@@ -32,6 +32,11 @@ defmodule KantaWeb.Router do
                 live "/", DashboardLive, :index, route_opts
               end
 
+              scope "/applications", Translations do
+                live "/", ApplicationSourcesLive, :index, route_opts
+                live "/:id", ApplicationSourceLive, :index, route_opts
+              end
+
               scope "/contexts", Translations do
                 live "/", ContextsLive, :index, route_opts
                 live "/:id", ContextLive, :index, route_opts
@@ -83,6 +88,7 @@ defmodule KantaWeb.Router do
           pipe_through :kanta_api_pipeline
           get "/", KantaApiController, :index
 
+          resources "/applications", ApplicationSourcesController, only: [:index, :update]
           resources "/contexts", ContextsController, only: [:index, :update]
           resources "/domains", DomainsController, only: [:index, :update]
           resources "/locales", LocalesController, only: [:index, :update]

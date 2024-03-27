@@ -4,6 +4,7 @@ defmodule Kanta.Translations do
   """
 
   alias Kanta.Translations.{
+    ApplicationSources,
     Contexts,
     Domains,
     Locales,
@@ -11,6 +12,12 @@ defmodule Kanta.Translations do
     PluralTranslations,
     SingularTranslations
   }
+
+  # APPLICATION SOURCES
+  defdelegate list_application_sources(params \\ []), to: ApplicationSources
+  defdelegate get_application_source(params), to: ApplicationSources
+  defdelegate create_application_source(attrs), to: ApplicationSources
+  defdelegate application_sources_empty?(), to: ApplicationSources
 
   # CONTEXTS
   defdelegate list_contexts(params \\ []), to: Contexts

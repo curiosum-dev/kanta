@@ -6,9 +6,9 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   alias KantaWeb.Components.Shared.Pagination
 
-  @available_filters ~w(domain_id context_id search not_translated page)
+  @available_filters ~w(application_source_id domain_id context_id search not_translated page)
   @available_params ~w(page search filter)
-  @params_in_filter ~w(domain_id context_id not_translated)
+  @params_in_filter ~w(application_source_id domain_id context_id not_translated)
 
   def mount(%{"locale_id" => locale_id} = params, _session, socket) do
     socket =
@@ -16,7 +16,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
         {:ok, locale} ->
           socket
           |> assign(:locale, locale)
-          |> assign(:filters, %{})
+          |> assign(:application_sources_empty?, Translations.application_sources_empty?())
           |> assign(get_assigns_from_params(params))
 
         _ ->
@@ -35,6 +35,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
         |> Keyword.merge(page: parse_page(params["page"] || "1"))
         |> Keyword.merge(
           preloads: [
+            :application_source,
             :context,
             :domain,
             :singular_translations,
