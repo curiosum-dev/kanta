@@ -35,35 +35,35 @@ defmodule Kanta.POFiles.MessagesExtractor do
 
     messages
     |> Stream.map(fn
-      %Expo.Message.Singular{msgctxt: nil, msgid: [msgid], msgstr: texts} ->
+      %Expo.Message.Singular{msgctxt: nil, msgid: msgid, msgstr: texts} ->
         ExtractSingularTranslation.call(%{
-          msgid: msgid,
+          msgid: parse_msgid(msgid),
           locale_name: locale,
           domain_name: domain,
           original_text: Enum.join(texts)
         })
 
-      %Expo.Message.Singular{msgctxt: [msgctxt], msgid: [msgid], msgstr: texts} ->
+      %Expo.Message.Singular{msgctxt: [msgctxt], msgid: msgid, msgstr: texts} ->
         ExtractSingularTranslation.call(%{
-          msgid: msgid,
+          msgid: parse_msgid(msgid),
           context_name: msgctxt,
           locale_name: locale,
           domain_name: domain,
           original_text: Enum.join(texts)
         })
 
-      %Expo.Message.Plural{msgctxt: nil, msgid_plural: [msgid], msgstr: plurals_map} ->
+      %Expo.Message.Plural{msgctxt: nil, msgid_plural: msgid, msgstr: plurals_map} ->
         ExtractPluralTranslation.call(%{
-          msgid: msgid,
+          msgid: parse_msgid(msgid),
           locale_name: locale,
           domain_name: domain,
           plurals_map: plurals_map,
           plurals_header: plurals_header
         })
 
-      %Expo.Message.Plural{msgctxt: [msgctxt], msgid_plural: [msgid], msgstr: plurals_map} ->
+      %Expo.Message.Plural{msgctxt: [msgctxt], msgid_plural: msgid, msgstr: plurals_map} ->
         ExtractPluralTranslation.call(%{
-          msgid: msgid,
+          msgid: parse_msgid(msgid),
           context_name: msgctxt,
           locale_name: locale,
           domain_name: domain,
@@ -113,5 +113,13 @@ defmodule Kanta.POFiles.MessagesExtractor do
       :error ->
         Expo.Messages.get_header(messages, "Plural-Forms") |> List.first()
     end
+  end
+
+  defp parse_msgid([msgid]) do
+    msgid
+  end
+
+  defp parse_msgid(msgid) do
+    Enum.join(msgid)
   end
 end
