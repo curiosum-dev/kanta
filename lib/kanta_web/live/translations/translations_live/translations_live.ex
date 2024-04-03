@@ -11,6 +11,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
   @available_filters ~w(domain_id context_id search not_translated page)
   @available_params ~w(page search filter)
   @params_in_filter ~w(domain_id context_id not_translated)
+  @ids_to_parse ~w(domain_id context_id locale_id)
 
   def mount(%{"locale_id" => locale_id} = params, _session, socket) do
     socket =
@@ -161,17 +162,17 @@ defmodule KantaWeb.Translations.TranslationsLive do
   defp get_not_translated_default_value(_), do: false
 
   defp parse_filters(filters) do
-    Enum.reduce(filters, %{}, fn {key, value}, acc ->
-      case key do
-        filter_key when filter_key in ["context_id", "domain_id", "locale_id"] ->
-          case parse_id_filter(value) do
-            {:ok, id} -> Map.put(acc, filter_key, id)
-            _ -> acc
-          end
+    Enum.reduce(filters, %{}, &parse_filter/2)
+  end
 
-        filter_key ->
-          Map.put(acc, filter_key, value)
-      end
-    end)
+  defp parse_filter({key, value}, acc) when key in @ids_to_parse do
+    case parse_id_filter(value) do
+      {:ok, id} -> Map.put(acc, key, id)
+      _ -> acc
+    end
+  end
+
+  defp parse_filter({key, value}, acc) do
+    Map.put(acc, key, value)
   end
 end
