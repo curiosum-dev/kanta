@@ -18,7 +18,7 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
          unverified_path(
            socket,
            Kanta.Router,
-           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}"
+           "#{socket.router.__kanta_dashboard_prefix__()}/locales/#{socket.assigns.locale.id}/translations/#{id}"
          )
      )}
   end

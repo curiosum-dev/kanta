@@ -25,7 +25,11 @@ defmodule KantaWeb.Router do
             get "/css-:md5", KantaWeb.Assets, :css, as: :kanta_dashboard_asset
             get "/js-:md5", KantaWeb.Assets, :js, as: :kanta_dashboard_asset
 
-            redirect("/", "/kanta/dashboard", :permanent)
+            redirect(
+              "/",
+              "/#{__MODULE__ |> Module.get_attribute(:phoenix_top_scopes) |> Map.fetch!(:path) |> Enum.join("/")}/dashboard",
+              :permanent
+            )
 
             scope "/", KantaWeb do
               scope "/dashboard", Dashboard do
@@ -67,7 +71,14 @@ defmodule KantaWeb.Router do
         end
       end
     else
-      scope
+      quote do
+        unquote(scope)
+
+        unless Module.get_attribute(__MODULE__, :kanta_dashboard_prefix) do
+          @kanta_dashboard_prefix "/#{__MODULE__ |> Module.get_attribute(:phoenix_top_scopes) |> Map.fetch!(:path) |> Enum.join("/")}"
+          def __kanta_dashboard_prefix__, do: @kanta_dashboard_prefix
+        end
+      end
     end
   end
 

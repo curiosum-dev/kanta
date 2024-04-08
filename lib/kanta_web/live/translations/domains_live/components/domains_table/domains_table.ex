@@ -16,7 +16,7 @@ defmodule KantaWeb.Translations.DomainsTable do
          unverified_path(
            socket,
            Kanta.Router,
-           "/kanta/domains/#{id}"
+           "#{socket.router.__kanta_dashboard_prefix__()}/domains/#{id}"
          )
      )}
   end

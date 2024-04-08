@@ -16,7 +16,7 @@ defmodule KantaWeb.Translations.ContextsTable do
          unverified_path(
            socket,
            Kanta.Router,
-           "/kanta/contexts/#{id}"
+           "#{socket.router.__kanta_dashboard_prefix__()}/contexts/#{id}"
          )
      )}
   end

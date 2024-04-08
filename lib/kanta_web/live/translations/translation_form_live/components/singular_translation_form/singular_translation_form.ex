@@ -34,7 +34,7 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
          unverified_path(
            socket,
            Kanta.Router,
-           "/kanta/locales/#{locale.id}/translations"
+           "#{socket.router.__kanta_dashboard_prefix__()}/locales/#{locale.id}/translations"
          )
      )}
   end
