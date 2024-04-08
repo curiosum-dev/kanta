@@ -2,6 +2,8 @@ defmodule KantaWeb.Translations.TranslationsLive do
   use KantaWeb, :live_view
 
   alias Kanta.Translations
+  alias Kanta.Translations.SingularTranslations.Finders.ListSingularTranslations
+  alias Kanta.Translations.PluralTranslations.Finders.ListPluralTranslations
   alias KantaWeb.Translations.Components.{FiltersBar, MessagesTable}
 
   alias KantaWeb.Components.Shared.Pagination
@@ -27,6 +29,10 @@ defmodule KantaWeb.Translations.TranslationsLive do
   end
 
   def handle_params(%{"locale_id" => locale_id} = params, _location, socket) do
+    preload_filters = %{"locale_id" => locale_id}
+    singular_translation_query = ListSingularTranslations.filter_query(preload_filters)
+    plural_translation_query = ListPluralTranslations.filter_query(preload_filters)
+
     %{entries: messages, metadata: messages_metadata} =
       Translations.list_messages(
         []
@@ -37,8 +43,8 @@ defmodule KantaWeb.Translations.TranslationsLive do
           preloads: [
             :context,
             :domain,
-            :singular_translations,
-            :plural_translations
+            singular_translations: singular_translation_query,
+            plural_translations: plural_translation_query
           ]
         )
       )
