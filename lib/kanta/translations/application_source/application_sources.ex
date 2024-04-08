@@ -18,10 +18,10 @@ defmodule Kanta.Translations.ApplicationSources do
     GetApplicationSource.find(params)
   end
 
-  def create_application_source(attrs) do
+  def create_application_source(attrs, opts \\ []) do
     %ApplicationSource{}
     |> ApplicationSource.changeset(attrs)
-    |> Kanta.Repo.get_repo().insert()
+    |> Kanta.Repo.get_repo().insert(opts)
   end
 
   def application_sources_empty? do

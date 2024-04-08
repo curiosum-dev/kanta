@@ -56,7 +56,7 @@
                       </td>
                       <td class="px-6 py-4">
                         <div class="text-sm font-medium text-primary-dark truncate">
-                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.domain), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{message.domain.color};"}>
+                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.domain), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{unless is_nil(message.domain), do: message.domain.color, else: "transparent"};"}>
                             <%= if is_nil(message.domain), do: "None", else: message.domain.name %>
                           </span>
                         </div>
