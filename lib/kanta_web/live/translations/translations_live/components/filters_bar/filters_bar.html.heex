@@ -1,5 +1,6 @@
-<div >
-  <.form :let={form} for={@filters} phx-change="change" class="grid grid-cols-5 gap-2">
+<div>
+  <.form :let={form} for={@filters} phx-change="change" class="relative grid grid-cols-5 gap-2">
+    <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/locales/#{@locale_id}/translations")} class="absolute -top-1 right-0 font-semibold text-primary-dark dark:text-accent-dark">Clear filters</.link>
     <div class="col-span-5 sm:col-span-5 xl:col-span-2">
       <SearchInput.render 
         type="text" 
