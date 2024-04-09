@@ -34,8 +34,15 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
          unverified_path(
            socket,
            Kanta.Router,
-           "/kanta/locales/#{locale.id}/translations"
+           "/kanta/locales/#{locale.id}/translations" <> get_query(socket.assigns)
          )
      )}
+  end
+
+  defp get_query(%{filters: nil}), do: ""
+
+  defp get_query(%{filters: filters}) do
+    query = UriQuery.params(filters)
+    "?" <> URI.encode_query(query)
   end
 end

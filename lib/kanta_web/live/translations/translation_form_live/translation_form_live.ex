@@ -14,6 +14,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         translation={@translations}
         message={@message}
         locale={@locale}
+        filters={@filters}
       />
     """
   end
@@ -35,11 +36,12 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         locale={@locale}
         current_tab={@tab}
         current_tab_index={String.to_integer(@tab) - 1}
+        filters={@filters}
       />
     """
   end
 
-  def mount(%{"message_id" => message_id, "locale_id" => locale_id}, _session, socket) do
+  def mount(%{"message_id" => message_id, "locale_id" => locale_id} = params, _session, socket) do
     socket =
       with {:ok, locale} <- Translations.get_locale(filter: [id: locale_id]),
            {:ok, message} <- Translations.get_message(filter: [id: message_id]),
@@ -50,7 +52,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         |> assign(:translations, translations)
       end
 
-    {:ok, socket}
+    {:ok, assign(socket, :filters, Map.get(params, "filters"))}
   end
 
   def handle_params(%{"tab" => tab}, _uri, socket) do

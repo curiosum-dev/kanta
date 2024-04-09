@@ -7,18 +7,25 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
   alias Kanta.Translations.{Message, SingularTranslation}
 
+  @available_params ~w(page search filter)
+  @params_in_filter ~w(domain_id context_id not_translated)
+
   def update(socket, assigns) do
     {:ok, assign(assigns, socket)}
   end
 
   def handle_event("edit_message", %{"id" => id}, socket) do
+    params = get_filter_params_from_assigns(socket.assigns)
+    query = UriQuery.params(params)
+
     {:noreply,
      push_navigate(socket,
        to:
          unverified_path(
            socket,
            Kanta.Router,
-           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}"
+           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}?" <>
+             URI.encode_query(query)
          )
      )}
   end
@@ -134,5 +141,20 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
   defp truncate_translation(text) do
     if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
+  end
+
+  defp get_filter_params_from_assigns(%{filters: filters}) do
+    filter =
+      filters
+      |> Map.take(@params_in_filter)
+      |> Map.reject(fn {_, value} -> is_nil(value) or value == "" end)
+
+    params =
+      filters
+      |> Map.take(@available_params)
+      |> Map.put("filter", filter)
+      |> Map.reject(fn {_, value} -> is_nil(value) or value == "" end)
+
+    %{"filters" => params}
   end
 end
