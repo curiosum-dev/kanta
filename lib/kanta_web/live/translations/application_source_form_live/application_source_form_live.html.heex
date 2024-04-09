@@ -23,7 +23,7 @@
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="text-xl font-bold leading-7 text-slate-600 dark:text-content-light sm:text-2xl sm:truncate">
-            <%= if @application_source, do: "Updating application source", else: "Creating application source" %>
+            <%= if Map.has_key?(assigns, :application_source), do: "Updating application source", else: "Creating application source" %>
           </h2>
         </div>
       </div>
