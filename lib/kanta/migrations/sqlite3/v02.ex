@@ -9,8 +9,6 @@ defmodule Kanta.Migrations.SQLite3.V02 do
   @kanta_messages "kanta_messages"
 
   def up(opts) do
-    Kanta.Migration.up(version: 2)
-
     [
       &up_application_sources/1,
       &up_kanta_messages/1
@@ -24,8 +22,6 @@ defmodule Kanta.Migrations.SQLite3.V02 do
       &down_kanta_messages/1
     ]
     |> Enum.each(&apply(&1, [opts]))
-
-    Kanta.Migration.down(version: 2)
   end
 
   def up_application_sources(_opts) do
@@ -53,8 +49,7 @@ defmodule Kanta.Migrations.SQLite3.V02 do
                              :context_id,
                              :domain_id,
                              :msgid
-                           ],
-                           nulls_distinct: false
+                           ]
                          )
   end
 
@@ -70,8 +65,7 @@ defmodule Kanta.Migrations.SQLite3.V02 do
              :context_id,
              :domain_id,
              :msgid
-           ],
-           nulls_distinct: false
+           ]
          )
 
     create_if_not_exists unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])
