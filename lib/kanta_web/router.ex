@@ -32,9 +32,10 @@ defmodule KantaWeb.Router do
                 live "/", DashboardLive, :index, route_opts
               end
 
-              scope "/applications", Translations do
+              scope "/application_sources", Translations do
                 live "/", ApplicationSourcesLive, :index, route_opts
-                live "/:id", ApplicationSourceLive, :index, route_opts
+                live "/new", ApplicationSourceFormLive, :index, route_opts
+                live "/:id", ApplicationSourceFormLive, :index, route_opts
               end
 
               scope "/contexts", Translations do

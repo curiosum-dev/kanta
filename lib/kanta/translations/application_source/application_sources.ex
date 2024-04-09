@@ -24,6 +24,16 @@ defmodule Kanta.Translations.ApplicationSources do
     |> Kanta.Repo.get_repo().insert(opts)
   end
 
+  def update_application_source(%ApplicationSource{} = application_source, attrs, opts \\ []) do
+    application_source
+    |> ApplicationSource.changeset(attrs)
+    |> Kanta.Repo.get_repo().update(opts)
+  end
+
+  def change_application_source(%ApplicationSource{} = application_source, params \\ %{}) do
+    ApplicationSource.changeset(application_source, params)
+  end
+
   def application_sources_empty? do
     %{entries: application_sources, metadata: _application_sources_metadata} =
       list_application_sources(page: 1, per_page: 1)

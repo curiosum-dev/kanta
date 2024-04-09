@@ -12,7 +12,7 @@ defmodule KantaWeb.Translations.ApplicationSourcesTable do
   def handle_event("edit_application_source", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to: unverified_path(socket, Kanta.Router, "/kanta/applications/#{id}")
+       to: unverified_path(socket, Kanta.Router, "/kanta/application_sources/#{id}")
      )}
   end
 end

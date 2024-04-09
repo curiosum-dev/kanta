@@ -29,5 +29,6 @@ defmodule Kanta.Translations.ApplicationSource do
     struct
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
+    |> unique_constraint([:name])
   end
 end
