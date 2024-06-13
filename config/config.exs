@@ -4,7 +4,9 @@ config :kanta, Kanta.Cache,
   primary: [
     gc_interval: :timer.hours(24),
     backend: :shards
-  ]
+  ],
+  adapter: Nebulex.Adapters.Partitioned,
+  primary_storage_adapter: Nebulex.Adapters.Local
 
 config :phoenix, :json_library, Jason
 config :phoenix, :stacktrace_depth, 20
