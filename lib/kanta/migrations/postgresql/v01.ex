@@ -89,10 +89,10 @@ defmodule Kanta.Migrations.Postgresql.V01 do
     execute(create_if_not_exists_message_type_query, drop_message_type_query)
 
     create_if_not_exists table(@kanta_messages) do
-      add(:msgid, :text)
+      add(:msgid, :text, null: false)
       add(:message_type, :gettext_message_type, null: false)
-      add(:domain_id, references(@kanta_domains), null: true)
-      add(:context_id, references(@kanta_contexts), null: true)
+      add(:domain_id, references(@kanta_domains), null: false)
+      add(:context_id, references(@kanta_contexts), null: false)
       timestamps()
     end
 

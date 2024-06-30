@@ -8,6 +8,9 @@ defmodule Kanta.PoFiles.Services.ExtractMessage do
   alias Kanta.Translations
   alias Kanta.Translations.{Context, Domain}
 
+  @default_domain "default"
+  @default_context "default"
+
   def call(attrs) do
     Repo.get_repo().transaction(fn ->
       with {:ok, domain} <- assign_domain(attrs[:domain_name]),
@@ -48,6 +51,7 @@ defmodule Kanta.PoFiles.Services.ExtractMessage do
       {:error, :message, :not_found} ->
         attrs
         |> Map.put(:context_id, context_id)
+        |> Map.put(:domain_id, @default_domain)
         |> Translations.create_message()
     end
   end
@@ -60,6 +64,7 @@ defmodule Kanta.PoFiles.Services.ExtractMessage do
       {:error, :message, :not_found} ->
         attrs
         |> Map.put(:domain_id, domain_id)
+        |> Map.put(:context_id, @default_context)
         |> Translations.create_message()
     end
   end
