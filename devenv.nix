@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  erlang = pkgs.beam.packages.erlangR25;
+  erlang = pkgs.beam.packages.erlang_25;
   nodejs = pkgs.nodejs_20;
   elixir = erlang.elixir_1_14;
   elixir-ls = erlang.elixir-ls.override {elixir = erlang.elixir_1_14;};
@@ -15,12 +15,7 @@ in {
     export PATH=$PATH:$(pwd)/_build/pip_packages/bin
   '';
 
-  packages =
-    (with pkgs; [
-      inotify-tools
-      alejandra
-    ])
-    ++ [nodejs elixir-ls];
+  packages = [nodejs elixir-ls];
 
   languages.elixir = {
     enable = true;
