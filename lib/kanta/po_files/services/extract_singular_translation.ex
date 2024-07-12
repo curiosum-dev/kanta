@@ -27,6 +27,10 @@ defmodule Kanta.PoFiles.Services.ExtractSingularTranslation do
   end
 
   defp create_or_update_singular_translation(attrs, message, locale) do
+    IO.inspect(attrs, label: "🐛 Attributes")
+    IO.inspect(message, label: "🐛 Message")
+    IO.inspect(locale, label: "🐛 Locale")
+
     case Translations.get_singular_translation(
            filter: [message_id: message.id, locale_id: locale.id]
          ) do
