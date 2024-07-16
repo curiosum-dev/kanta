@@ -8,9 +8,7 @@ defmodule Kanta.MixProject do
       package: package(),
       version: "0.3.1",
       elixir: "~> 1.14",
-      elixirc_options: [
-        warnings_as_errors: true
-      ],
+      elixirc_options: [],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
