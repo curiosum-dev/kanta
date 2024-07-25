@@ -63,7 +63,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply,
-     push_redirect(socket,
+     push_navigate(socket,
        to:
          unverified_path(
            socket,
