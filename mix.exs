@@ -44,7 +44,7 @@ defmodule Kanta.MixProject do
       {:phoenix_html_helpers, "~> 1.0"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
-      {:nebulex, "~> 2.5"},
+      {:nebulex, "~> 2.6.2"},
       {:shards, "~> 1.0"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 2.0"},
