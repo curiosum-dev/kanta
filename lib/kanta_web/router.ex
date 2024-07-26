@@ -27,7 +27,7 @@ defmodule KantaWeb.Router do
 
             redirect(
               "/",
-              "/#{__MODULE__ |> Module.get_attribute(:phoenix_top_scopes) |> Map.fetch!(:path) |> Enum.join("/")}/dashboard",
+              "#{KantaWeb.Router.internal_dashboard_scoped_path(path)}/dashboard",
               :permanent
             )
 
@@ -61,23 +61,12 @@ defmodule KantaWeb.Router do
         end
       end
 
-    if Code.ensure_loaded?(Phoenix.VerifiedRoutes) do
-      quote do
-        unquote(scope)
+    quote do
+      unquote(scope)
 
-        unless Module.get_attribute(__MODULE__, :kanta_dashboard_prefix) do
-          @kanta_dashboard_prefix Phoenix.Router.scoped_path(__MODULE__, path)
-          def __kanta_dashboard_prefix__, do: @kanta_dashboard_prefix
-        end
-      end
-    else
-      quote do
-        unquote(scope)
-
-        unless Module.get_attribute(__MODULE__, :kanta_dashboard_prefix) do
-          @kanta_dashboard_prefix "/#{__MODULE__ |> Module.get_attribute(:phoenix_top_scopes) |> Map.fetch!(:path) |> Enum.join("/")}"
-          def __kanta_dashboard_prefix__, do: @kanta_dashboard_prefix
-        end
+      unless Module.get_attribute(__MODULE__, :kanta_dashboard_prefix) do
+        @kanta_dashboard_prefix KantaWeb.Router.internal_dashboard_scoped_path(path)
+        def __kanta_dashboard_prefix__, do: @kanta_dashboard_prefix
       end
     end
   end
@@ -105,6 +94,34 @@ defmodule KantaWeb.Router do
           resources "/plural_translations", PluralTranslationsController, only: [:index, :update]
         end
       end
+    end
+  end
+
+  defmacro internal_dashboard_scoped_path(path) do
+    if Code.ensure_loaded?(Phoenix.VerifiedRoutes) do
+      quote do
+        Phoenix.Router.scoped_path(__MODULE__, unquote(path))
+      end
+    else
+      quote do
+        __MODULE__
+        |> Module.get_attribute(:phoenix_top_scopes)
+        |> Map.fetch!(:path)
+        |> KantaWeb.Router.append_last_path(unquote(path))
+        |> Enum.join("/")
+        |> String.replace_prefix("", "/")
+      end
+    end
+  end
+
+  @spec append_last_path(list(), binary()) :: list()
+  def append_last_path(paths, "/" <> path), do: append_last_path(paths, path)
+
+  def append_last_path(paths, path) do
+    if List.last(paths) == path do
+      paths
+    else
+      paths ++ [path]
     end
   end
 
