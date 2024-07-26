@@ -4,6 +4,7 @@ defmodule Kanta.Migrations.SQLite3.V02 do
   """
 
   use Ecto.Migration
+  alias Kanta.Utils.Colors
 
   @kanta_application_sources "kanta_application_sources"
   @kanta_messages "kanta_messages"
@@ -28,7 +29,7 @@ defmodule Kanta.Migrations.SQLite3.V02 do
     create_if_not_exists table(@kanta_application_sources) do
       add(:name, :string)
       add(:description, :text)
-      add(:color, :string, null: false, default: "#7E37D8")
+      add(:color, :string, null: false, default: Colors.default_color())
       timestamps()
     end
 
