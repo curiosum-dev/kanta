@@ -111,6 +111,7 @@ defmodule KantaWeb do
 
       import Kanta.Utils.ModuleUtils
 
+      alias KantaWeb.Components.Icons
       alias KantaWeb.Router.Helpers, as: Routes
       unquote(verified_routes())
     end
