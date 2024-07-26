@@ -3,7 +3,7 @@
     <div>
       <div>
         <nav class="sm:hidden" aria-label="Back">
-          <.link navigate={unverified_path(@socket, Kanta.Router, "#{@socket.router.__kanta_dashboard_prefix__()}/locales/#{@locale.id}/translations")} class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
+          <.link navigate={dashboard_path(@socket, "/locales/#{@locale.id}/translations")} class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
             <svg class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
             </svg>
@@ -14,7 +14,7 @@
           <ol class="flex items-center space-x-4">
             <li>
               <div>
-                <.link patch={"#{@socket.router.__kanta_dashboard_prefix__()}/locales"} class="cursor-pointer text-sm font-medium text-slate-400 hover:text-slate-200">Locales</.link>
+                <.link patch={"#{dashboard_path(@socket)}/locales"} class="cursor-pointer text-sm font-medium text-slate-400 hover:text-slate-200">Locales</.link>
               </div>
             </li>
             <li>
@@ -22,7 +22,7 @@
                 <svg class="flex-shrink-0 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <.link patch={"#{@socket.router.__kanta_dashboard_prefix__()}/locales/#{@locale.id}/translations"} class="cursor-pointer ml-4 text-sm font-medium text-slate-400 hover:text-slate-200"><%= @locale.native_name %></.link>
+                <.link patch={"#{dashboard_path(@socket)}/locales/#{@locale.id}/translations"} class="cursor-pointer ml-4 text-sm font-medium text-slate-400 hover:text-slate-200"><%= @locale.native_name %></.link>
               </div>
             </li>
             <li>
@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <.live_component module={Tabs} id="tabs" tabs={@tabs} current_url={"#{@socket.router.__kanta_dashboard_prefix__()}/locales/#{@locale.id}/translations/#{@message.id}"} current_tab={@current_tab} />
+  <.live_component module={Tabs} id="tabs" tabs={@tabs} current_url={"#{dashboard_path(@socket)}/locales/#{@locale.id}/translations/#{@message.id}"} current_tab={@current_tab} />
   <.form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself} class="bg-white dark:bg-stone-900 shadow rounded-md mt-4 px-4 py-4 space-y-4">
     <div class="pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
       <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">

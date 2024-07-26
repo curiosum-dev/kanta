@@ -18,7 +18,7 @@ defmodule KantaWeb.Translations.DomainsLive do
   end
 
   def handle_event("navigate", %{"to" => to}, socket) do
-    {:noreply, push_redirect(socket, to: socket.router.__kanta_dashboard_prefix__() <> to)}
+    {:noreply, push_redirect(socket, to: dashboard_path(socket) <> to)}
   end
 
   def handle_event("page_changed", %{"index" => page_number}, socket) do

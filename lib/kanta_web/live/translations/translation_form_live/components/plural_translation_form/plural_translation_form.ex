@@ -63,14 +63,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply,
-     push_redirect(socket,
-       to:
-         unverified_path(
-           socket,
-           Kanta.Router,
-           "#{socket.router.__kanta_dashboard_prefix__()}/locales/#{locale.id}/translations"
-         )
-     )}
+     push_redirect(socket, to: dashboard_path(socket, "/locales/#{locale.id}/translations"))}
   end
 
   def plural_examples(locale, index) do

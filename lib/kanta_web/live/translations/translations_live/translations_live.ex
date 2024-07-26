@@ -60,13 +60,13 @@ defmodule KantaWeb.Translations.TranslationsLive do
     {:noreply,
      push_patch(socket,
        to:
-         "#{socket.router.__kanta_dashboard_prefix__()}/locales/#{socket.assigns.locale.id}/translations?" <>
+         "#{dashboard_path(socket)}/locales/#{socket.assigns.locale.id}/translations?" <>
            URI.encode_query(query)
      )}
   end
 
   def handle_event("navigate", %{"to" => to}, socket) do
-    {:noreply, push_redirect(socket, to: socket.router.__kanta_dashboard_prefix__() <> to)}
+    {:noreply, push_redirect(socket, to: dashboard_path(socket) <> to)}
   end
 
   def handle_event("page_changed", %{"index" => page_number}, socket) do
@@ -87,7 +87,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
     {:noreply,
      push_patch(socket,
        to:
-         "#{socket.router.__kanta_dashboard_prefix__()}/locales/#{socket.assigns.locale.id}/translations?" <>
+         "#{dashboard_path(socket)}/locales/#{socket.assigns.locale.id}/translations?" <>
            URI.encode_query(query)
      )}
   end
