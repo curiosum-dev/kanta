@@ -2,6 +2,7 @@ defmodule KantaWeb.Components.Shared.Select do
   @moduledoc """
   Shared select component
   """
+  use PhoenixHTMLHelpers
 
   use KantaWeb, :live_component
 

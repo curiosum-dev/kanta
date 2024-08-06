@@ -5,8 +5,7 @@ defmodule Kanta.Cache do
 
   use Nebulex.Cache,
     otp_app: :kanta,
-    adapter: Nebulex.Adapters.Partitioned,
-    primary_storage_adapter: Nebulex.Adapters.Local
+    adapter: Nebulex.Adapters.Local
 
   def generate_cache_key(prefix, params) do
     Enum.reduce(params, prefix, fn {key, value}, acc ->
