@@ -48,7 +48,7 @@ defmodule Kanta.MixProject do
       {:shards, "~> 1.0"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 2.0"},
-      {:uri_query, "~> 0.1.1"},
+      {:uri_query, "~> 0.2"},
       # DEV
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
