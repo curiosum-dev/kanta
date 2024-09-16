@@ -99,8 +99,9 @@ defmodule KantaWeb do
     quote do
       @endpoint Application.compile_env(:kanta, :endpoint)
 
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
+      use PhoenixHTMLHelpers
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.Component

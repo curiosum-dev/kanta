@@ -193,6 +193,7 @@ defmodule Kanta.Migration do
   defp migrator do
     case repo().__adapter__() do
       Ecto.Adapters.Postgres -> Kanta.Migrations.Postgresql
+      Ecto.Adapters.SQLite3 -> Kanta.Migrations.SQLite3
     end
   end
 end

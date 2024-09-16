@@ -61,6 +61,7 @@
     <ul>
       <li><a href="#po-writer">PO Writer</a></li>
       <li><a href="#deepl">DeepL</a></li>
+      <li><a href="#kantasync">Translation synchronization</a></li>
     </ul>
   </li>
   <li><a href="#roadmap">Roadmap</a></li>
@@ -335,6 +336,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 
 ## Contact
+
+[Curiosum](https://curiosum.com)
 
 Michał Buszkiewicz - michal@curiosum.com
 
