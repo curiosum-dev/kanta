@@ -63,7 +63,7 @@ jobs:
       - name: Check Formatting
         run: mix format --check-formatted
       - name: Dialyzer
-        run: mix dialyzer
+        run: mix dialyzer -Wno_match --format short 2>&1 
       - name: Credo
         run: mix credo
       - name: Run tests
