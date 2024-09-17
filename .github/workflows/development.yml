@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         elixir: ['1.14', '1.15', '1.16', '1.17']
-        otp: ['23', '24', '25', '26', '27']
+        otp: ['24', '25', '26', '27']
         os: [ubuntu-22.04, ubuntu-24.04]
         exclude:
           # Elixir 1.14
@@ -26,17 +26,11 @@ jobs:
             otp: '27'
           # Elixir 1.15
           - elixir: '1.15'
-            otp: '23'
-          - elixir: '1.15'
             otp: '27'
           # Elixir 1.16
           - elixir: '1.16'
-            otp: '23'
-          - elixir: '1.16'
             otp: '27'
           # Elixir 1.17
-          - elixir: '1.17'
-            otp: '23'
           - elixir: '1.17'
             otp: '24'
     runs-on: ${{matrix.os}}
