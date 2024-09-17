@@ -7,7 +7,7 @@ on:
     branches: ["develop"]
 
 env:
-  MIX_ENV: test
+  MIX_ENV: dev
 
 permissions:
   contents: read
@@ -63,8 +63,8 @@ jobs:
       - name: Check Formatting
         run: mix format --check-formatted
       - name: Dialyzer
-        run: MIX_ENV=test mix dialyzer
+        run: mix dialyzer
       - name: Credo
-        run: MIX_ENV=test mix credo
+        run: mix credo
       - name: Run tests
         run: MIX_ENV=test mix test
