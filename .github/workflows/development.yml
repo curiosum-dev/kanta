@@ -17,8 +17,8 @@ jobs:
     name: OS ${{matrix.os}} / Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir_version: ['1.12', '1.13', '1.14', '1.15', '1.16', '1.17']
-        otp_version: ['24', '25', '26', '27']
+        elixir: ['1.12', '1.13', '1.14', '1.15', '1.16', '1.17']
+        otp: ['24', '25', '26', '27']
         os: [ubuntu-22.04, ubuntu-24.04]
         exclude:
           # Elixir 1.12
