@@ -19,6 +19,7 @@ jobs:
       matrix:
         elixir: ['1.14', '1.15', '1.16', '1.17']
         otp: ['24', '25', '26', '27']
+        os: [ubuntu-24.04]
         exclude:
           # Elixir 1.14
           - elixir: '1.14'
@@ -32,7 +33,7 @@ jobs:
           # Elixir 1.17
           - elixir: '1.17'
             otp: '24'
-    runs-on: ubuntu-24.04
+    runs-on: ${{matrix.os}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
