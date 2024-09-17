@@ -22,29 +22,29 @@ jobs:
         os: [ubuntu-22.04, ubuntu-24.04]
         exclude:
           # Elixir 1.12
-          - elixir_version: '1.12'
-            otp_version: '25'
-          - elixir_version: '1.12'
-            otp_version: '26'
-          - elixir_version: '1.12'
-            otp_version: '27'
+          - elixir: '1.12'
+            otp: '25'
+          - elixir: '1.12'
+            otp: '26'
+          - elixir: '1.12'
+            otp: '27'
           # Elixir 1.13
-          - elixir_version: '1.13'
-            otp_version: '26'
-          - elixir_version: '1.13'
-            otp_version: '27'
+          - elixir: '1.13'
+            otp: '26'
+          - elixir: '1.13'
+            otp: '27'
           # Elixir 1.14
-          - elixir_version: '1.14'
-            otp_version: '27'
+          - elixir: '1.14'
+            otp: '27'
           # Elixir 1.15
-          - elixir_version: '1.15'
-            otp_version: '27'
+          - elixir: '1.15'
+            otp: '27'
           # Elixir 1.16
-          - elixir_version: '1.16'
-            otp_version: '27'
+          - elixir: '1.16'
+            otp: '27'
           # Elixir 1.17
-          - elixir_version: '1.17'
-            otp_version: '24'
+          - elixir: '1.17'
+            otp: '24'
     runs-on: ${{matrix.os}}
     steps:
       - name: Checkout code
