@@ -8,7 +8,7 @@ defmodule KantaWeb.APIAuthPlug do
   def init(_opts), do: %{}
 
   def call(conn, _opts) do
-    if api_authorization_disabled?() or is_bearer_token_valid?(conn) do
+    if api_authorization_disabled?() or bearer_token_valid?(conn) do
       conn
     else
       conn
@@ -20,16 +20,16 @@ defmodule KantaWeb.APIAuthPlug do
     end
   end
 
-  defp is_bearer_token_valid?(conn) do
+  defp bearer_token_valid?(conn) do
     with {:ok, token} <- extract_bearer_token(conn),
-         true <- is_secret_token_matching?(token) do
+         true <- secret_token_matching?(token) do
       true
     else
       _ -> false
     end
   end
 
-  defp is_secret_token_matching?(token) do
+  defp secret_token_matching?(token) do
     secret_token_env =
       @kanta_secret_token
       |> System.get_env()
