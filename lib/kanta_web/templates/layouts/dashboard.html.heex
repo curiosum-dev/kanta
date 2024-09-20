@@ -59,7 +59,7 @@
                       <Icons.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                         Contexts
                     <% end %>
-                    <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/application_sources"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                    <%= link to: dashboard_path(@conn, "/application_sources"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                       <Icons.computer class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                         Applications
                     <% end %>

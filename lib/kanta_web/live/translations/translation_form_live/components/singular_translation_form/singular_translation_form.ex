@@ -29,6 +29,16 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     Translations.update_singular_translation(translation, %{"translated_text" => translated})
 
     {:noreply,
-     push_redirect(socket, to: dashboard_path(socket, "/locales/#{locale.id}/translations"))}
+     push_redirect(socket,
+       to:
+         dashboard_path(socket, "/locales/#{locale.id}/translations" <> get_query(socket.assigns))
+     )}
+  end
+
+  defp get_query(%{filters: nil}), do: ""
+
+  defp get_query(%{filters: filters}) do
+    query = UriQuery.params(filters)
+    "?" <> URI.encode_query(query)
   end
 end

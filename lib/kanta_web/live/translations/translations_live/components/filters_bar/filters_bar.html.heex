@@ -1,5 +1,6 @@
 <div>
   <.form :let={form} for={@filters} phx-change="change" class={"grid #{@grid_cols} gap-2"}>
+    <.link navigate={dashboard_path(@socket, "/locales/#{@locale_id}/translations")} class="absolute -top-1 right-0 font-semibold text-primary-dark dark:text-accent-dark">Clear filters</.link>
     <div class={"#{@col_span} sm:#{@col_span} xl:col-span-2"}>
       <SearchInput.render 
         type="text" 

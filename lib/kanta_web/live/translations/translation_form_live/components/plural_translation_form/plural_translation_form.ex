@@ -63,7 +63,10 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply,
-     push_redirect(socket, to: dashboard_path(socket, "/locales/#{locale.id}/translations"))}
+     push_redirect(socket,
+       to:
+         dashboard_path(socket, "/locales/#{locale.id}/translations" <> get_query(socket.assigns))
+     )}
   end
 
   def plural_examples(locale, index) do
@@ -72,5 +75,12 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     Enum.group_by(0..30, &Expo.PluralForms.index(forms_struct, &1), & &1)
     |> Map.fetch!(index)
     |> Enum.join(", ")
+  end
+
+  defp get_query(%{filters: nil}), do: ""
+
+  defp get_query(%{filters: filters}) do
+    query = UriQuery.params(filters)
+    "?" <> URI.encode_query(query)
   end
 end

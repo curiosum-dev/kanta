@@ -3,7 +3,7 @@
     <div>
       <div>
         <nav class="sm:hidden" aria-label="Back">
-          <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/application_sources")} class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
+          <.link navigate={dashboard_path(@socket, "/application_sources")} class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
             <Icons.chevron_left class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-slate-500" aria-hidden="true" />
             Back
           </.link>
@@ -12,7 +12,7 @@
           <ol class="flex items-center space-x-4">
             <li>
               <div>
-                <.link patch={"/kanta/application_sources"} class="cursor-pointer text-sm font-medium text-slate-400 hover:text-slate-200">Application Sources</.link>
+                <.link patch={"/application_sources"} class="cursor-pointer text-sm font-medium text-slate-400 hover:text-slate-200">Application Sources</.link>
               </div>
             </li>
           </ol>
