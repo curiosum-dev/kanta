@@ -1,6 +1,8 @@
 defmodule KantaWeb.Translations.TranslationsLive do
   use KantaWeb, :live_view
 
+  import Kanta.Utils.ParamParsers
+
   alias Kanta.Translations
   alias KantaWeb.Translations.Components.{FiltersBar, MessagesTable}
 
@@ -9,10 +11,11 @@ defmodule KantaWeb.Translations.TranslationsLive do
   @available_filters ~w(domain_id context_id search not_translated page)
   @available_params ~w(page search filter)
   @params_in_filter ~w(domain_id context_id not_translated)
+  @ids_to_parse ~w(domain_id context_id locale_id)
 
   def mount(%{"locale_id" => locale_id} = params, _session, socket) do
     socket =
-      case Translations.get_locale(filter: [id: locale_id]) do
+      case get_locale(locale_id) do
         {:ok, locale} ->
           socket
           |> assign(:locale, locale)
@@ -21,6 +24,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
         _ ->
           socket
+          |> redirect(to: "/kanta/locales")
       end
 
     {:ok, socket}
@@ -30,9 +34,11 @@ defmodule KantaWeb.Translations.TranslationsLive do
     %{entries: messages, metadata: messages_metadata} =
       Translations.list_messages(
         []
-        |> Keyword.merge(filter: Map.put(params["filter"] || %{}, "locale_id", locale_id))
         |> Keyword.merge(search: params["search"] || "")
         |> Keyword.merge(page: parse_page(params["page"] || "1"))
+        |> Keyword.merge(
+          filter: parse_filters(Map.put(params["filter"] || %{}, "locale_id", locale_id))
+        )
         |> Keyword.merge(
           preloads: [
             :context,
@@ -74,14 +80,12 @@ defmodule KantaWeb.Translations.TranslationsLive do
       socket
       |> assign(
         :filters,
-        Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
+        Map.merge(socket.assigns.filters, %{"page" => parse_page(page_number)})
       )
 
     query =
       UriQuery.params(
-        format_filters(
-          Map.merge(socket.assigns.filters, %{"page" => String.to_integer(page_number)})
-        )
+        format_filters(Map.merge(socket.assigns.filters, %{"page" => parse_page(page_number)}))
       )
 
     {:noreply,
@@ -92,33 +96,32 @@ defmodule KantaWeb.Translations.TranslationsLive do
      )}
   end
 
+  defp get_locale(id) do
+    case parse_id_filter(id) do
+      {:ok, id} -> Translations.get_locale(filter: [id: id])
+      _ -> {:error, :id, :invalid}
+    end
+  end
+
   defp format_filters(filters) do
     filters
     |> Map.take(@available_filters)
     |> Enum.reject(fn {_, value} -> is_nil(value) or value == "" end)
-    |> Enum.reduce([filter: %{}, search: "", page: "1"], fn {key, value}, acc ->
-      case key do
-        "search" ->
-          Keyword.put(acc, :search, value)
+    |> Enum.reduce([filter: %{}, search: "", page: "1"], &update_filters_acc/2)
+  end
 
-        "page" ->
-          Keyword.put(acc, :page, value)
+  defp update_filters_acc({"search", value}, acc), do: Keyword.put(acc, :search, value)
+  defp update_filters_acc({"page", value}, acc), do: Keyword.put(acc, :page, value)
 
-        "not_translated" ->
-          Keyword.put(
-            acc,
-            :filter,
-            Map.put(acc[:filter] || %{}, "not_translated", value)
-          )
+  defp update_filters_acc({"not_translated", value}, acc) do
+    Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, "not_translated", value))
+  end
 
-        filter_key ->
-          Keyword.put(
-            acc,
-            :filter,
-            Map.put(acc[:filter] || %{}, filter_key, String.to_integer(value))
-          )
-      end
-    end)
+  defp update_filters_acc({key, value}, acc) do
+    case parse_id_filter(value) do
+      {:ok, id} -> Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, key, id))
+      _ -> acc
+    end
   end
 
   defp get_assigns_from_params(params) do
@@ -151,10 +154,18 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   defp get_not_translated_default_value(_), do: false
 
-  defp parse_page(page) do
-    case Integer.parse(page) do
-      {page, _} -> page
-      _ -> 1
+  defp parse_filters(filters) do
+    Enum.reduce(filters, %{}, &parse_filter/2)
+  end
+
+  defp parse_filter({key, value}, acc) when key in @ids_to_parse do
+    case parse_id_filter(value) do
+      {:ok, id} -> Map.put(acc, key, id)
+      _ -> acc
     end
+  end
+
+  defp parse_filter({key, value}, acc) do
+    Map.put(acc, key, value)
   end
 end

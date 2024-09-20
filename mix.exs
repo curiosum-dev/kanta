@@ -35,8 +35,8 @@ defmodule Kanta.MixProject do
   defp deps do
     [
       {:expo, "~> 0.3"},
-      {:ecto, "~> 3.10"},
-      {:ecto_sql, "~> 3.10"},
+      {:ecto, "~> 3.12"},
+      {:ecto_sql, "~> 3.12"},
       {:phoenix, "~> 1.7.0"},
       {:phoenix_view, "~> 2.0"},
       {:phoenix_live_view, "~> 0.20"},
@@ -48,14 +48,14 @@ defmodule Kanta.MixProject do
       {:shards, "~> 1.0"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 2.0"},
-      {:uri_query, "~> 0.1.1"},
+      {:uri_query, "~> 0.2"},
       # DEV
       {:esbuild, "~> 0.7", only: :dev},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
       {:gettext, github: "ravensiris/gettext", branch: "runtime-gettext", only: [:dev, :test]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.3", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.4", only: :dev, runtime: false}
     ]
   end
 
