@@ -107,28 +107,21 @@ defmodule KantaWeb.Translations.TranslationsLive do
     filters
     |> Map.take(@available_filters)
     |> Enum.reject(fn {_, value} -> is_nil(value) or value == "" end)
-    |> Enum.reduce([filter: %{}, search: "", page: "1"], fn {key, value}, acc ->
-      case key do
-        "search" ->
-          Keyword.put(acc, :search, value)
+    |> Enum.reduce([filter: %{}, search: "", page: "1"], &update_filters_acc/2)
+  end
 
-        "page" ->
-          Keyword.put(acc, :page, value)
+  defp update_filters_acc({"search", value}, acc), do: Keyword.put(acc, :search, value)
+  defp update_filters_acc({"page", value}, acc), do: Keyword.put(acc, :page, value)
 
-        "not_translated" ->
-          Keyword.put(
-            acc,
-            :filter,
-            Map.put(acc[:filter] || %{}, "not_translated", value)
-          )
+  defp update_filters_acc({"not_translated", value}, acc) do
+    Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, "not_translated", value))
+  end
 
-        filter_key ->
-          case parse_id_filter(value) do
-            {:ok, id} -> Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, filter_key, id))
-            _ -> acc
-          end
-      end
-    end)
+  defp update_filters_acc({key, value}, acc) do
+    case parse_id_filter(value) do
+      {:ok, id} -> Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, key, id))
+      _ -> acc
+    end
   end
 
   defp get_assigns_from_params(params) do
