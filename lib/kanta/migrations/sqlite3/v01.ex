@@ -3,6 +3,8 @@ defmodule Kanta.Migrations.SQLite3.V01 do
 
   use Ecto.Migration
 
+  alias Kanta.Utils.Colors
+
   @kanta_locales "kanta_locales"
   @kanta_domains "kanta_domains"
   @kanta_contexts "kanta_contexts"
@@ -53,7 +55,7 @@ defmodule Kanta.Migrations.SQLite3.V01 do
     create_if_not_exists table(@kanta_domains) do
       add(:name, :string)
       add(:description, :text)
-      add(:color, :string, null: false, default: "#7E37D8")
+      add(:color, :string, null: false, default: Colors.default_color())
       timestamps()
     end
 
@@ -64,7 +66,7 @@ defmodule Kanta.Migrations.SQLite3.V01 do
     create_if_not_exists table(@kanta_contexts) do
       add(:name, :string)
       add(:description, :text)
-      add(:color, :string, null: false, default: "#7E37D8")
+      add(:color, :string, null: false, default: Colors.default_color())
       timestamps()
     end
 

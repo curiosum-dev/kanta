@@ -39,7 +39,7 @@
                 <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
                   <div class="flex justify-start items-center mb-4">
                     <Logo.render class="ml-4 w-10 h-10 text-primary-dark dark:text-accent-light" />
-                    <div class="ml-4 text-4xl text-primary-dark dark:text-accent-light fotn-medium">Kanta</div>
+                    <div class="ml-4 text-4xl text-primary-dark dark:text-accent-light font-medium">Kanta</div>
                   </div>
                   <div class="border-b border-slate-50 opacity-50" />
                   <nav class="mt-5 flex-1 px-2 space-y-3">
@@ -58,6 +58,10 @@
                     <%= link to: dashboard_path(@conn, "/contexts"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
                       <Icons.box class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
                         Contexts
+                    <% end %>
+                    <%= link to: unverified_path(@conn, Kanta.Router, "/kanta/application_sources"), class: "bg-white dark:bg-base-dark transition-all hover:bg-slate-100 dark:hover:bg-stone-800 border-slate-300 dark:border-accent-dark shadow-md text-primary-dark dark:text-accent-dark group flex items-center px-2 py-2 text-sm font-semibold rounded-md" do %>
+                      <Icons.computer class="mr-3 flex-shrink-0 h-6 w-6 text-primary-dark dark:text-accent-dark" />
+                        Applications
                     <% end %>
                   </nav>
                 </div>

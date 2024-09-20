@@ -22,6 +22,11 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Context
                     </th>
+                    <%= if not @application_sources_empty? do %>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
+                        Application
+                      </th>
+                    <% end %>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Type
                     </th>
@@ -51,7 +56,7 @@
                       </td>
                       <td class="px-6 py-4">
                         <div class="text-sm font-medium text-primary-dark truncate">
-                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.domain), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{message.domain.color};"}>
+                          <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.domain), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{unless is_nil(message.domain), do: message.domain.color, else: "transparent"};"}>
                             <%= if is_nil(message.domain), do: "None", else: message.domain.name %>
                           </span>
                         </div>
@@ -63,6 +68,15 @@
                           </span>
                         </div>
                       </td>
+                      <%= if not @application_sources_empty? do %>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-primary-dark truncate">
+                            <span class={"inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark #{if is_nil(message.application_source), do: "text-primary-dark dark:text-accent-dark", else: "text-white"} font-bold"} style={"background-color:#{unless is_nil(message.application_source), do: message.application_source.color, else: "transparent"};"}>
+                              <%= if is_nil(message.application_source), do: "None", else: message.application_source.name %>
+                            </span>
+                          </div>
+                        </td>
+                      <% end %>
                       <td class="px-6 py-4">
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark text-primary-dark dark:text-accent-dark font-bold">
                           <%= message.message_type %>

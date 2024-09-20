@@ -6,7 +6,7 @@ defmodule Kanta.Migrations.SQLite3 do
   use Ecto.Migration
 
   @initial_version 1
-  @current_version 1
+  @current_version 2
 
   @doc false
   def initial_version, do: @initial_version
