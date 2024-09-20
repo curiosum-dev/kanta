@@ -3,7 +3,7 @@ defmodule Kanta.Translations.Context do
   Gettext Context DB model
   """
 
-  use Ecto.Schema
+  use Kanta.Schema
   import Ecto.Changeset
 
   alias Kanta.Translations.Message

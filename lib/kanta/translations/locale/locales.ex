@@ -16,8 +16,8 @@ defmodule Kanta.Translations.Locales do
     GetLocale.find(params)
   end
 
-  def update_locale(locale, attrs \\ %{}) do
+  def update_locale(locale, attrs \\ %{}, opts \\ []) do
     Locale.changeset(locale, attrs)
-    |> Repo.get_repo().update()
+    |> Repo.get_repo().update(opts)
   end
 end

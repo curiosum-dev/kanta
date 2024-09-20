@@ -13,10 +13,10 @@ defmodule Kanta.Translations.SingularTranslations do
     GetSingularTranslation.find(params)
   end
 
-  def create_singular_translation(attrs) do
+  def create_singular_translation(attrs, opts \\ []) do
     attrs
     |> then(&SingularTranslation.changeset(%SingularTranslation{}, &1))
-    |> Repo.get_repo().insert()
+    |> Repo.get_repo().insert(opts)
     |> case do
       {:ok, singular_translation} ->
         cache_key =
@@ -35,9 +35,9 @@ defmodule Kanta.Translations.SingularTranslations do
     end
   end
 
-  def update_singular_translation(translation, attrs) do
+  def update_singular_translation(translation, attrs, opts \\ []) do
     SingularTranslation.changeset(translation, attrs)
-    |> Repo.get_repo().update()
+    |> Repo.get_repo().update(opts)
     |> case do
       {:ok, translation} ->
         cache_key =

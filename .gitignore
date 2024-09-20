@@ -30,9 +30,4 @@ kanta-*.tar
 /assets/node_modules
 /assets/.DS_Store
 /.DS_Store
-/.devenv.flake.nix
-/.devenv/
-/.direnv/
-/.nix-mix/
-/.nix-hex/
 .DS_Store

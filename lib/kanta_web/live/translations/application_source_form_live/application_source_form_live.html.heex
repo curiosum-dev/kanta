@@ -1,0 +1,71 @@
+<div>
+  <div class="mb-6">
+    <div>
+      <div>
+        <nav class="sm:hidden" aria-label="Back">
+          <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/application_sources")} class="flex items-center text-sm font-medium text-slate-400 hover:text-slate-200">
+            <Icons.chevron_left class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-slate-500" aria-hidden="true" />
+            Back
+          </.link>
+        </nav>
+        <nav class="hidden sm:flex mb-2" aria-label="Breadcrumb">
+          <ol class="flex items-center space-x-4">
+            <li>
+              <div>
+                <.link patch={"/kanta/application_sources"} class="cursor-pointer text-sm font-medium text-slate-400 hover:text-slate-200">Application Sources</.link>
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="mt-2 md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+          <h2 class="text-xl font-bold leading-7 text-slate-600 dark:text-content-light sm:text-2xl sm:truncate">
+            <%= if Map.has_key?(assigns, :application_source), do: "Updating application source", else: "Creating application source" %>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <.form for={@form} phx-change="validate" phx-submit="submit" class="bg-white dark:bg-stone-900 shadow rounded-md mt-4 px-4 py-4 space-y-4">
+    <div class="pb-5 border-b border-slate-200 sm:flex sm:items-center sm:justify-between">
+      <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-dark">
+        Application Source
+      </h3>
+    </div>
+    <div class="grid grid-cols-2 gap-4 lg:gap-8">
+      <div class="col-span-2 space-y-4">
+        <div>
+          <label for={@form[:name].id} class="block text-sm font-bold text-slate-700 dark:text-content-light">Name</label>
+          <input type="text" name={@form[:name].name} id={@form[:name].id} value={@form[:name].value} class="bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md" />
+          <p :for={{error, _} <- @form[:name].errors} class="mt-3 text-sm leading-6 text-rose-600">
+            <%= error %>
+          </p>        
+        </div>
+        <div>
+          <label for={@form[:description].id} class="block text-sm font-bold text-slate-700 dark:text-content-light">Description</label>
+          <div class="mt-1">
+            <textarea type="text" name={@form[:description].name} id={@form[:description].id} class="bg-slate-100 dark:bg-stone-700 shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md"><%= @form[:description].value %></textarea>
+          </div>
+          <p :for={{error, _} <- @form[:description].errors} class="mt-3 text-sm leading-6 text-rose-600">
+            <%= error %>
+          </p>  
+        </div>
+        <div>
+          <label for={@form[:color].id} class="block text-sm font-bold text-slate-700 dark:text-content-light">Color</label>
+          <div class="mt-1">
+            <input type="color" name={@form[:color].name} id={@form[:color].id} value={@form[:color].value} class="bg-white dark:bg-base-dark text-content-dark dark:text-content-light shadow-sm focus:ring-primary focus:dark:ring-accent-dark focus:border-primary focus:dark:border-accent-dark block w-full sm:text-sm border-slate-300 rounded-md" />
+          </div>
+          <p :for={{error, _} <- @form[:color].errors} class="mt-3 text-sm leading-6 text-rose-600">
+            <%= error %>
+          </p>  
+        </div>
+      </div>
+      <div class="col-span-2">
+        <button type="submit" class="w-full flex items-center justify-center px-4 py-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary dark:bg-accent-dark hover:bg-primary-dark hover:dark:bg-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-primary focus:dark:ring-accent-dark">
+          Save
+        </button>
+      </div>
+    </div>
+  </.form>
+</div>

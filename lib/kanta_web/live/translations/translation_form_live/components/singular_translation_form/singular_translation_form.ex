@@ -31,11 +31,7 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     {:noreply,
      push_redirect(socket,
        to:
-         unverified_path(
-           socket,
-           Kanta.Router,
-           "/kanta/locales/#{locale.id}/translations" <> get_query(socket.assigns)
-         )
+         dashboard_path(socket, "/locales/#{locale.id}/translations" <> get_query(socket.assigns))
      )}
   end
 
