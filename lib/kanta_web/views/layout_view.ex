@@ -21,7 +21,7 @@ defmodule KantaWeb.LayoutView do
   def asset_path(conn, asset) when asset in [:css, :js] do
     hash = KantaWeb.Assets.current_hash(asset)
 
-    prefix = conn.private.phoenix_router.__kanta_dashboard_prefix__()
+    prefix = dashboard_path(conn)
 
     Phoenix.VerifiedRoutes.unverified_path(
       conn,

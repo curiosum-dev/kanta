@@ -10,14 +10,6 @@ defmodule KantaWeb.Translations.DomainsTable do
   end
 
   def handle_event("edit_domain", %{"id" => id}, socket) do
-    {:noreply,
-     push_navigate(socket,
-       to:
-         unverified_path(
-           socket,
-           Kanta.Router,
-           "/kanta/domains/#{id}"
-         )
-     )}
+    {:noreply, push_navigate(socket, to: dashboard_path(socket, "/domains/#{id}"))}
   end
 end

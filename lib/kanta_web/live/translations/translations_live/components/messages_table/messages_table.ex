@@ -14,16 +14,11 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
   def handle_event("edit_message", %{"id" => id}, socket) do
     {:noreply,
      push_navigate(socket,
-       to:
-         unverified_path(
-           socket,
-           Kanta.Router,
-           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}"
-         )
+       to: dashboard_path(socket, "/locales/#{socket.assigns.locale.id}/translations/#{id}")
      )}
   end
 
-  def is_translated(%Message{message_type: :singular} = message, locale, source) do
+  def translated?(%Message{message_type: :singular} = message, locale, source) do
     case Enum.find(message.singular_translations, &(&1.locale_id == locale.id)) do
       nil ->
         false
@@ -37,18 +32,18 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
     end
   end
 
-  def is_translated(%Message{message_type: :plural} = message, locale, source) do
+  def translated?(%Message{message_type: :plural} = message, locale, source) do
     case Enum.filter(message.plural_translations, &(&1.locale_id == locale.id)) do
       [] ->
         false
 
       translations ->
         translations
-        |> Enum.map(&is_plural_form_translated(&1, source))
+        |> Enum.map(&plural_form_translated?(&1, source))
     end
   end
 
-  defp is_plural_form_translated(translation, source) do
+  defp plural_form_translated?(translation, source) do
     case get_in(translation, [Access.key!(source)]) do
       nil ->
         false

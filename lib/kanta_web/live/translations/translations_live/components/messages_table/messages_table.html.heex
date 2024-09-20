@@ -41,7 +41,7 @@
                       <td class="px-6 py-4">
                         <div class={[
                           "text-md font-medium tracking-wide",
-                          "#{if is_translated(message, @locale, :original_text), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500"}"
+                          "#{if translated?(message, @locale, :original_text), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500"}"
                         ]}>
                           <%= original_text(assigns, message) %>
                         </div>
@@ -49,7 +49,7 @@
                       <td class="px-6 py-4">
                         <div class={[
                           "text-md font-medium tracking-wide",
-                          "#{if is_translated(message, @locale, :translated_text), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500"}"
+                          "#{if translated?(message, @locale, :translated_text), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500"}"
                         ]}>
                           <%= translated_text(assigns, message) %>
                         </div>
