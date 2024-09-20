@@ -29,13 +29,6 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     Translations.update_singular_translation(translation, %{"translated_text" => translated})
 
     {:noreply,
-     push_redirect(socket,
-       to:
-         unverified_path(
-           socket,
-           Kanta.Router,
-           "/kanta/locales/#{locale.id}/translations"
-         )
-     )}
+     push_redirect(socket, to: dashboard_path(socket, "/locales/#{locale.id}/translations"))}
   end
 end
