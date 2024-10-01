@@ -50,6 +50,8 @@ defmodule Kanta.MixProject do
       {:scrivener_ecto, "~> 2.0"},
       {:uri_query, "~> 0.2"},
       # DEV
+      {:versioce, "~> 2.0.0"},
+      {:git_cli, "~> 0.3.0"},
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
