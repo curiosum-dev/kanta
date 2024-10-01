@@ -1,6 +1,6 @@
 {
   "name": "kanta",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Translations management library for Elixir/Phoenix projects",
   "license": "MIT",
   "private": true,

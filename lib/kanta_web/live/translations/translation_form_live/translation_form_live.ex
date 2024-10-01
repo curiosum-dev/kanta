@@ -1,6 +1,8 @@
 defmodule KantaWeb.Translations.TranslationFormLive do
   use KantaWeb, :live_view
 
+  import Kanta.Utils.ParamParsers, only: [parse_id_filter: 1]
+
   alias Kanta.Translations
   alias Kanta.Translations.Message
 
@@ -14,6 +16,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         translation={@translations}
         message={@message}
         locale={@locale}
+        filters={@filters}
       />
     """
   end
@@ -35,22 +38,25 @@ defmodule KantaWeb.Translations.TranslationFormLive do
         locale={@locale}
         current_tab={@tab}
         current_tab_index={String.to_integer(@tab) - 1}
+        filters={@filters}
       />
     """
   end
 
-  def mount(%{"message_id" => message_id, "locale_id" => locale_id}, _session, socket) do
+  def mount(%{"message_id" => message_id, "locale_id" => locale_id} = params, _session, socket) do
     socket =
-      with {:ok, locale} <- Translations.get_locale(filter: [id: locale_id]),
-           {:ok, message} <- Translations.get_message(filter: [id: message_id]),
+      with {:ok, locale} <- get_locale(locale_id),
+           {:ok, message} <- get_message(message_id),
            {:ok, translations} <- get_translations(message, locale) do
         socket
         |> assign(:locale, locale)
         |> assign(:message, message)
         |> assign(:translations, translations)
+      else
+        _ -> redirect(socket, to: "/kanta/locales/#{locale_id}/translations")
       end
 
-    {:ok, socket}
+    {:ok, assign(socket, :filters, Map.get(params, "filters"))}
   end
 
   def handle_params(%{"tab" => tab}, _uri, socket) do
@@ -114,6 +120,20 @@ defmodule KantaWeb.Translations.TranslationFormLive do
             |> Enum.reject(&is_nil/1)
           }
         end
+    end
+  end
+
+  defp get_locale(locale_id) do
+    case parse_id_filter(locale_id) do
+      {:ok, id} -> Translations.get_locale(filter: [id: id])
+      _ -> {:error, :id, :invalid}
+    end
+  end
+
+  defp get_message(message_id) do
+    case parse_id_filter(message_id) do
+      {:ok, id} -> Translations.get_message(filter: [id: id])
+      _ -> {:error, :id, :invalid}
     end
   end
 end
