@@ -111,6 +111,7 @@ defmodule KantaWeb do
 
       import Kanta.Utils.ModuleUtils
 
+      alias KantaWeb.Components.Icons
       alias KantaWeb.Router.Helpers, as: Routes
       unquote(verified_routes())
     end
@@ -122,6 +123,33 @@ defmodule KantaWeb do
         endpoint: Application.compile_env(:kanta, :endpoint),
         router: KantaWeb.Router,
         statics: KantaWeb.static_paths()
+
+      def dashboard_path(%Phoenix.LiveView.Socket{} = socket),
+        do: socket.router.__kanta_dashboard_prefix__()
+
+      def dashboard_path(%Plug.Conn{} = conn),
+        do: conn.private.phoenix_router.__kanta_dashboard_prefix__()
+
+      def dashboard_path(%Phoenix.LiveView.Socket{} = socket, "/" <> path),
+        do: dashboard_path(socket, path)
+
+      def dashboard_path(%Phoenix.LiveView.Socket{} = socket, path) do
+        unverified_path(
+          socket,
+          Kanta.Router,
+          socket.router.__kanta_dashboard_prefix__() <> "/" <> path
+        )
+      end
+
+      def dashboard_path(%Plug.Conn{} = conn, "/" <> path), do: dashboard_path(conn, path)
+
+      def dashboard_path(%Plug.Conn{} = conn, path) do
+        unverified_path(
+          conn,
+          Kanta.Router,
+          conn.private.phoenix_router.__kanta_dashboard_prefix__() <> "/" <> path
+        )
+      end
     end
   end
 

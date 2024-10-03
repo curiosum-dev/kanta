@@ -4,6 +4,7 @@ defmodule Kanta.Utils.GetSchemata do
   alias Kanta.Specs.SchemataSpec
 
   alias Kanta.Translations.{
+    ApplicationSource,
     Context,
     Domain,
     Locale,
@@ -13,6 +14,7 @@ defmodule Kanta.Utils.GetSchemata do
   }
 
   @schemata [
+    {"application_sources", %{schema: ApplicationSource, conflict_target: [:name]}},
     {"contexts", %{schema: Context, conflict_target: [:name]}},
     {"domains", %{schema: Domain, conflict_target: [:name]}},
     {"locales", %{schema: Locale, conflict_target: [:iso639_code]}},

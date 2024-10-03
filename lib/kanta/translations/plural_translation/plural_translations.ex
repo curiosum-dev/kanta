@@ -20,10 +20,10 @@ defmodule Kanta.Translations.PluralTranslations do
     GetPluralTranslation.find(params)
   end
 
-  def create_plural_translation(attrs) do
+  def create_plural_translation(attrs, opts \\ []) do
     attrs
     |> then(&PluralTranslation.changeset(%PluralTranslation{}, &1))
-    |> Repo.get_repo().insert()
+    |> Repo.get_repo().insert(opts)
     |> case do
       {:ok, plural_translation} ->
         cache_key =
@@ -43,9 +43,9 @@ defmodule Kanta.Translations.PluralTranslations do
     end
   end
 
-  def update_plural_translation(translation, attrs) do
+  def update_plural_translation(translation, attrs, opts \\ []) do
     PluralTranslation.changeset(translation, attrs)
-    |> Repo.get_repo().update()
+    |> Repo.get_repo().update(opts)
     |> case do
       {:ok, translation} ->
         cache_key =

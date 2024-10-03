@@ -22,7 +22,7 @@ if config_env() == :dev do
     ]
 
   config :tailwind,
-    version: "3.2.4",
+    version: "3.4.13",
     default: [
       args: ~w(
       --config=tailwind.config.js
@@ -31,4 +31,26 @@ if config_env() == :dev do
     ),
       cd: Path.expand("../assets", __DIR__)
     ]
+
+  config :versioce, :changelog,
+    datagrabber: Versioce.Changelog.DataGrabber.Git,
+    formatter: Versioce.Changelog.Formatter.Keepachangelog
+
+  config :versioce,
+    files: [
+      "README.md",
+      "CHANGELOG.md",
+      "mix.exs",
+      "assets/package.json",
+      "package.json"
+    ],
+    post_hooks: [
+      Versioce.PostHooks.Changelog,
+      Versioce.PostHooks.Git.Release
+    ]
+
+  config :versioce, :git,
+    commit_message_template: "chore: :bookmark: Bump version to {version}",
+    tag_template: "v{version}",
+    tag_message_template: "Release v{version}"
 end

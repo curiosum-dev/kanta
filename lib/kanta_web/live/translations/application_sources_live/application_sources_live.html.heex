@@ -1,0 +1,18 @@
+<div>
+  <div class="mt-2 md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-primary-dark dark:text-accent-dark sm:text-3xl sm:truncate">
+        Application Sources
+      </h2>
+    </div>
+  </div>
+</div>
+<div class="mt-4">
+  <div class="flex gap-2 justify-end">
+    <.link navigate={dashboard_path(@socket, "/application_sources/new")} class="font-semibold text-primary-dark dark:text-accent-dark">
+      Create application source
+    </.link>
+  </div>
+  <.live_component module={ApplicationSourcesTable} id="application_sources-table" application_sources={@application_sources} />
+  <Pagination.render metadata={@application_sources_metadata} on_page_change="page_changed" />
+</div>
