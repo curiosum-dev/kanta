@@ -2,11 +2,8 @@
 <div>
   <div>
     <nav class="sm:hidden" aria-label="Back">
-      <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/locales")} class="flex items-center text-sm font-medium text-slate-500 hover:text-slate-700">
-        <!-- Heroicon name: solid/chevron-left -->
-        <svg class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-slate-400 dark:text-content-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
+      <.link navigate={dashboard_path(@socket, "/locales")} class="flex items-center text-sm font-medium text-slate-500 hover:text-slate-700">
+        <Icons.chevron_left class="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-slate-400 dark:text-content-light" aria-hidden="true" />
         Back
       </.link>
     </nav>
@@ -14,15 +11,12 @@
       <ol class="flex items-center space-x-4">
         <li>
           <div>
-            <.link navigate={unverified_path(@socket, Kanta.Router, "/kanta/locales")} class="text-sm font-medium text-slate-500 dark:text-content-light hover:text-slate-700 dark:hover:text-white">Locales</.link>
+            <.link navigate={dashboard_path(@socket, "/locales")} class="text-sm font-medium text-slate-500 dark:text-content-light hover:text-slate-700 dark:hover:text-white">Locales</.link>
           </div>
         </li>
         <li>
           <div class="flex items-center">
-            <!-- Heroicon name: solid/chevron-right -->
-            <svg class="flex-shrink-0 h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
+            <Icons.chevron_right class="flex-shrink-0 h-5 w-5 text-slate-400" aria-hidden="true" />
             <.link navigate="#" aria-current="page" class="ml-4 text-sm font-medium text-slate-500 dark:text-content-light hover:text-slate-700 dark:hover:text-white"><%= @locale.native_name %></.link>
           </div>
         </li>
@@ -38,7 +32,7 @@
   </div>
 </div>
 <div class="mt-4">
-  <.live_component module={FiltersBar} not_translated_default={@not_translated_default} filters={@filters} id="filters-bar" />
-  <.live_component module={MessagesTable} id="messages-table" messages={@messages} locale={@locale} />
+  <.live_component module={FiltersBar} filters={@filters} not_translated_default={@not_translated_default} application_sources_empty?={@application_sources_empty?} locale_id={@locale.id} id="filters-bar" />
+  <.live_component module={MessagesTable} messages={@messages} filters={@filters} locale={@locale} application_sources_empty?={@application_sources_empty?} id="messages-table" />
   <Pagination.render metadata={@messages_metadata} on_page_change="page_changed" />
 </div>

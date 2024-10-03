@@ -10,7 +10,7 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
   alias Kanta.Translations.PluralTranslations.Finders.ListPluralTranslations
   alias Kanta.Translations.SingularTranslations.Finders.ListSingularTranslations
 
-  @available_filters ~w(domain_id context_id)
+  @available_filters ~w(domain_id context_id application_source_id)
 
   def find(params \\ []) do
     filters = params[:filter] || %{}

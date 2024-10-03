@@ -13,49 +13,58 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+  build:
+    name: OS ${{matrix.os}} / Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        otp: ["25.0.4"]
-        elixir: ["1.14.1"]
+        elixir: ['1.14', '1.15', '1.16', '1.17']
+        otp: ['24', '25', '26', '27']
+        os: [ubuntu-24.04]
+        exclude:
+          # Elixir 1.14
+          - elixir: '1.14'
+            otp: '27'
+          # Elixir 1.15
+          - elixir: '1.15'
+            otp: '27'
+          # Elixir 1.16
+          - elixir: '1.16'
+            otp: '27'
+          # Elixir 1.17
+          - elixir: '1.17'
+            otp: '24'
+    runs-on: ${{matrix.os}}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Cache deps
-        id: cache-deps
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-elixir-deps
+      - name: Restore dependencies cache
+        uses: actions/cache@v4
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ env.cache-name }}-
-      - name: Cache compiled build
-        id: cache-build
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-compiled-build
-        with:
-          path: _build
-          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ env.cache-name }}-
-            ${{ runner.os }}-mix-
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Set up Postgres
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql
+          sudo service postgresql start
+          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
       - name: Install dependencies
         run: mix deps.get
-      - name: Compiles without warnings
+      - name: Create database
+        run: mix do ecto.create, ecto.migrate
+      - name: Compile code
         run: mix compile --warnings-as-errors
       - name: Check Formatting
         run: mix format --check-formatted
-      - name: Run credo
+      - name: Dialyzer
+        run: mix dialyzer -Wno_match --format short 2>&1 
+      - name: Credo
         run: mix credo
-      - name: "Run dialyzer"
-        run: mix dialyzer -Wno_match --format short 2>&1
+      - name: Run tests
+        run: MIX_ENV=test mix test

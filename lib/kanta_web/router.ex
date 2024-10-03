@@ -25,11 +25,21 @@ defmodule KantaWeb.Router do
             get "/css-:md5", KantaWeb.Assets, :css, as: :kanta_dashboard_asset
             get "/js-:md5", KantaWeb.Assets, :js, as: :kanta_dashboard_asset
 
-            redirect("/", "/kanta/dashboard", :permanent)
+            redirect(
+              "/",
+              "#{KantaWeb.Router.internal_dashboard_scoped_path(path)}/dashboard",
+              :permanent
+            )
 
             scope "/", KantaWeb do
               scope "/dashboard", Dashboard do
                 live "/", DashboardLive, :index, route_opts
+              end
+
+              scope "/application_sources", Translations do
+                live "/", ApplicationSourcesLive, :index, route_opts
+                live "/new", ApplicationSourceFormLive, :index, route_opts
+                live "/:id", ApplicationSourceFormLive, :index, route_opts
               end
 
               scope "/contexts", Translations do
@@ -57,17 +67,13 @@ defmodule KantaWeb.Router do
         end
       end
 
-    if Code.ensure_loaded?(Phoenix.VerifiedRoutes) do
-      quote do
-        unquote(scope)
+    quote do
+      unquote(scope)
 
-        unless Module.get_attribute(__MODULE__, :kanta_dashboard_prefix) do
-          @kanta_dashboard_prefix Phoenix.Router.scoped_path(__MODULE__, path)
-          def __kanta_dashboard_prefix__, do: @kanta_dashboard_prefix
-        end
+      unless Module.get_attribute(__MODULE__, :kanta_dashboard_prefix) do
+        @kanta_dashboard_prefix KantaWeb.Router.internal_dashboard_scoped_path(path)
+        def __kanta_dashboard_prefix__, do: @kanta_dashboard_prefix
       end
-    else
-      scope
     end
   end
 
@@ -83,6 +89,7 @@ defmodule KantaWeb.Router do
           pipe_through :kanta_api_pipeline
           get "/", KantaApiController, :index
 
+          resources "/applications", ApplicationSourcesController, only: [:index, :update]
           resources "/contexts", ContextsController, only: [:index, :update]
           resources "/domains", DomainsController, only: [:index, :update]
           resources "/locales", LocalesController, only: [:index, :update]
@@ -94,6 +101,34 @@ defmodule KantaWeb.Router do
           resources "/plural_translations", PluralTranslationsController, only: [:index, :update]
         end
       end
+    end
+  end
+
+  defmacro internal_dashboard_scoped_path(path) do
+    if Code.ensure_loaded?(Phoenix.VerifiedRoutes) do
+      quote do
+        Phoenix.Router.scoped_path(__MODULE__, unquote(path))
+      end
+    else
+      quote do
+        __MODULE__
+        |> Module.get_attribute(:phoenix_top_scopes)
+        |> Map.fetch!(:path)
+        |> KantaWeb.Router.append_last_path(unquote(path))
+        |> Enum.join("/")
+        |> String.replace_prefix("", "/")
+      end
+    end
+  end
+
+  @spec append_last_path(list(), binary()) :: list()
+  def append_last_path(paths, "/" <> path), do: append_last_path(paths, path)
+
+  def append_last_path(paths, path) do
+    if List.last(paths) == path do
+      paths
+    else
+      paths ++ [path]
     end
   end
 

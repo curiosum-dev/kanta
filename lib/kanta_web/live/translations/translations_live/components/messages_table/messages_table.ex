@@ -7,23 +7,29 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
   alias Kanta.Translations.{Message, SingularTranslation}
 
+  @available_params ~w(page search filter)
+  @params_in_filter ~w(domain_id context_id not_translated)
+
   def update(socket, assigns) do
     {:ok, assign(assigns, socket)}
   end
 
   def handle_event("edit_message", %{"id" => id}, socket) do
+    params = get_filter_params_from_assigns(socket.assigns)
+    query = UriQuery.params(params)
+
     {:noreply,
      push_navigate(socket,
        to:
-         unverified_path(
+         dashboard_path(
            socket,
-           Kanta.Router,
-           "/kanta/locales/#{socket.assigns.locale.id}/translations/#{id}"
+           "/locales/#{socket.assigns.locale.id}/translations/#{id}?" <>
+             URI.encode_query(query)
          )
      )}
   end
 
-  def is_translated(%Message{message_type: :singular} = message, locale, source) do
+  def translated?(%Message{message_type: :singular} = message, locale, source) do
     case Enum.find(message.singular_translations, &(&1.locale_id == locale.id)) do
       nil ->
         false
@@ -37,18 +43,18 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
     end
   end
 
-  def is_translated(%Message{message_type: :plural} = message, locale, source) do
+  def translated?(%Message{message_type: :plural} = message, locale, source) do
     case Enum.filter(message.plural_translations, &(&1.locale_id == locale.id)) do
       [] ->
         false
 
       translations ->
         translations
-        |> Enum.map(&is_plural_form_translated(&1, source))
+        |> Enum.map(&plural_form_translated?(&1, source))
     end
   end
 
-  defp is_plural_form_translated(translation, source) do
+  defp plural_form_translated?(translation, source) do
     case get_in(translation, [Access.key!(source)]) do
       nil ->
         false
@@ -134,5 +140,20 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
   defp truncate_translation(text) do
     if String.length(text) > 45, do: String.slice(text, 0..45) <> "... ", else: text
+  end
+
+  defp get_filter_params_from_assigns(%{filters: filters}) do
+    filter =
+      filters
+      |> Map.take(@params_in_filter)
+      |> Map.reject(fn {_, value} -> is_nil(value) or value == "" end)
+
+    params =
+      filters
+      |> Map.take(@available_params)
+      |> Map.put("filter", filter)
+      |> Map.reject(fn {_, value} -> is_nil(value) or value == "" end)
+
+    %{"filters" => params}
   end
 end

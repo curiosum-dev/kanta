@@ -37,7 +37,8 @@ defmodule Kanta.Gettext.Repo do
              filter: [
                msgid: msgid,
                context_id: context_id,
-               domain_id: domain_id
+               domain_id: domain_id,
+               application_source_id: nil
              ]
            ),
          {:ok, %SingularTranslation{translated_text: text}} <-
@@ -107,7 +108,8 @@ defmodule Kanta.Gettext.Repo do
              filter: [
                msgid: msgid_plural,
                context_id: context_id,
-               domain_id: domain_id
+               domain_id: domain_id,
+               application_source_id: nil
              ]
            ),
          {:ok, plurals_options} <- Expo.PluralForms.parse(plurals_header),
