@@ -6,7 +6,7 @@
   </div>
 </div>
 <div class="mt-8 grid grid-cols-12 gap-8">
-  <div class="col-span-6 grid grid-cols-4 gap-2 h-fit">
+  <div class="col-span-12 xl:col-span-6 grid grid-cols-4 gap-2 h-fit">
     <div class="col-span-1">
       <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
@@ -39,23 +39,39 @@
         </div>
       </div>
     </div>
-    <div class="col-span-6">
+    <div class="col-span-6 grid grid-cols-12">
       <%= if length(Kanta.config().plugins) > 0 do %>
-        <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
-        <div class="grid grid-cols-4 gap-4">
-          <%= for {plugin_name, _} <- Kanta.config().plugins do %>
-            <%= if plugin_name |> Module.concat(DashboardComponent) |> module_exists?() do %>
-              <.live_component module={Module.concat(plugin_name, DashboardComponent)} id={plugin_name} />
+        <div class="col-span-12">
+          <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Plugins</div>
+          <div class="grid grid-cols-4 gap-4">
+            <%= for {plugin_name, _} <- Kanta.config().plugins do %>
+              <%= if plugin_name |> Module.concat(DashboardComponent) |> module_exists?() do %>
+                <.live_component module={Module.concat(plugin_name, DashboardComponent)} id={plugin_name} />
+              <% end %>
+              <%= if plugin_name |> Module.concat(DashboardLive) |> module_exists?() do %>
+                <%= live_render(@socket, Module.concat(plugin_name, DashboardLive), id: plugin_name) %>
+              <% end %>
             <% end %>
-            <%= if plugin_name |> Module.concat(DashboardLive) |> module_exists?() do %>
-              <%= live_render(@socket, Module.concat(plugin_name, DashboardLive), id: plugin_name) %>
-            <% end %>
-          <% end %>
+          </div>
         </div>
       <% end %>
+      <div class="col-span-12">
+        <div class="text-slate-600 dark:text-content-light font-semibold text-xl my-4">Cache</div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg relative">
+            <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+              <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @cache_count %></div>
+              <div class="text-slate-600 dark:text-content-light font-medium text-lg">Items</div>
+            </div>
+            <button class="bg-primary hover:bg-primary-dark text-white font-semibold rounded p-1 absolute top-2 right-2" phx-click="clear-cache" data-confirm="Are you sure?">
+              <Icons.trash class="flex-shrink-0 h-6 w-6 text-white dark:text-accent-dark" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col-span-6">
+  <div class="col-span-12 xl:col-span-6">
     <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
       <div class="bg-white dark:bg-stone-900 px-4 py-5 border-b border-slate-200 sm:px-6">
         <h3 class="text-lg leading-6 font-medium text-primary-dark dark:text-accent-light">
