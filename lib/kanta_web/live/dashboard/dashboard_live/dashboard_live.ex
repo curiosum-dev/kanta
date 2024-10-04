@@ -1,8 +1,8 @@
 defmodule KantaWeb.Dashboard.DashboardLive do
   use KantaWeb, :live_view
 
+  alias Kanta.Cache
   alias Kanta.Translations
-
   alias Kanta.Translations.Locale.Finders.GetLocaleTranslationProgress
 
   def mount(_params, _session, socket) do
@@ -17,8 +17,15 @@ defmodule KantaWeb.Dashboard.DashboardLive do
       |> assign(:languages, locales)
       |> assign(:contexts, contexts)
       |> assign(:domains, domains)
+      |> assign(:cache_count, Cache.count_all())
 
     {:ok, socket}
+  end
+
+  def handle_event("clear-cache", _, socket) do
+    Cache.delete_all()
+
+    {:noreply, assign(socket, :cache_count, Cache.count_all())}
   end
 
   def translation_progress(language) do
