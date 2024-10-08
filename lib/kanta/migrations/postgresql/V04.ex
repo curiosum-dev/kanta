@@ -4,14 +4,8 @@ defmodule Kanta.Migrations.Postgresql.V04 do
   """
 
   use Ecto.Migration
-  alias Kanta.Translations
-  alias Kanta.Translations.Context
 
-  @default_prefix "public"
-  @kanta_singular_translations "kanta_singular_translations"
-  @kanta_plural_translations "kanta_plural_translations"
-
-  def up(opts) do
+  def up do
     Kanta.Migration.up(version: 3)
 
     execute(
@@ -21,7 +15,11 @@ defmodule Kanta.Migrations.Postgresql.V04 do
     execute("UPDATE kanta_messages SET context_id=1 WHERE context_id IS NULL;")
   end
 
-  def down(opts) do
-    Kanta.Migration.down(version: 3)
+  def down do
+    execute("UPDATE kanta_messages SET context_id=NULL WHERE context_id=1;")
+
+    execute(
+      "DELETE FROM kanta_contexts WHERE name='default';"
+    )
   end
 end
