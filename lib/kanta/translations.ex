@@ -48,11 +48,12 @@ defmodule Kanta.Translations do
   defdelegate update_locale(locale, attrs, opts \\ []), to: Locales
 
   # TRANSLATIONS
-  defdelegate list_plural_translations(params), to: PluralTranslations
+  defdelegate list_plural_translations(params \\ []), to: PluralTranslations
   defdelegate get_plural_translation(params), to: PluralTranslations
   defdelegate create_plural_translation(attrs, opts \\ []), to: PluralTranslations
   defdelegate update_plural_translation(translation, attrs, opts \\ []), to: PluralTranslations
 
+  defdelegate list_singular_translations(params \\ []), to: SingularTranslations
   defdelegate get_singular_translation(params), to: SingularTranslations
   defdelegate create_singular_translation(attrs, opts \\ []), to: SingularTranslations
 

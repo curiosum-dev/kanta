@@ -8,10 +8,16 @@ defmodule Kanta.Translations.PluralTranslations.Finders.ListPluralTranslations d
     binding: :plural_translation
 
   def find(params \\ []) do
-    base()
-    |> filter_query(params[:filter])
-    |> search_query(params[:search])
-    |> preload_resources(params[:preloads] || [])
-    |> paginate(params[:page], params[:per_page])
+    query =
+      base()
+      |> filter_query(params[:filter])
+      |> search_query(params[:search])
+      |> preload_resources(params[:preloads] || [])
+
+    if params[:skip_pagination] do
+      all(query)
+    else
+      paginate(query, params[:page], params[:per_page])
+    end
   end
 end

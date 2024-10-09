@@ -34,6 +34,10 @@ defmodule Kanta.Query do
         Repo.get_repo().one(query, opts)
       end
 
+      def all(query \\ base(), opts \\ []) do
+        Repo.get_repo().all(query, opts)
+      end
+
       @default_page_size 100
       @minimum_per_page 10
 
@@ -230,6 +234,8 @@ defmodule Kanta.Query do
         |> maybe_greater_or_equal_than(value, field_name)
         |> maybe_lower_than(value, field_name)
         |> maybe_lower_or_equal_than(value, field_name)
+        |> maybe_is_null(value, field_name)
+        |> maybe_is_not_null(value, field_name)
         |> maybe_equality(value, field_name)
       end
 
@@ -288,12 +294,25 @@ defmodule Kanta.Query do
       end
 
       defp maybe_equality(q, value, field_name) do
-        if (is_binary(value) && String.match?(value, ~r/(>|>=|<|<=).*/)) || is_list(value) do
+        if (is_binary(value) && String.match?(value, ~r/(>|>=|<|<=).*/)) ||
+             value in [:is_null, :is_not_null] || is_list(value) do
           q
         else
           from(s in q, where: field(s, ^field_name) == ^value)
         end
       end
+
+      defp maybe_is_null(q, :is_null, field_name) do
+        from(s in q, where: is_nil(field(s, ^field_name)))
+      end
+
+      defp maybe_is_null(q, _value, field_name), do: q
+
+      defp maybe_is_not_null(q, :is_not_null, field_name) do
+        from(s in q, where: not is_nil(field(s, ^field_name)))
+      end
+
+      defp maybe_is_not_null(q, _value, field_name), do: q
 
       defp get_field_name(value, current_query, field_name) when is_binary(field_name) do
         get_field_name(value, current_query, String.to_existing_atom(field_name))
