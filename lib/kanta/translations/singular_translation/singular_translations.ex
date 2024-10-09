@@ -3,11 +3,18 @@ defmodule Kanta.Translations.SingularTranslations do
   Singular translations Kanta subcontext
   """
 
-  alias Kanta.Translations.SingularTranslations.Finders.GetSingularTranslation
+  alias Kanta.Translations.SingularTranslations.Finders.{
+    GetSingularTranslation,
+    ListSingularTranslations
+  }
 
   alias Kanta.Cache
   alias Kanta.Repo
   alias Kanta.Translations.SingularTranslation
+
+  def list_singular_translations(params \\ []) do
+    ListSingularTranslations.find(params)
+  end
 
   def get_singular_translation(params \\ []) do
     GetSingularTranslation.find(params)
