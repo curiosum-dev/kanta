@@ -4,7 +4,6 @@ defmodule Kanta.Migrations.Postgresql.V03 do
   """
 
   use Ecto.Migration
-
   alias Kanta.Utils.Colors
 
   @kanta_application_sources "kanta_application_sources"

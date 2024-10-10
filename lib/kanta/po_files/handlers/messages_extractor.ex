@@ -4,6 +4,7 @@ defmodule Kanta.POFiles.MessagesExtractor do
   """
 
   @po_wildcard "**/*.po"
+  @default_context "default"
 
   alias Expo.{Messages, PO}
 
@@ -38,6 +39,7 @@ defmodule Kanta.POFiles.MessagesExtractor do
       %Expo.Message.Singular{msgctxt: nil, msgid: msgid, msgstr: texts} ->
         ExtractSingularTranslation.call(%{
           msgid: Enum.join(msgid),
+          context_name: @default_context,
           locale_name: locale,
           domain_name: domain,
           original_text: Enum.join(texts)
@@ -55,6 +57,7 @@ defmodule Kanta.POFiles.MessagesExtractor do
       %Expo.Message.Plural{msgctxt: nil, msgid_plural: msgid, msgstr: plurals_map} ->
         ExtractPluralTranslation.call(%{
           msgid: Enum.join(msgid),
+          context_name: @default_context,
           locale_name: locale,
           domain_name: domain,
           plurals_map: plurals_map,
