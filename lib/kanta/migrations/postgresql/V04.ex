@@ -18,8 +18,6 @@ defmodule Kanta.Migrations.Postgresql.V04 do
   def down do
     execute("UPDATE kanta_messages SET context_id=NULL WHERE context_id=1;")
 
-    execute(
-      "DELETE FROM kanta_contexts WHERE name='default';"
-    )
+    execute("DELETE FROM kanta_contexts WHERE name='default';")
   end
 end
