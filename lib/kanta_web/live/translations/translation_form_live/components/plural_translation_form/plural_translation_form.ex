@@ -72,7 +72,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
   def plural_examples(locale, index) do
     forms_struct = Expo.PluralForms.parse!(locale.plurals_header)
 
-    Enum.group_by(0..30, &Expo.PluralForms.index(forms_struct, &1), & &1)
+    Enum.group_by(0..100, &Expo.PluralForms.index(forms_struct, &1), & &1)
     |> Map.fetch!(index)
     |> Enum.join(", ")
   end
