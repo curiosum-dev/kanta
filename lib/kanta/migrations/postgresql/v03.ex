@@ -43,7 +43,9 @@ defmodule Kanta.Migrations.Postgresql.V03 do
 
   def up_kanta_messages(_opts) do
     alter table(@kanta_messages) do
-      add(:application_source_id, references(@kanta_application_sources), null: true)
+      add_if_not_exists(:application_source_id, references(@kanta_application_sources),
+        null: true
+      )
     end
 
     drop unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])
@@ -75,7 +77,7 @@ defmodule Kanta.Migrations.Postgresql.V03 do
     create_if_not_exists unique_index(@kanta_messages, [:context_id, :domain_id, :msgid])
 
     alter table(@kanta_messages) do
-      remove(:application_source_id)
+      remove_if_exists(:application_source_id)
     end
   end
 end
