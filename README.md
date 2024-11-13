@@ -141,11 +141,11 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 2, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.up(version: 3, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 
   def down do
-    Kanta.Migration.down(version: 2, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.down(version: 3, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
