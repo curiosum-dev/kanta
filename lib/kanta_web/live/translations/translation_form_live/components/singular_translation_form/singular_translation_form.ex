@@ -29,7 +29,7 @@ defmodule KantaWeb.Translations.SingularTranslationForm do
     Translations.update_singular_translation(translation, %{"translated_text" => translated})
 
     {:noreply,
-     push_redirect(socket,
+     push_navigate(socket,
        to:
          dashboard_path(socket, "/locales/#{locale.id}/translations" <> get_query(socket.assigns))
      )}
