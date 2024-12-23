@@ -39,7 +39,7 @@ defmodule Kanta.MixProject do
       {:ecto_sql, "~> 3.12"},
       {:phoenix, "~> 1.7.0"},
       {:phoenix_view, "~> 2.0"},
-      {:phoenix_live_view, "~> 0.20"},
+      {:phoenix_live_view, ">= 0.20.0"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_html_helpers, "~> 1.0"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
