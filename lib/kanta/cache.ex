@@ -15,7 +15,17 @@ defmodule Kanta.Cache do
           acc <> "_" <> to_string(key) <> "_" <> URI.encode_query(val)
 
         val when is_list(val) ->
-          acc <> "_" <> to_string(key) <> "_" <> (Enum.into(val, %{}) |> URI.encode_query())
+          # this old way is just broken for preloads lists
+          # encoded_list = (Enum.into(val, %{}) |> URI.encode_query())
+          # the new way is robust and reversible
+          encoded_list =
+            val
+            |> :erlang.term_to_binary()
+            |> URI.encode()
+            |> then(&%{encoded_params: &1})
+            |> URI.encode_query()
+
+          acc <> "_" <> to_string(key) <> "_" <> encoded_list
 
         _val ->
           acc

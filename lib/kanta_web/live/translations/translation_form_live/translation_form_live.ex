@@ -132,7 +132,7 @@ defmodule KantaWeb.Translations.TranslationFormLive do
 
   defp get_message(message_id) do
     case parse_id_filter(message_id) do
-      {:ok, id} -> Translations.get_message(filter: [id: id])
+      {:ok, id} -> Translations.get_message(filter: [id: id], preloads: [:context])
       _ -> {:error, :id, :invalid}
     end
   end
