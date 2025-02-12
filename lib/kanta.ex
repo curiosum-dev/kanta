@@ -23,6 +23,7 @@ defmodule Kanta do
   @impl Supervisor
   def init(%Config{plugins: plugins} = conf) do
     children = [
+      {Kanta.MigrationVersionChecker, []},
       {MessagesExtractorAgent, conf: conf, name: Registry.via(conf.name, MessagesExtractorAgent)}
     ]
 
