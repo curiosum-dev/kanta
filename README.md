@@ -94,7 +94,7 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
 - Elixir (tested on 1.14.0)
 - Phoenix (tested on 1.7.0)
 - Ecto SQL (tested on 3.6)
-- PostgreSQL 15 or newer
+- PostgreSQL 15+ or SQLite 3.31.0+
 
 ## Installation
 
