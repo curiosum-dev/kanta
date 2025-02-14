@@ -94,6 +94,7 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
 - Elixir (tested on 1.14.0)
 - Phoenix (tested on 1.7.0)
 - Ecto SQL (tested on 3.6)
+- PostgreSQL 15+ or SQLite 3.31.0+
 
 ## Installation
 
@@ -181,9 +182,9 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
 
 ## Kanta UI
 
-Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro. 
+Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
 
-```elixir 
+```elixir
 import KantaWeb.Router
 
 scope "/" do
@@ -227,7 +228,7 @@ Not all of us are polyglots, and sometimes we need the help of machine translati
 
 ```elixir
 # mix.exs
-defp deps do 
+defp deps do
   ...
   {:kanta_deep_l_plugin, "~> 0.1.1"}
 end
@@ -242,27 +243,27 @@ config :kanta,
   ]
 ```
 
-## KantaSync 
+## KantaSync
 
 The [KantaSync plugin](https://github.com/curiosum-dev/kanta_sync_plugin) allows you to synchronize translations between your production and staging/dev environments. It ensures that any changes made to translations in one are reflected in the others, helping you maintain consistency across different stages of development.
 
-```elixir 
-# mix.exs 
-defp deps do 
+```elixir
+# mix.exs
+defp deps do
   ...
   {:kanta_sync_plugin, "~> 0.1.0"}
 end
 ```
 
-You need to have Kanta API configured by using kanta_api macro. 
+You need to have Kanta API configured by using kanta_api macro.
 
 ```elixir
-# router.ex 
+# router.ex
 import KantaWeb.Router
 
-scope "/" do 
+scope "/" do
   kanta_api("/kanta-api")
-end 
+end
 ```
 
 ### Authorization
