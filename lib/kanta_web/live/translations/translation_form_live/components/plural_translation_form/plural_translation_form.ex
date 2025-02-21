@@ -63,7 +63,7 @@ defmodule KantaWeb.Translations.PluralTranslationForm do
     })
 
     {:noreply,
-     push_redirect(socket,
+     push_navigate(socket,
        to:
          dashboard_path(socket, "/locales/#{locale.id}/translations" <> get_query(socket.assigns))
      )}

@@ -79,7 +79,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
   end
 
   def handle_event("navigate", %{"to" => to}, socket) do
-    {:noreply, push_redirect(socket, to: dashboard_path(socket) <> to)}
+    {:noreply, push_navigate(socket, to: dashboard_path(socket) <> to)}
   end
 
   def handle_event("page_changed", %{"index" => page_number}, socket) do
