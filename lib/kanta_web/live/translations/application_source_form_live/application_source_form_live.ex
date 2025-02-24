@@ -54,7 +54,7 @@ defmodule KantaWeb.Translations.ApplicationSourceFormLive do
     socket =
       case Translations.update_application_source(application_source, attrs) do
         {:ok, _application_source} ->
-          push_redirect(socket, to: dashboard_path(socket, "/application_sources"))
+          push_navigate(socket, to: dashboard_path(socket, "/application_sources"))
 
         {:error, changeset} ->
           assign(socket, :form, to_form(changeset))
@@ -67,7 +67,7 @@ defmodule KantaWeb.Translations.ApplicationSourceFormLive do
     socket =
       case Translations.create_application_source(attrs) do
         {:ok, _application_source} ->
-          push_redirect(socket, to: dashboard_path(socket, "/application_sources"))
+          push_navigate(socket, to: dashboard_path(socket, "/application_sources"))
 
         {:error, changeset} ->
           assign(socket, :form, to_form(changeset))
