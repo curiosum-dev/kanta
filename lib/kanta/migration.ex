@@ -55,7 +55,7 @@ defmodule Kanta.Migration do
 
     def up, do: Kanta.Migration.up(version: 11)
 
-    def down, do: Kanta.Migration.down(version: 11)
+    def down, do: Kanta.Migration.down(version: 1)
   end
   ```
 
@@ -169,7 +169,7 @@ defmodule Kanta.Migration do
 
   Run migrations down to and including a specified version:
 
-      Kanta.Migration.down(version: 5)
+      Kanta.Migration.down(version: 1)
 
   Run migrations in an alternate prefix:
 

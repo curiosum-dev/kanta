@@ -1,6 +1,6 @@
 defmodule Kanta.Migrations.Postgresql.V01 do
   @moduledoc """
-  Kanta V1 Migrations
+  Kanta PostgreSQL V1 Migrations
   """
 
   use Ecto.Migration

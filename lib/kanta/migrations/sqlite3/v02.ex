@@ -1,6 +1,6 @@
 defmodule Kanta.Migrations.SQLite3.V02 do
   @moduledoc """
-  Kanta V2 Migrations
+  Kanta SQLite3 V2 Migrations
   """
 
   use Ecto.Migration
