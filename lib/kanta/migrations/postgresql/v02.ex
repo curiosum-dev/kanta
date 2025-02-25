@@ -1,6 +1,6 @@
 defmodule Kanta.Migrations.Postgresql.V02 do
   @moduledoc """
-  Kanta V2 Migrations
+  Kanta PostgreSQL V2 Migrations
   """
 
   use Ecto.Migration
@@ -10,13 +10,11 @@ defmodule Kanta.Migrations.Postgresql.V02 do
   @kanta_plural_translations "kanta_plural_translations"
 
   def up(opts) do
-    Kanta.Migration.up(version: 1)
     up_fuzzy_search(opts)
   end
 
   def down(opts) do
     down_fuzzy_search(opts)
-    Kanta.Migration.down(version: 1)
   end
 
   def up_fuzzy_search(opts) do

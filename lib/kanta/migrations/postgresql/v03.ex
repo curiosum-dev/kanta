@@ -1,6 +1,6 @@
 defmodule Kanta.Migrations.Postgresql.V03 do
   @moduledoc """
-  Kanta V3 Migrations
+  Kanta PostgreSQL V3 Migrations
   """
 
   use Ecto.Migration
@@ -10,8 +10,6 @@ defmodule Kanta.Migrations.Postgresql.V03 do
   @kanta_messages "kanta_messages"
 
   def up(opts) do
-    Kanta.Migration.up(version: 2)
-
     [
       &up_application_sources/1,
       &up_kanta_messages/1
@@ -21,12 +19,10 @@ defmodule Kanta.Migrations.Postgresql.V03 do
 
   def down(opts) do
     [
-      &down_application_sources/1,
-      &down_kanta_messages/1
+      &down_kanta_messages/1,
+      &down_application_sources/1
     ]
     |> Enum.each(&apply(&1, [opts]))
-
-    Kanta.Migration.down(version: 2)
   end
 
   def up_application_sources(_opts) do
