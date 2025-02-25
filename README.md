@@ -148,17 +148,11 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
     Kanta.Migration.up(version: 4)
   end
 
-  # We specify `version: 1` because we want to rollback all the way down.
+  # We specify `version: 1` because we want to rollback all the way down including the first migration.
   def down do
     Kanta.Migration.down(version: 1)
   end
 end
-```
-
-If you are using multitenancy with i.e. [triplex](https://github.com/ateliware/triplex), you can pass the schema prefix to the migration.
-
-```elixir
-Kanta.Migration.up(version: ..., prefix: prefix())
 ```
 
 ### SQLite3
@@ -168,12 +162,12 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 3, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.up(version: 3)
   end
 
-  # We specify `version: 1` because we want to rollback all the way down.
+  # We specify `version: 1` because we want to rollback all the way down including the first migration.
   def down do
-    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.down(version: 1)
   end
 end
 ```
