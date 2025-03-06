@@ -42,8 +42,8 @@ defmodule Kanta.Gettext.Macros do
 
   @moduledoc since: "0.26.0"
 
-  alias Kanta.Gettext.Adapter
   alias Gettext.Extractor
+  alias Kanta.Gettext.Adapter
 
   @doc """
   Marks the given message for extraction and returns it unchanged.
@@ -649,11 +649,10 @@ defmodule Kanta.Gettext.Macros do
              unquote(backend),
              unquote(domain),
              unquote(msgctxt),
-             unquote(msgid)
+             unquote(msgid),
+             unquote(bindings)
            ) do
         {:ok, text} ->
-          IO.inspect(text, label: "Found singular translation: ")
-
           text
 
         :not_found ->
@@ -690,11 +689,10 @@ defmodule Kanta.Gettext.Macros do
              unquote(msgctxt),
              unquote(msgid),
              unquote(msgid_plural),
-             unquote(n)
+             unquote(n),
+             unquote(bindings)
            ) do
         {:ok, text} ->
-          IO.inspect(text, label: "Found plural translation: ")
-
           text
 
         :not_found ->
@@ -790,7 +788,7 @@ defmodule Kanta.Gettext.Macros do
     :ok
   end
 
-  defp get_and_flush_extracted_comments() do
+  defp get_and_flush_extracted_comments do
     Enum.reverse(Process.delete(:gettext_comments) || [])
   end
 end
