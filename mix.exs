@@ -8,6 +8,7 @@ defmodule Kanta.MixProject do
       package: package(),
       version: "0.4.1",
       elixir: "~> 1.14",
+      elixirc_paths: elixirc_paths(Mix.env()),
       elixirc_options: [
         warnings_as_errors: true
       ],
@@ -30,6 +31,9 @@ defmodule Kanta.MixProject do
       mod: {Kanta.Application, []}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_env), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
@@ -57,7 +61,8 @@ defmodule Kanta.MixProject do
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
       {:gettext, "~> 0.26"},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.4", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.4", only: :dev, runtime: false},
+      {:postgrex, "~> 0.16", only: :test}
     ]
   end
 
