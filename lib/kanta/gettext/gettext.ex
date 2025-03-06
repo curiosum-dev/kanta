@@ -651,7 +651,6 @@ defmodule Kanta.Gettext do
         end
 
       _other ->
-        # TODO: remove this once we stop supporting the old way of defining backends.
         IO.warn(
           """
           defining a Gettext backend by calling
@@ -701,8 +700,8 @@ defmodule Kanta.Gettext do
 
   """
   @doc section: :locale
-  @spec get_locale() :: locale
-  def get_locale() do
+  @spec get_locale :: locale
+  def get_locale do
     with nil <- Process.get(Gettext) do
       # If this is not set by the user, it's still set in mix.exs (to "en").
       Application.fetch_env!(:gettext, :default_locale)
