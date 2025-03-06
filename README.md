@@ -181,11 +181,21 @@ mix ecto.migrate
 
 ## Gettext module
 
-We now need to pass information to our project's `Gettext` module that we want Kanta to manage translations. To do this add `Kanta.Gettext.Repo` as a default translation repository inside your `Gettext` module.
+Configuring Gettext requires just a single change.
+
+Wherever you have:
 
 ```elixir
-use Gettext, ..., repo: Kanta.Gettext.Repo
+use Gettext, backend: YourApp.Gettext
 ```
+
+replace it with:
+
+```elixir
+use Kanta.Gettext, backend: YourApp.Gettext
+```
+
+If you're using a Gettext version lower than 0.26, refer to the [official documentation](https://github.com/elixir-gettext/gettext) for migration instructions.
 
 ## Kanta Supervisor
 
