@@ -54,3 +54,14 @@ if config_env() == :dev do
     tag_template: "v{version}",
     tag_message_template: "Release v{version}"
 end
+
+if config_env() == :test do
+  config :kanta,
+    ecto_repos: [Kanta.Test.Repo]
+
+  config :kanta, Kanta.Test.Repo,
+    database: "kanta_test",
+    hostname: "localhost",
+    pool: Ecto.Adapters.SQL.Sandbox,
+    pool_size: 10
+end
