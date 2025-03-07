@@ -1039,7 +1039,7 @@ defmodule Kanta.Gettext do
 
   """
   @doc section: :locale
-  @spec with_locale(locale, (-> result)) :: result when result: var
+  @spec with_locale(locale, fun()) :: any()
   def with_locale(locale, fun) when is_binary(locale) and is_function(fun) do
     previous_locale = Process.get(Gettext)
     Gettext.put_locale(locale)
@@ -1083,7 +1083,7 @@ defmodule Kanta.Gettext do
 
   """
   @doc section: :locale
-  @spec with_locale(backend(), locale(), (-> result)) :: result when result: var
+  @spec with_locale(backend(), locale(), fun()) :: any()
   def with_locale(backend, locale, fun)
       when is_atom(backend) and is_binary(locale) and is_function(fun) do
     previous_locale = Process.get(backend)
