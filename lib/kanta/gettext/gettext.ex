@@ -645,7 +645,7 @@ defmodule Kanta.Gettext do
 
           _ ->
             raise ArgumentError,
-                  "the :backend option on \"use Gettext\" expects the backend " <>
+                  "the :backend option on \"use Kanta.Gettext\" expects the backend " <>
                     "to be a literal atom/alias/module, got: #{Macro.to_string(backend)}"
         end
 
@@ -662,7 +662,7 @@ defmodule Kanta.Gettext do
 
           Then, instead of importing your backend, call this in your module:
 
-              use Gettext, backend: MyApp.Gettext
+              use Kanta.Gettext, backend: MyApp.Gettext
           """,
           Macro.Env.stacktrace(__CALLER__)
         )
