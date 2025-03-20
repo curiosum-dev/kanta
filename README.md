@@ -95,6 +95,7 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
 - Phoenix (tested on 1.7.0)
 - Ecto SQL (tested on 3.6)
 - Phoenix LiveView 0.18.0+
+- Gettext 0.26.0+
 - PostgreSQL 15+ or SQLite 3.31.0+
 
 ## Installation
@@ -180,11 +181,21 @@ mix ecto.migrate
 
 ## Gettext module
 
-We now need to pass information to our project's `Gettext` module that we want Kanta to manage translations. To do this add `Kanta.Gettext.Repo` as a default translation repository inside your `Gettext` module.
+Configuring Gettext requires just a single change.
+
+Wherever you have:
 
 ```elixir
-use Gettext, ..., repo: Kanta.Gettext.Repo
+use Gettext, backend: YourApp.Gettext
 ```
+
+replace it with:
+
+```elixir
+use Kanta.Gettext, backend: YourApp.Gettext
+```
+
+If you're using a Gettext version lower than 0.26, refer to the [official documentation](https://github.com/elixir-gettext/gettext) for migration instructions.
 
 ## Kanta Supervisor
 

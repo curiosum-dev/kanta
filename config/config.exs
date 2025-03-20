@@ -54,3 +54,17 @@ if config_env() == :dev do
     tag_template: "v{version}",
     tag_message_template: "Release v{version}"
 end
+
+if config_env() == :test do
+  config :kanta,
+    ecto_repos: [Kanta.Test.Repo]
+
+  config :kanta, Kanta.Test.Repo,
+    username: System.get_env("POSTGRES_USERNAME", "postgres"),
+    password: System.get_env("POSTGRES_PASSWORD", "postgres"),
+    hostname: System.get_env("POSTGRES_HOSTNAME", "localhost"),
+    database: "kanta_test",
+    port: 5432,
+    pool: Ecto.Adapters.SQL.Sandbox,
+    pool_size: 10
+end
