@@ -1,6 +1,5 @@
 defmodule KantaWeb.Router do
   use Phoenix.Router
-
   # deps/phoenix/lib/phoenix/router.ex:2:no_return Function call/2 has no local return.
   @dialyzer {:no_return, {:call, 2}}
 
@@ -19,22 +18,14 @@ defmodule KantaWeb.Router do
 
           import Phoenix.Router
           import Phoenix.LiveView.Router, only: [live: 4, live_session: 3]
-          import Redirect
 
           live_session session_name, session_opts do
             get "/css-:md5", KantaWeb.Assets, :css, as: :kanta_dashboard_asset
             get "/js-:md5", KantaWeb.Assets, :js, as: :kanta_dashboard_asset
 
-            redirect(
-              "/",
-              "#{KantaWeb.Router.internal_dashboard_scoped_path(path)}/dashboard",
-              :permanent
-            )
-
             scope "/", KantaWeb do
-              scope "/dashboard", Dashboard do
-                live "/", DashboardLive, :index, route_opts
-              end
+              live "/", Dashboard.DashboardLive, :index, route_opts
+              live "/dashboard", Dashboard.DashboardLive, :index, route_opts
 
               scope "/application_sources", Translations do
                 live "/", ApplicationSourcesLive, :index, route_opts
