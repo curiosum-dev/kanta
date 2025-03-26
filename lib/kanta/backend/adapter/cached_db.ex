@@ -1,4 +1,4 @@
-defmodule Kanta.Gettext.Adapter do
+defmodule Kanta.Backend.Adapter.KantaCachedDB do
   @moduledoc """
   Kanta adapter used in *gettext functions from Kanta.Gettext.Macros.
 
@@ -6,6 +6,7 @@ defmodule Kanta.Gettext.Adapter do
   """
 
   require Logger
+  @behaviour Kanta.Backend.Adapter
 
   alias Kanta.Translations.{
     Context,
@@ -18,16 +19,22 @@ defmodule Kanta.Gettext.Adapter do
 
   alias Kanta.Translations
 
-  def get_singular_translation(backend, domain, msgctxt, msgid, bindings) do
-    locale = Gettext.get_locale(backend)
+  @doc """
+  Translates a message with the given locale, domain, context, and message ID.
 
-    get_singular_translation(backend, locale, domain, msgctxt, msgid, bindings)
-  end
+  ## Parameters
+    * `locale` - ISO-639 code for the locale
+    * `domain` - Name of the translation domain
+    * `msgctxt` - Optional context for the message
+    * `msgid` - Message ID to translate
+    * `bindings` - Map or keyword list of variables to interpolate
 
-  def get_singular_translation(backend, locale, domain, msgctxt, msgid, bindings) do
-    default_locale = Application.get_env(:kanta, :default_locale) || "en"
-    domain = if is_atom(domain), do: Atom.to_string(domain), else: domain
-
+  ## Returns
+    * `{:ok, translation}` - When translation is found
+    * `{:error, :not_found}` - When translation is not found
+  """
+  @impl true
+  def lgettext(locale, domain, msgctxt, msgid, bindings) do
     with {:ok, %Locale{id: locale_id}} <-
            Translations.get_locale(filter: [iso639_code: locale]),
          {:ok, %Domain{id: domain_id}} <-
@@ -42,64 +49,38 @@ defmodule Kanta.Gettext.Adapter do
                application_source_id: nil
              ]
            ),
-         {:ok, %SingularTranslation{translated_text: text}} <-
+         {:ok, %SingularTranslation{translated_text: text}} when not is_nil(text) <-
            Translations.get_singular_translation(
              filter: [
                locale_id: locale_id,
                message_id: message_id
              ]
-           ) do
-      if is_nil(text) do
-        if locale != default_locale do
-          get_singular_translation(backend, default_locale, domain, msgctxt, msgid, bindings)
-        else
-          :not_found
-        end
-      else
-        apply_bindings(text, bindings)
-      end
+           ),
+         {:ok, interpolated} <- apply_bindings(text, bindings) do
+      {:ok, interpolated}
     else
-      _ ->
-        :not_found
+      _ -> {:error, :not_found}
     end
   end
 
-  def get_plural_translation(
-        backend,
-        domain,
-        msgctxt,
-        msgid,
-        msgid_plural,
-        plural_form,
-        bindings
-      ) do
-    locale = Gettext.get_locale(backend)
+  @doc """
+  Translates a plural message with the given locale, domain, context, message IDs, count and bindings.
 
-    get_plural_translation(
-      backend,
-      locale,
-      domain,
-      msgctxt,
-      msgid,
-      msgid_plural,
-      plural_form,
-      bindings
-    )
-  end
+  ## Parameters
+    * `locale` - ISO-639 code for the locale
+    * `domain` - Name of the translation domain
+    * `msgctxt` - Optional context for the message
+    * `msgid` - Singular message ID
+    * `msgid_plural` - Plural message ID
+    * `n` - Count to determine which plural form to use
+    * `bindings` - Map or keyword list of variables to interpolate
 
-  def get_plural_translation(
-        backend,
-        locale,
-        domain,
-        msgctxt,
-        msgid,
-        msgid_plural,
-        plural_form,
-        bindings
-      ) do
-    default_locale = Application.get_env(:kanta, :default_locale) || "en"
-    domain = if is_atom(domain), do: Atom.to_string(domain), else: domain
-
+  ## Returns
+    * `{:ok, translation}` - When translation is found
+    * `{:error, :not_found}` - When translation is not found
+  """
+  @impl true
+  def lngettext(locale, domain, msgctxt, _msgid, msgid_plural, n, bindings) do
     with {:ok, %Locale{id: locale_id, plurals_header: plurals_header}} <-
            Translations.get_locale(filter: [iso639_code: locale]),
          {:ok, %Domain{id: domain_id}} <-
@@ -115,7 +96,7 @@ defmodule Kanta.Gettext.Adapter do
              ]
            ),
          {:ok, plurals_options} <- Expo.PluralForms.parse(plurals_header),
-         nplural_index <- Expo.PluralForms.index(plurals_options, plural_form),
+         nplural_index <- Expo.PluralForms.index(plurals_options, n),
          {:ok, %PluralTranslation{translated_text: text}} <-
            Translations.get_plural_translation(
              filter: [
@@ -123,29 +104,11 @@ defmodule Kanta.Gettext.Adapter do
                message_id: message_id,
                nplural_index: nplural_index
              ]
-           ) do
-      if is_nil(text) do
-        if locale != default_locale do
-          get_plural_translation(
-            backend,
-            default_locale,
-            domain,
-            msgctxt,
-            msgid,
-            msgid_plural,
-            plural_form,
-            bindings
-          )
-        else
-          :not_found
-        end
-      else
-        bindings = Map.put(bindings, :count, plural_form)
-        apply_bindings(text, bindings)
-      end
+           ),
+         {:ok, interpolated} <- apply_bindings(text, Map.put(bindings, :count, n)) do
+      {:ok, interpolated}
     else
-      _ ->
-        :not_found
+      _ -> {:error, :not_found}
     end
   end
 

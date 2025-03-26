@@ -11,9 +11,7 @@ Kanta.start_link(
 
 ExUnit.start()
 
-Ecto.Migrator.up(Kanta.Test.Repo, 0, Kanta.Test.Migration)
-
 # clear translations cache
 Kanta.Cache.delete_all()
 
-Ecto.Adapters.SQL.Sandbox.mode(Kanta.Test.Repo, {:shared, self()})
+Ecto.Adapters.SQL.Sandbox.mode(Kanta.Test.Repo, :manual)
