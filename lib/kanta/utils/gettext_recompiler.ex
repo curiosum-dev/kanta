@@ -1,9 +1,8 @@
 defmodule Kanta.Utils.GettextRecompiler do
   require Logger
 
-  def setup_recompile_flag(flag_file, message) do
+  def setup_recompile_flag(flag_file) do
     if Gettext.Extractor.extracting?() do
-      Logger.debug(message)
       File.mkdir_p!(Path.dirname(flag_file))
       File.touch!(flag_file)
     end

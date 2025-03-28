@@ -16,18 +16,12 @@ defmodule Kanta.Backend.GettextFallback do
 
         # When `mix gettext extract` create empty stub so that the  Kanta.Backend can compile.
         if Gettext.Extractor.extracting?() do
-          Logger.debug("#{__MODULE__} OFF")
-
           def lgettext(_locale, _domain, _msgctxt, _msgid, _bindings), do: nil
           def lngettext(_locale, _domain, _msgctxt, _msgid, _msgid_plural, _n, _bindings), do: nil
 
-          Kanta.Utils.GettextRecompiler.setup_recompile_flag(
-            @flag_file,
-            "Setting fallback recompile flag #{__MODULE__}"
-          )
+          Kanta.Utils.GettextRecompiler.setup_recompile_flag(@flag_file)
         else
           # ...otherwise generate the Gettext.Backend interface
-          Logger.debug("#{__MODULE__} ON")
           use Gettext.Backend, opts
         end
 

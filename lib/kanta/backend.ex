@@ -38,15 +38,10 @@ defmodule Kanta.Backend do
 
       # When `mix gettext extract` create POT/PO files based on this backend usage (ex. getext(...) call) across the application codebase.
       if Gettext.Extractor.extracting?() do
-        Logger.debug("#{__MODULE__} OFF")
         use Gettext.Backend, opts
 
-        Kanta.Utils.GettextRecompiler.setup_recompile_flag(
-          @flag_file,
-          "Setting gettext recompile flag for #{__MODULE__}"
-        )
+        Kanta.Utils.GettextRecompiler.setup_recompile_flag(@flag_file)
       else
-        Logger.debug("#{__MODULE__} ON")
         opts = Keyword.merge(opts, priv: "priv/#{ModuleFolder.safe_folder_name(__MODULE__)}")
         use Gettext.Backend, opts
       end
@@ -69,13 +64,9 @@ defmodule Kanta.Backend do
                bindings
              ) do
           {:ok, translation} ->
-            Logger.debug("Kanta for \"#{msgid}\"")
-
             {:ok, translation}
 
           {:error, :not_found} ->
-            Logger.debug("Gettext for \"#{msgid}\"")
-
             backend = fallback_backend()
             backend.lgettext(locale, domain, msgctxt, msgid, bindings)
         end
@@ -100,11 +91,9 @@ defmodule Kanta.Backend do
                bindings
              ) do
           {:ok, translation} ->
-            Logger.debug("Kanta for \"#{msgid}\"")
             {:ok, translation}
 
           {:error, :not_found} ->
-            Logger.debug("Gettext for \"#{msgid}\"")
             backend = fallback_backend()
 
             backend.lngettext(
