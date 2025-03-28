@@ -1,6 +1,6 @@
 defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
   # Changing back to async: false for now
-  use Kanta.Test.DataCase, async: true
+  use Kanta.Test.DataCase, async: false
 
   alias Kanta.Translations
   alias Kanta.Backend.Adapter.KantaCachedDB
