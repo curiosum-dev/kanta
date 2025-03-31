@@ -42,3 +42,8 @@ msgid "Not even one msgstr"
 msgid_plural "Not even %{count} msgstrs"
 msgstr[0] ""
 msgstr[1] "<not empty>"
+
+msgid "One apple"
+msgid_plural "%{count} apples"
+msgstr[0] "Una mela"
+msgstr[1] "%{count} mele"
