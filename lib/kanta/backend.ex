@@ -42,7 +42,6 @@ defmodule Kanta.Backend do
 
         Kanta.Utils.GettextRecompiler.setup_recompile_flag(@flag_file)
       else
-        Logger.debug("#{__MODULE__} ON")
         opts = Keyword.merge(opts, priv: "priv/#{ModuleFolder.safe_folder_name(__MODULE__)}")
         use Gettext.Backend, opts
       end
