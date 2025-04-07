@@ -1,15 +1,26 @@
-<a id="readme-top" name="readme-top"></a>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/f0352656-397d-4d90-999a-d3adbae1095f">
+
+  <h1>Kanta</h1>
+  <p><strong>User-friendly translations manager for Elixir/Phoenix projects</strong></p>
+
+  [![Contact Us](https://img.shields.io/badge/Contact%20Us-%23F36D2E?style=for-the-badge&logo=maildotru&logoColor=white&labelColor=F36D2E)](https://curiosum.com/contact)
+  [![Visit Curiosum](https://img.shields.io/badge/Visit%20Curiosum-%236819E6?style=for-the-badge&logo=elixir&logoColor=white&labelColor=6819E6)](https://curiosum.com/services/elixir-software-development)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-1D0642?style=for-the-badge&logo=open-source-initiative&logoColor=white&labelColor=1D0642)](https://github.com/curiosum-dev/kanta/blob/main/LICENSE)
+</div>
+
 <br />
 
-<div align="center">
+# About The Project
+
+
+<div align="left">
   <a href="https://github.com/curiosum-dev/kanta">
-    <img src="./logo.png" alt="Logo" height="111">
+    <img src="./logo.png" alt="Logo" height="80">
   </a>
   <br />
   <br />
-  <p style="margin-top: 3rem; font-size: 14pt;" align="center">
-    User-friendly translations manager for Elixir/Phoenix projects.
-    <br />
+  <p style="margin-top: 3rem; font-size: 14pt;" align="left">
     <a href="https://kanta.curiosum.com">View Demo</a>
     ·
     <a href="https://github.com/curiosum-dev/kanta/issues">Report Bug</a>
@@ -17,6 +28,8 @@
     <a href="https://github.com/curiosum-dev/kanta/issues">Request Feature</a>
   </p>
 </div>
+
+If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
 
 <div>
   <a href="https://github.com/curiosum-dev/kanta/actions/workflows/development.yml">
@@ -31,6 +44,8 @@
 </div>
 
 <br/>
+
+# Table of contents
 
 <ul style="margin-top: 3rem; margin-bottom: 3rem;">
   <li>
@@ -80,10 +95,6 @@ _Note: Official documentation for Kanta library is [available on hexdocs][hexdoc
 ---
 
 <br />
-
-# About The Project
-
-If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
