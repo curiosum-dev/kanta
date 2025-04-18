@@ -5,8 +5,8 @@ defmodule Kanta do
 
   use Supervisor
 
-  alias Kanta.{Config, Registry}
-  alias Kanta.POFiles.MessagesExtractorAgent
+  alias Kanta.Registry
+  alias Kanta.Config
 
   def start_link(opts) when is_list(opts) do
     conf = Config.new(opts)
@@ -21,10 +21,20 @@ defmodule Kanta do
   end
 
   @impl Supervisor
-  def init(%Config{plugins: plugins} = conf) do
+  def init(conf) do
+    %Config{plugins: plugins} = conf
+
+    po_extractor_opts =
+      if conf.default_data_access,
+        do: [backends: conf.backends, default_data_access: conf.default_data_access],
+        else: [backends: conf.backends]
+
     children = [
       {Kanta.MigrationVersionChecker, []},
-      {MessagesExtractorAgent, conf: conf, name: Registry.via(conf.name, MessagesExtractorAgent)}
+      {Kanta.POFiles.POExtractorTask, po_extractor_opts}
+      # TODO
+      # {Kanta.POFiles.MessagesExtractorAgent,
+      #  conf: conf, name: Registry.via(conf.name, MessagesExtractorAgent)}
     ]
 
     children = children ++ Enum.map(plugins, &plugin_child_spec(&1, conf))

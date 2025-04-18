@@ -1,188 +1,190 @@
 defmodule Kanta.Backend do
-  alias Kanta.Utils.ModuleFolder
-  require Logger
+  @moduledoc """
+  Defines the `Kanta.Backend` macro for creating dynamic Gettext backends.
 
-  # Define defaults consistent with Gettext where possible
-  # No default adapter - it must be specified by the user
-  # @default_adapter Kanta.Backend.Adapter.KantaCachedDB
+  This module provides the core macro (`use Kanta.Backend`) that allows developers
+  to define Gettext backend modules which load translations from dynamic sources
+  (like databases) at runtime, rather than relying solely on compiled `.po` files.
+
+  ## Usage
+
+  Instead of `use Gettext.Backend`, use `Kanta.Backend` in your Gettext module definition:
+
+  ```elixir
+  defmodule MyApp.Gettext do
+    use Kanta.Backend,
+      otp_app: :my_app,
+      source: Kanta.Backend.Source.Ecto,
+      source_opts: [repo: MyApp.Repo]
+      # Optional cache:
+      # cache: MyApp.GettextCache
+  end
+  ```
+
+  ## Options
+
+  The `use Kanta.Backend` macro accepts the following options:
+
+  *   `:otp_app` (required): The OTP application name. Used by Gettext infrastructure.
+  *   `:priv` (optional): The directory for `.po` files. Defaults to `"priv/gettext"`.
+      While Kanta loads dynamically, this is still used by Gettext extraction tools.
+  *   `:source` (optional): The module responsible for fetching translations. Must
+      implement the `Kanta.Backend.Source` behaviour. Defaults to
+      `Kanta.Backend.Source.Ecto`.
+  *   `:source_opts` (optional): A keyword list of options passed to the `:source`
+      module's `validate_opts/1` and used during runtime lookups. Defaults to `[]`.
+      The specific options depend on the chosen `:source` module. For `Ecto`,
+      this typically includes `:repo` and `:schema`.
+  *   `:cache` (optional): The module responsible for caching translations. Must
+      implement the `Kanta.Backend.Cache` behaviour. Defaults to `nil` (no caching).
+  *   `:plural_forms` (optional): The module responsible for determining plural forms.
+      Defaults to `Gettext.Plural`. Must implement the `Gettext.Plural` behaviour.
+  *   `:interpolation` (optional): The module responsible for string interpolation.
+      Defaults to `Gettext.Interpolation.Default`. Must implement the
+      `Gettext.Interpolation` behaviour.
+  *   `:default_locale` (optional): The default locale. Defaults to `"en"`.
+  *   `:default_domain` (optional): The default domain. Defaults to `"default"`.
+
+  Any other options are passed directly to `use Gettext.Backend` when running in
+  extraction mode.
+
+  ## Kanta.Backend Behaviour
+
+  Modules using `Kanta.Backend` implicitly implement the `Kanta.Backend` behaviour,
+  which currently requires the `source_opts/0` callback. This callback returns the
+  `:source_opts` configured during `use`.
+  """
+
+  @callback source_opts() :: Keyword.t()
 
   defmacro __using__(opts) do
-    quote bind_quoted: [opts: opts] do
+    quote bind_quoted: [opts: opts, caller: __MODULE__] do
       require Logger
-      # Flag file used by Kanta.Utils.GettextRecompiler
-      # Needs to be coordinated if location changes.
-      @flag_file "priv/kanta/.gettext_recompiled"
-      gettext_opts = Keyword.drop(opts, [:adapter])
+      # Flag file setup remains the same
+      @flag_file Path.join([
+                   "priv/kanta/",
+                   Kanta.Utils.ModuleFolder.safe_folder_name(__MODULE__),
+                   ".gettext_recompiled"
+                 ])
+      gettext_opts = Keyword.drop(opts, [:source, :cache, :source_opts])
 
-      # Store modules for runtime use in helpers
-      @kanta_adapter Keyword.get(opts, :adapter, Kanta.Backend.Adapter.EctoDB)
-      @kanta_plural_forms Keyword.get(opts, :plural_forms, Gettext.Plural)
-      @kanta_interpolation Keyword.get(opts, :interpolation, Gettext.Interpolation.Default)
+      # Store modules and config for runtime use
+      @kanta_source Keyword.get(opts, :source, Kanta.Backend.Source.Ecto)
+      @kanta_source_opts Keyword.get(opts, :source_opts, [])
+      @plural_forms Keyword.get(opts, :plural_forms, Gettext.Plural)
+      @interpolation Keyword.get(opts, :interpolation, Gettext.Interpolation.Default)
+      # Default to nil
+      @kanta_cache Keyword.get(opts, :cache, nil)
 
-      # --- Fallback Backend Compilation ---
-      # Compile the PO-file based fallback backend first.
-      # It receives the standard gettext options like :otp_app, :priv,
-      # :plural_forms, :interpolation etc.
-      use Kanta.Backend.GettextFallback, gettext_opts
-
-      # --- Main Backend Compilation & Extractor Handling ---
-      if Gettext.Extractor.extracting?() do
-        # For extraction (`mix gettext.extract`), use a standard Gettext backend setup
-        # based on the provided options, so `gettext` calls are registered
-        # correctly for POT file generation using the project's main :priv dir.
-        use Gettext.Backend, gettext_opts
-        # Set up the flag to force recompilation after extraction
-        Kanta.Utils.GettextRecompiler.setup_recompile_flag(@flag_file)
-      else
-        # For runtime, use Gettext.Backend primarily to get the standard
-        # Gettext behaviour boilerplate (__behaviour__, function heads, etc.)
-        # and the __gettext__ info functions.
-        # We use a dummy priv path specific to this module to avoid accidentally
-        # compiling the *same* PO files as the fallback backend if the user
-        # didn't override :priv in the main opts.
-        # The functions generated by this `use Gettext.Backend` call are unlikely
-        # to be hit directly, as lookups should fall through to the Kanta handlers.
-        dummy_priv_opts =
-          Keyword.merge(gettext_opts, priv: "priv/#{ModuleFolder.safe_folder_name(__MODULE__)}")
-
-        use Gettext.Backend, dummy_priv_opts
-      end
-
-      # --- Kanta Runtime Logic Overrides ---
-
-      # Override __mix_recompile__? to use Kanta's flag mechanism.
       def __mix_recompile__?() do
         Kanta.Utils.GettextRecompiler.needs_recompile?(@flag_file)
       end
 
-      # Override __gettext__ functions as needed for consistency.
-      # Get known locales from the *fallback* backend, as the DB content might differ
-      # or might not be easily queryable for all distinct locales.
-      def __gettext__(:known_locales) do
-        fb_backend = fallback_backend()
-        # Ensure the fallback module exists before calling it
-        if Code.ensure_loaded?(fb_backend) do
-          Gettext.known_locales(fb_backend)
-        else
-          Logger.error("Kanta: Fallback backend #{inspect(fb_backend)} not loaded.")
-          # Return empty list if fallback isn't available
-          []
-        end
-      end
+      if Gettext.Extractor.extracting?() do
+        use Gettext.Backend, gettext_opts
+        Kanta.Utils.GettextRecompiler.setup_recompile_flag(@flag_file)
+      else
+        # --- Runtime Logic (Delegates to Kanta.Backend.Lookup) ---
+        @behaviour Gettext.Backend
+        @behaviour Kanta.Backend
 
-      @impl Gettext.Backend
-      # This function is called by Gettext when its compiled clauses for PO files
-      # inside *this* module (if any were generated by the dummy `use Gettext.Backend` above)
-      # don't match. We intercept it to try the database adapter first.
-      def handle_missing_translation(locale, domain, msgctxt, msgid, bindings) do
-        case @kanta_adapter.lookup_lgettext(locale, domain, msgctxt, msgid) do
-          {:ok, raw_msgstr} ->
-            # Found in DB: Apply interpolation at runtime
-            {:ok, apply_interpolation(raw_msgstr, bindings)}
+        # --- Basic Gettext Callbacks ---
+        def __gettext__(:priv), do: unquote(Keyword.get(opts, :priv, "priv/gettext"))
+        def __gettext__(:otp_app), do: unquote(Keyword.fetch!(opts, :otp_app))
+        def __gettext__(:known_locales), do: @kanta_source.known_locales(__MODULE__)
+        def __gettext__(:default_locale), do: unquote(Keyword.get(opts, :default_locale, "en"))
 
-          {:error, :not_found} ->
-            # Not in DB: Delegate to the PO file fallback backend
-            fallback_backend().lgettext(locale, domain, msgctxt, msgid, bindings)
-        end
-      end
+        def __gettext__(:default_domain),
+          do: unquote(Keyword.get(opts, :default_domain, "default"))
 
-      @impl Gettext.Backend
-      # This function is called by Gettext for non-matching plural lookups.
-      def handle_missing_plural_translation(
+        def __gettext__(:interpolation), do: @interpolation
+
+        # --- Kanta Backend Callback---
+        @impl Kanta.Backend
+        def source_opts(), do: @kanta_source_opts
+
+        # --- Source Validation ---
+        @kanta_source.validate_opts(@kanta_source_opts)
+
+        # --- Core Gettext Backend Implementations (Delegate to Lookup Module) ---
+
+        @impl Gettext.Backend
+        def lgettext(locale, domain, msgctx, msgid, bindings) do
+          # Delegate core logic to the Lookup module
+          Kanta.Backend.Lookup.lgettext(
+            # Pass self for callbacks
+            __MODULE__,
+            @kanta_source,
+            @kanta_cache,
+            @interpolation,
             locale,
             domain,
-            msgctxt,
+            msgctx,
+            msgid,
+            bindings
+          )
+        end
+
+        @impl Gettext.Backend
+        def lngettext(locale, domain, msgctx, msgid, msgid_plural, n, bindings) do
+          # Delegate core logic to the Lookup module
+          Kanta.Backend.Lookup.lngettext(
+            # Pass self for callbacks
+            __MODULE__,
+            @kanta_source,
+            @kanta_cache,
+            @interpolation,
+            @plural_forms,
+            locale,
+            domain,
+            msgctx,
             msgid,
             msgid_plural,
             n,
             bindings
-          ) do
-        # 1. Calculate plural index using configured module and LOCALE FIRST!
-        # Pass locale
-        plural_index = plural(locale, n)
+          )
+        end
 
-        # 2. Call adapter with the calculated index to get the specific form string
-        case @kanta_adapter.lookup_lngettext(
-               locale,
-               domain,
-               msgctxt,
-               msgid,
-               msgid_plural,
-               plural_index
-             ) do
-          {:ok, raw_msgstr} ->
-            # Found the specific form in DB: Apply interpolation
-            # a. Add :count to bindings for interpolation convenience
-            extended_bindings = Map.put(bindings, :count, n)
-            # b. Apply interpolation using configured module
-            {:ok, apply_interpolation(raw_msgstr, extended_bindings)}
+        # --- Default Handlers and Overridables  ---
+        # These provide the *default* implementation for this specific backend module
+        # and allow users to override them directly in their Gettext module.
+        # Kanta.Backend.Lookup calls these functions via the `backend_module` argument.
 
-          {:error, :not_found} ->
-            # DB lookup failed for this specific index/message combination.
-            # Fallback to the PO file backend.
-            Logger.debug(fn ->
-              """
-              Kanta: Plural form index #{plural_index} for count #{n} not found via adapter \
-              for locale "#{locale}", domain "#{domain}", msgid "#{msgid}". \
-              Falling back to PO files.
-              """
-            end)
+        @impl true
+        def handle_missing_bindings(exception, incomplete) do
+          _ = Logger.error(Exception.message(exception))
+          incomplete
+        end
 
-            fallback_backend().lngettext(
-              locale,
-              domain,
-              msgctxt,
+        @impl true
+        def handle_missing_translation(_locale, _domain, _msgctxt, msgid, bindings) do
+          # Interpolate the original msgid as fallback
+          with {:ok, interpolated} <- @interpolation.runtime_interpolate(msgid, bindings),
+               do: {:default, interpolated}
+        end
+
+        @impl true
+        def handle_missing_plural_translation(
+              _locale,
+              _domain,
+              _msgctxt,
               msgid,
               msgid_plural,
               n,
+              # These are the extended bindings passed from Lookup
               bindings
-            )
+            ) do
+          string = if n == 1, do: msgid, else: msgid_plural
+          # Bindings already include :count
+          with {:ok, interpolated} <- @interpolation.runtime_interpolate(string, bindings),
+               do: {:default, interpolated}
         end
+
+        # Make the default handlers overridable in the user's module
+        defoverridable handle_missing_bindings: 2,
+                       handle_missing_translation: 5,
+                       handle_missing_plural_translation: 7
       end
-
-      # --- Generated Helper Functions ---
-
-      # Helper to apply pluralization using the configured module and LOCALE.
-      # Returns the plural form index (0, 1, 2...).
-      defp plural(locale, n) when is_binary(locale) and is_integer(n) do
-        try do
-          @kanta_plural_forms.plural(locale, n)
-        catch
-          kind, reason ->
-            # Log error if plural calculation fails (e.g., locale unknown to plural module)
-            Logger.error("""
-            Kanta: Error calling plural function (#{@kanta_plural_forms}.plural/2) \
-            with locale=#{inspect(locale)}, n=#{n}. \
-            Error: #{kind} - #{inspect(reason)}. \
-            Returning default plural index 0.
-            """)
-
-            # Default to index 0 on error to prevent crashes, though translation may be wrong
-            0
-        end
-      end
-
-      # Helper to apply interpolation using the configured module at RUNTIME.
-      defp apply_interpolation(raw_msgstr, bindings) when is_binary(raw_msgstr) do
-        # Use the runtime `interpolate/2` function of the configured module
-        @kanta_interpolation.runtime_interpolate(raw_msgstr, bindings)
-      end
-
-      # Helper to get the fallback module name.
-      # Assumes Kanta.Backend.GettextFallback appends this suffix.
-      defp fallback_backend() do
-        Module.concat(__MODULE__, GettextFallbackBackend)
-      end
-
-      # Allow users to override the Kanta handlers if they need even more custom logic,
-      # while still benefiting from the Kanta setup.
-      defoverridable handle_missing_translation: 5, handle_missing_plural_translation: 7
     end
-
-    # end quote
   end
-
-  # end __using__
 end
-
-# end module

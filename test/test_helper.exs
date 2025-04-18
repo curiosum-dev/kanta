@@ -12,6 +12,6 @@ Kanta.start_link(
 ExUnit.start()
 
 # clear translations cache
-Kanta.Cache.delete_all()
+Kanta.Cache.start_link()
 
 Ecto.Adapters.SQL.Sandbox.mode(Kanta.Test.Repo, :manual)

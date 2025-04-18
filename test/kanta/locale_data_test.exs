@@ -1,27 +1,26 @@
-defmodule Kanta.LocaleDataTest do
+defmodule Kanta.LocaleInfoTest do
   use ExUnit.Case, async: true
 
-  alias Kanta.LocaleData, as: LocaleData
-  alias Kanta.LocaleData.Metadata, as: Metadata
+  alias Kanta.LocaleInfo, as: LocaleInfo
 
-  describe "get_locale_metadata/1" do
+  describe "get_locale_info/1" do
     test "returns metadata for exact locale matches" do
-      assert %Metadata{
+      assert %LocaleInfo{
                language_name: "Portuguese",
                unicode_flag: "🇧🇷",
                flag_colors: ["#009B3A", "#FFCC29", "#002776"]
-             } = LocaleData.get_locale_metadata("pt-br")
+             } = LocaleInfo.get_locale_info("pt-br")
     end
 
     test "handles case insensitivity" do
-      lowercase = LocaleData.get_locale_metadata("en-us")
-      uppercase = LocaleData.get_locale_metadata("EN-US")
-      mixed_case = LocaleData.get_locale_metadata("En-Us")
+      lowercase = LocaleInfo.get_locale_info("en-us")
+      uppercase = LocaleInfo.get_locale_info("EN-US")
+      mixed_case = LocaleInfo.get_locale_info("En-Us")
 
       assert lowercase == uppercase
       assert lowercase == mixed_case
 
-      assert %Metadata{
+      assert %LocaleInfo{
                language_name: "English",
                unicode_flag: "🇺🇸",
                flag_colors: ["#B22234", "#FFFFFF", "#3C3B6E"]
@@ -29,64 +28,64 @@ defmodule Kanta.LocaleDataTest do
     end
 
     test "returns inherited data for base language codes" do
-      assert %Metadata{
+      assert %LocaleInfo{
                language_name: "Polish",
                unicode_flag: "🇵🇱",
                flag_colors: ["#FFFFFF", "#DC143C"]
-             } = LocaleData.get_locale_metadata("pl")
+             } = LocaleInfo.get_locale_info("pl")
     end
 
     test "returns partial data when some attributes have no fallback" do
-      assert %Metadata{
+      assert %LocaleInfo{
                language_name: "English",
                unicode_flag: nil,
                flag_colors: nil
-             } = LocaleData.get_locale_metadata("en")
+             } = LocaleInfo.get_locale_info("en")
     end
 
     test "returns nil for unknown locales" do
-      assert LocaleData.get_locale_metadata("xx-yy") == nil
-      assert LocaleData.get_locale_metadata("not-a-locale") == nil
+      assert LocaleInfo.get_locale_info("xx-yy") == nil
+      assert LocaleInfo.get_locale_info("not-a-locale") == nil
     end
 
     test "returns nil for non-string inputs" do
-      assert LocaleData.get_locale_metadata(123) == nil
-      assert LocaleData.get_locale_metadata(nil) == nil
-      assert LocaleData.get_locale_metadata(%{}) == nil
-      assert LocaleData.get_locale_metadata([]) == nil
+      assert LocaleInfo.get_locale_info(123) == nil
+      assert LocaleInfo.get_locale_info(nil) == nil
+      assert LocaleInfo.get_locale_info(%{}) == nil
+      assert LocaleInfo.get_locale_info([]) == nil
     end
 
     test "correctly handles special cases" do
       # Latin American Spanish
-      assert %Metadata{
+      assert %LocaleInfo{
                language_name: "Latin American Spanish",
                unicode_flag: nil,
                flag_colors: nil
-             } = LocaleData.get_locale_metadata("es-419")
+             } = LocaleInfo.get_locale_info("es-419")
 
       # Latin (historical language with no specific region)
-      assert %Metadata{
+      assert %LocaleInfo{
                language_name: "Latin",
                unicode_flag: nil,
                flag_colors: nil
-             } = LocaleData.get_locale_metadata("la")
+             } = LocaleInfo.get_locale_info("la")
     end
 
     test "verifies consistent language names between base and regional variants" do
       # Sample checks of base language and regional variants
-      assert LocaleData.get_locale_metadata("de").language_name ==
-               LocaleData.get_locale_metadata("de-de").language_name
+      assert LocaleInfo.get_locale_info("de").language_name ==
+               LocaleInfo.get_locale_info("de-de").language_name
 
-      assert LocaleData.get_locale_metadata("fr").language_name ==
-               LocaleData.get_locale_metadata("fr-fr").language_name
+      assert LocaleInfo.get_locale_info("fr").language_name ==
+               LocaleInfo.get_locale_info("fr-fr").language_name
     end
 
     test "properly handles languages with multiple regions" do
       # German has multiple regions
-      de = LocaleData.get_locale_metadata("de")
-      de_de = LocaleData.get_locale_metadata("de-de")
-      de_at = LocaleData.get_locale_metadata("de-at")
-      de_ch = LocaleData.get_locale_metadata("de-ch")
+      de = LocaleInfo.get_locale_info("de")
+      de_de = LocaleInfo.get_locale_info("de-de")
+      de_at = LocaleInfo.get_locale_info("de-at")
+      de_ch = LocaleInfo.get_locale_info("de-ch")
 
       assert de.language_name == "German"
       assert de_de.language_name == "German"

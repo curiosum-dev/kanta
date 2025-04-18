@@ -6,7 +6,7 @@ defmodule Kanta.Migrations.Postgresql do
   use Ecto.Migration
 
   @initial_version 1
-  @current_version 4
+  @current_version 5
   @default_prefix "public"
 
   @doc false

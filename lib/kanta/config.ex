@@ -9,7 +9,9 @@ defmodule Kanta.Config do
           endpoint: module(),
           plugins: false | [module() | {module() | Keyword.t()}],
           disable_api_authorization: boolean(),
-          id_parse_function: mfa() | (term() -> {:ok, term()} | term())
+          id_parse_function: mfa() | (term() -> {:ok, term()} | term()),
+          backends: [module() | {module(), module()}],
+          default_data_access: module()
         }
 
   defstruct name: Kanta,
@@ -18,7 +20,9 @@ defmodule Kanta.Config do
             endpoint: nil,
             plugins: [],
             disable_api_authorization: false,
-            id_parse_function: {Kanta.Utils.ParamParsers, :default_id_parser, 1}
+            id_parse_function: {Kanta.Utils.ParamParsers, :default_id_parser, 1},
+            default_data_access: nil,
+            backends: []
 
   alias Kanta.Validator
 
@@ -45,6 +49,22 @@ defmodule Kanta.Config do
     opts = normalize(opts)
 
     Validator.validate(opts, &validate_opt(opts, &1))
+  end
+
+  defp validate_opt(_opts, {:default_data_access, data_access}) do
+    if Code.ensure_loaded?(data_access) do
+      :ok
+    else
+      {:error, "expected :data_access to be loaded"}
+    end
+  end
+
+  defp validate_opt(_opts, {:backends, backends}) do
+    if is_list(backends) do
+      :ok
+    else
+      {:error, "expected :backends to be a list"}
+    end
   end
 
   defp validate_opt(_opts, {:plugins, plugins}) do

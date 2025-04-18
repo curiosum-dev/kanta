@@ -1,10 +1,8 @@
 defmodule Kanta.BackendTest do
-  # Keep async if Agent is simple enough, otherwise set to false
   use ExUnit.Case, async: false
   import ExUnit.CaptureLog
 
   # --- Call Counter Agent ---
-  # Used to track calls to the MockSource lookup functions
   defmodule CallCounterAgent do
     use Agent
 
@@ -29,107 +27,91 @@ defmodule Kanta.BackendTest do
   defmodule MockSource do
     @behaviour Kanta.Backend.Source
 
-    # Helper to increment counter before returning result
     defp count_and_return(result) do
       CallCounterAgent.increment()
       result
     end
 
-    def validate_opts(opts) do
-      opts
-    end
-
+    def validate_opts(opts), do: opts
     def known_locales(_backend), do: ["en", "fr", "es", "pl"]
 
-    def lookup_lgettext(_backend, "en", "default", nil, "Hello") do
-      count_and_return({:ok, "Hello"})
-    end
+    def lookup_lgettext(_backend, "en", "default", nil, "Hello"),
+      do: count_and_return({:ok, "Hello"})
 
-    def lookup_lgettext(_backend, "fr", "default", nil, "Hello") do
-      count_and_return({:ok, "Bonjour"})
-    end
+    def lookup_lgettext(_backend, "fr", "default", nil, "Hello"),
+      do: count_and_return({:ok, "Bonjour"})
 
-    def lookup_lgettext(_backend, "es", "default", nil, "Hello") do
-      count_and_return({:ok, "Hola"})
-    end
+    def lookup_lgettext(_backend, "es", "default", nil, "Hello"),
+      do: count_and_return({:ok, "Hola"})
 
-    def lookup_lgettext(_backend, "en", "default", nil, "Hello %{name}") do
-      count_and_return({:ok, "Hello %{name}"})
-    end
+    def lookup_lgettext(_backend, "en", "default", nil, "Hello %{name}"),
+      do: count_and_return({:ok, "Hello %{name}"})
 
-    def lookup_lgettext(_backend, "fr", "default", nil, "Hello %{name}") do
-      count_and_return({:ok, "Bonjour %{name}"})
-    end
+    def lookup_lgettext(_backend, "fr", "default", nil, "Hello %{name}"),
+      do: count_and_return({:ok, "Bonjour %{name}"})
 
-    def lookup_lgettext(_backend, "en", "errors", nil, "Not found") do
-      count_and_return({:ok, "Not found"})
-    end
+    def lookup_lgettext(_backend, "en", "errors", nil, "Not found"),
+      do: count_and_return({:ok, "Not found"})
 
-    def lookup_lgettext(_backend, "fr", "errors", nil, "Not found") do
-      count_and_return({:ok, "Pas trouvé"})
-    end
+    def lookup_lgettext(_backend, "fr", "errors", nil, "Not found"),
+      do: count_and_return({:ok, "Pas trouvé"})
 
-    def lookup_lgettext(_backend, _, _, _, _) do
-      count_and_return({:error, :not_found})
-    end
+    def lookup_lgettext(_backend, _, _, _, _), do: count_and_return({:error, :not_found})
 
-    # --- Plural Lookups ---
-    def lookup_lngettext(_backend, "en", "default", nil, "One item", "%{count} items", 0) do
-      # Note: Gettext plural index 0 is singular for n=1 in English
-      count_and_return({:ok, "One item"})
-    end
+    # Plural Lookups (index based)
+    # n=1
+    def lookup_lngettext(_backend, "en", "default", nil, "One item", "%{count} items", 0),
+      do: count_and_return({:ok, "One item"})
 
-    def lookup_lngettext(_backend, "en", "default", nil, "One item", "%{count} items", 1) do
-      # Plural index 1 is for n != 1
-      count_and_return({:ok, "%{count} items"})
-    end
+    # n!=1
+    def lookup_lngettext(_backend, "en", "default", nil, "One item", "%{count} items", 1),
+      do: count_and_return({:ok, "%{count} items"})
 
-    def lookup_lngettext(_backend, "fr", "default", nil, "One item", "%{count} items", 0) do
-      # French index 0 is for n=0 or n=1
-      count_and_return({:ok, "Un objet"})
-    end
+    # n=0,1
+    def lookup_lngettext(_backend, "fr", "default", nil, "One item", "%{count} items", 0),
+      do: count_and_return({:ok, "Un objet"})
 
-    def lookup_lngettext(_backend, "fr", "default", nil, "One item", "%{count} items", 1) do
-      # French index 1 is for n > 1
-      count_and_return({:ok, "%{count} objets"})
-    end
+    # n>1
+    def lookup_lngettext(_backend, "fr", "default", nil, "One item", "%{count} items", 1),
+      do: count_and_return({:ok, "%{count} objets"})
 
-    def lookup_lngettext(_backend, "es", "default", nil, "One item", "%{count} items", 0) do
-      # Spanish index 0 is for n=1
-      count_and_return({:ok, "Un artículo"})
-    end
+    # n=1
+    def lookup_lngettext(_backend, "es", "default", nil, "One item", "%{count} items", 0),
+      do: count_and_return({:ok, "Un artículo"})
 
-    def lookup_lngettext(_backend, "es", "default", nil, "One item", "%{count} items", 1) do
-      # Spanish index 1 is for n != 1
-      count_and_return({:ok, "%{count} artículos"})
-    end
+    # n!=1
+    def lookup_lngettext(_backend, "es", "default", nil, "One item", "%{count} items", 1),
+      do: count_and_return({:ok, "%{count} artículos"})
 
-    def lookup_lngettext(_backend, "pl", "default", nil, "One item", "%{count} items", 0) do
-      # Polish index 0 (n=1)
-      count_and_return({:ok, "Jeden przedmiot"})
-    end
+    # n=1
+    def lookup_lngettext(_backend, "pl", "default", nil, "One item", "%{count} items", 0),
+      do: count_and_return({:ok, "Jeden przedmiot"})
 
-    def lookup_lngettext(_backend, "pl", "default", nil, "One item", "%{count} items", 1) do
-      # Polish index 1 (n=2,3,4 mod 10, !12,13,14)
-      count_and_return({:ok, "%{count} przedmioty"})
-    end
+    # n=2,3,4 mod 10, !12,13,14
+    def lookup_lngettext(_backend, "pl", "default", nil, "One item", "%{count} items", 1),
+      do: count_and_return({:ok, "%{count} przedmioty"})
 
-    def lookup_lngettext(_backend, "pl", "default", nil, "One item", "%{count} items", 2) do
-      # Polish index 2 (other)
-      count_and_return({:ok, "%{count} przedmiotów"})
-    end
+    # other
+    def lookup_lngettext(_backend, "pl", "default", nil, "One item", "%{count} items", 2),
+      do: count_and_return({:ok, "%{count} przedmiotów"})
 
-    def lookup_lngettext(_backend, _, _, _, _, _, _) do
-      count_and_return({:error, :not_found})
-    end
+    def lookup_lngettext(_backend, _, _, _, _, _, _), do: count_and_return({:error, :not_found})
   end
 
   # --- Test Gettext Modules ---
-  defmodule TestGettext do
+  defmodule TestGettextWithCache do
     use Kanta.Backend,
       otp_app: :kanta_test,
       source: Kanta.BackendTest.MockSource,
       cache: Kanta.Cache
+  end
+
+  defmodule TestGettextWithoutCache do
+    use Kanta.Backend,
+      otp_app: :kanta_test,
+      source: Kanta.BackendTest.MockSource
+
+    # Cache is implicitly disabled (defaults to nil)
   end
 
   defmodule DefaultAdapterGettext do
@@ -137,30 +119,41 @@ defmodule Kanta.BackendTest do
   end
 
   # --- Setup ---
-  # Start the counter agent and reset it before each test
-  setup do
-    # Start the agent if it's not running (relevant for first test run)
+  # Start the Agent once for the entire test module
+  setup_all do
     {:ok, _pid} = CallCounterAgent.start_link([])
-    # Reset the counter for the current test
+    # Return an :on_exit callback to stop the agent after all tests
+    on_exit(fn -> Agent.stop(CallCounterAgent) end)
+    :ok
+  end
+
+  setup do
     CallCounterAgent.reset()
     Kanta.Cache.delete_all()
     :ok
   end
 
-  # --- Existing Describe Blocks (Keep As Is) ---
-
+  # --- Basic Config Tests ---
   describe "backend configuration" do
-    # ... (tests remain the same) ...
-    test "returns correct configuration values" do
-      assert TestGettext.__gettext__(:otp_app) == :kanta_test
-      assert TestGettext.__gettext__(:default_locale) == "en"
-      assert TestGettext.__gettext__(:default_domain) == "default"
-      assert is_binary(TestGettext.__gettext__(:priv))
-      assert TestGettext.__gettext__(:known_locales) == ["en", "fr", "es", "pl"]
+    test "returns correct configuration values (with cache)" do
+      assert TestGettextWithCache.__gettext__(:otp_app) == :kanta_test
+      assert TestGettextWithCache.__gettext__(:default_locale) == "en"
+      assert TestGettextWithCache.__gettext__(:default_domain) == "default"
+      assert is_binary(TestGettextWithCache.__gettext__(:priv))
+      assert TestGettextWithCache.__gettext__(:known_locales) == ["en", "fr", "es", "pl"]
+    end
+
+    test "returns correct configuration values (without cache)" do
+      assert TestGettextWithoutCache.__gettext__(:otp_app) == :kanta_test
+      assert TestGettextWithoutCache.__gettext__(:default_locale) == "en"
+      assert TestGettextWithoutCache.__gettext__(:default_domain) == "default"
+      assert is_binary(TestGettextWithoutCache.__gettext__(:priv))
+      assert TestGettextWithoutCache.__gettext__(:known_locales) == ["en", "fr", "es", "pl"]
     end
 
     test "uses the specified adapter" do
-      assert TestGettext.__gettext__(:known_locales) == ["en", "fr", "es", "pl"]
+      assert TestGettextWithCache.__gettext__(:known_locales) == ["en", "fr", "es", "pl"]
+      assert TestGettextWithoutCache.__gettext__(:known_locales) == ["en", "fr", "es", "pl"]
     end
 
     test "uses default adapter when none specified" do
@@ -168,186 +161,350 @@ defmodule Kanta.BackendTest do
     end
   end
 
-  describe "gettext translation" do
-    # ... (tests remain the same, they implicitly test cache correctness) ...
+  # --- Core Translation Logic Tests (Using WithCache module for coverage) ---
+  describe "gettext translation (core logic)" do
     test "translates simple strings" do
-      assert TestGettext.lgettext("en", "default", nil, "Hello", %{}) == {:ok, "Hello"}
-      assert TestGettext.lgettext("fr", "default", nil, "Hello", %{}) == {:ok, "Bonjour"}
-      assert TestGettext.lgettext("es", "default", nil, "Hello", %{}) == {:ok, "Hola"}
+      assert TestGettextWithCache.lgettext("en", "default", nil, "Hello", %{}) == {:ok, "Hello"}
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello", %{}) == {:ok, "Bonjour"}
+      assert TestGettextWithCache.lgettext("es", "default", nil, "Hello", %{}) == {:ok, "Hola"}
     end
 
     test "handles interpolation" do
-      assert TestGettext.lgettext("en", "default", nil, "Hello %{name}", %{name: "John"}) ==
+      assert TestGettextWithCache.lgettext("en", "default", nil, "Hello %{name}", %{name: "John"}) ==
                {:ok, "Hello John"}
 
-      assert TestGettext.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Jean"}) ==
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Jean"}) ==
                {:ok, "Bonjour Jean"}
     end
 
     test "uses different domains" do
-      assert TestGettext.lgettext("en", "errors", nil, "Not found", %{}) == {:ok, "Not found"}
-      assert TestGettext.lgettext("fr", "errors", nil, "Not found", %{}) == {:ok, "Pas trouvé"}
+      assert TestGettextWithCache.lgettext("en", "errors", nil, "Not found", %{}) ==
+               {:ok, "Not found"}
+
+      assert TestGettextWithCache.lgettext("fr", "errors", nil, "Not found", %{}) ==
+               {:ok, "Pas trouvé"}
     end
 
     test "returns default translation when not found" do
-      assert TestGettext.lgettext("en", "default", nil, "Missing translation", %{}) ==
+      assert TestGettextWithCache.lgettext("en", "default", nil, "Missing translation", %{}) ==
                {:default, "Missing translation"}
 
-      assert TestGettext.lgettext("unknown", "default", nil, "Hello", %{}) ==
+      assert TestGettextWithCache.lgettext("unknown", "default", nil, "Hello", %{}) ==
                {:default, "Hello"}
     end
   end
 
-  describe "plural translations" do
-    # ... (tests remain the same, they implicitly test cache correctness) ...
-    # Note: We need to adjust expected plural indices based on Gettext.Plural rules
-    # English: n=1 -> index 0, n!=1 -> index 1
-    # French: n=0 or n=1 -> index 0, n>1 -> index 1
-
+  describe "plural translations (core logic)" do
     test "handles singular forms (n=1)" do
-      # English n=1 uses index 0 in MockSource
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "One item"}
-
-      # French n=1 uses index 0 in MockSource
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "Un objet"}
-    end
-
-    test "handles plural forms" do
-      # English n=0 uses index 1 in MockSource
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 0, %{}) ==
-               {:ok, "0 items"}
-
-      # English n=5 uses index 1 in MockSource
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 5, %{}) ==
-               {:ok, "5 items"}
-
-      # French n=0 uses index 0 in MockSource
-      # Note: MockSource lookup for index 0 returns "Un objet"
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 0, %{}) ==
-               {:ok, "Un objet"}
-
-      # French n=5 uses index 1 in MockSource
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 5, %{}) ==
-               {:ok, "5 objets"}
-    end
-
-    test "falls back to default when translation not found" do
-      assert TestGettext.lngettext("en", "unknown", nil, "One thing", "%{count} things", 1, %{}) ==
-               {:default, "One thing"}
-
-      assert TestGettext.lngettext("en", "unknown", nil, "One thing", "%{count} things", 2, %{}) ==
-               {:default, "2 things"}
-    end
-  end
-
-  describe "plural forms handling" do
-    # Note: Adjusted expectations based on standard Gettext.Plural rules mapping to MockSource indices
-    test "uses correct plural form for English" do
-      # n=1 -> index 0
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "One item"}
-
-      # n=0 -> index 1
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 0, %{}) ==
-               {:ok, "0 items"}
-
-      # n=2 -> index 1
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 2, %{}) ==
-               {:ok, "2 items"}
-
-      # n=5 -> index 1
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 5, %{}) ==
-               {:ok, "5 items"}
-    end
-
-    test "uses correct plural form for French" do
-      # n=1 -> index 0
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "Un objet"}
-
-      # n=0 -> index 0
-      # Should return the singular form according to rule nplurals=2; plural=(n > 1);
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 0, %{}) ==
-               {:ok, "Un objet"}
-
-      # n=2 -> index 1
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 2, %{}) ==
-               {:ok, "2 objets"}
-    end
-
-    test "uses correct plural form for Spanish" do
-      # n=1 -> index 0
-      assert TestGettext.lngettext("es", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "Un artículo"}
-
-      # n=2 -> index 1
-      assert TestGettext.lngettext("es", "default", nil, "One item", "%{count} items", 2, %{}) ==
-               {:ok, "2 artículos"}
-    end
-
-    test "handles languages with complex plural rules (Polish)" do
-      # Polish Rules (approx): n=1 -> idx 0; n=2,3,4 (ends in) -> idx 1; others -> idx 2
-      # n=1 -> index 0
-      assert TestGettext.lngettext("pl", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "Jeden przedmiot"}
-
-      # n=2 -> index 1
-      assert TestGettext.lngettext("pl", "default", nil, "One item", "%{count} items", 2, %{}) ==
-               {:ok, "2 przedmioty"}
-
-      # n=5 -> index 2
-      assert TestGettext.lngettext("pl", "default", nil, "One item", "%{count} items", 5, %{}) ==
-               {:ok, "5 przedmiotów"}
-
-      # n=12 -> index 2
-      assert TestGettext.lngettext("pl", "default", nil, "One item", "%{count} items", 12, %{}) ==
-               {:ok, "12 przedmiotów"}
-
-      # n=22 -> index 1
-      assert TestGettext.lngettext("pl", "default", nil, "One item", "%{count} items", 22, %{}) ==
-               {:ok, "22 przedmioty"}
-    end
-  end
-
-  describe "plural with custom bindings" do
-    # ... (tests remain the same) ...
-    test "interpolates count and custom variables" do
-      assert TestGettext.lngettext(
+      assert TestGettextWithCache.lngettext(
                "en",
                "default",
                nil,
                "One item",
                "%{count} items",
-               # n=3 -> index 1 for english
+               1,
+               %{}
+             ) ==
+               {:ok, "One item"}
+
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) ==
+               {:ok, "Un objet"}
+    end
+
+    test "handles plural forms" do
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               0,
+               %{}
+             ) ==
+               {:ok, "0 items"}
+
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) ==
+               {:ok, "5 items"}
+
+      # French index 0 covers n=0
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               0,
+               %{}
+             ) ==
+               {:ok, "Un objet"}
+
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) ==
+               {:ok, "5 objets"}
+    end
+
+    test "falls back to default when translation not found" do
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "unknown",
+               nil,
+               "One thing",
+               "%{count} things",
+               1,
+               %{}
+             ) ==
+               {:default, "One thing"}
+
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "unknown",
+               nil,
+               "One thing",
+               "%{count} things",
+               2,
+               %{}
+             ) ==
+               {:default, "2 things"}
+    end
+  end
+
+  describe "plural forms handling (core logic)" do
+    test "uses correct plural form for English" do
+      # n=1 -> idx 0
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "One item"}
+
+      # n=0 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               0,
+               %{}
+             ) == {:ok, "0 items"}
+
+      # n=2 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 items"}
+
+      # n=5 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) == {:ok, "5 items"}
+    end
+
+    test "uses correct plural form for French" do
+      # n=1 -> idx 0
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "Un objet"}
+
+      # n=0 -> idx 0
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               0,
+               %{}
+             ) == {:ok, "Un objet"}
+
+      # n=2 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 objets"}
+    end
+
+    test "uses correct plural form for Spanish" do
+      # n=1 -> idx 0
+      assert TestGettextWithCache.lngettext(
+               "es",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "Un artículo"}
+
+      # n=2 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "es",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 artículos"}
+    end
+
+    test "handles languages with complex plural rules (Polish)" do
+      # n=1 -> idx 0
+      assert TestGettextWithCache.lngettext(
+               "pl",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "Jeden przedmiot"}
+
+      # n=2 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "pl",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 przedmioty"}
+
+      # n=5 -> idx 2
+      assert TestGettextWithCache.lngettext(
+               "pl",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) == {:ok, "5 przedmiotów"}
+
+      # n=12 -> idx 2
+      assert TestGettextWithCache.lngettext(
+               "pl",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               12,
+               %{}
+             ) == {:ok, "12 przedmiotów"}
+
+      # n=22 -> idx 1
+      assert TestGettextWithCache.lngettext(
+               "pl",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               22,
+               %{}
+             ) == {:ok, "22 przedmioty"}
+    end
+  end
+
+  describe "plural with custom bindings (core logic)" do
+    test "interpolates count and custom variables" do
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
                3,
                %{extra: "test"}
-             ) == {:ok, "3 items"}
+             ) ==
+               {:ok, "3 items"}
     end
   end
 
-  describe "missing bindings handling" do
-    # ... (tests remain the same) ...
+  describe "missing bindings handling (core logic)" do
     test "handles missing bindings gracefully" do
       assert {:missing_bindings, "Hello %{name}", [:name]} =
-               TestGettext.lgettext("en", "default", nil, "Hello %{name}", %{})
+               TestGettextWithCache.lgettext("en", "default", nil, "Hello %{name}", %{})
     end
   end
 
-  describe "error handling" do
-    # ... (tests remain the same) ...
+  describe "error handling (core logic)" do
     test "handles unknown locales gracefully" do
       assert {:default, "One item"} =
-               TestGettext.lngettext("xyz", "default", nil, "One item", "%{count} items", 1, %{})
+               TestGettextWithCache.lngettext(
+                 "xyz",
+                 "default",
+                 nil,
+                 "One item",
+                 "%{count} items",
+                 1,
+                 %{}
+               )
 
       assert {:default, "2 items"} =
-               TestGettext.lngettext("xyz", "default", nil, "One item", "%{count} items", 2, %{})
+               TestGettextWithCache.lngettext(
+                 "xyz",
+                 "default",
+                 nil,
+                 "One item",
+                 "%{count} items",
+                 2,
+                 %{}
+               )
     end
 
     test "handles unknown domain gracefully" do
       assert {:default, "One item"} =
-               TestGettext.lngettext(
+               TestGettextWithCache.lngettext(
                  "en",
                  "unknown_domain",
                  nil,
@@ -362,7 +519,7 @@ defmodule Kanta.BackendTest do
       log_output =
         capture_log(fn ->
           assert {:default, "One item"} =
-                   TestGettext.lngettext(
+                   TestGettextWithCache.lngettext(
                      "xyz",
                      "default",
                      nil,
@@ -373,7 +530,7 @@ defmodule Kanta.BackendTest do
                    )
 
           assert {:default, "2 items"} =
-                   TestGettext.lngettext(
+                   TestGettextWithCache.lngettext(
                      "xyz",
                      "default",
                      nil,
@@ -387,142 +544,401 @@ defmodule Kanta.BackendTest do
       assert log_output =~ "Kanta: Error calling plural function"
       assert log_output =~ "locale=\"xyz\""
       assert log_output =~ "Returning default plural index 0"
-      # This comes from Gettext.Plural
+      # From Gettext.Plural
       assert log_output =~ "UnknownLocaleError"
     end
   end
 
-  # --- NEW: Caching Behavior Tests ---
-  describe "caching behavior" do
+  # --- Cache-Specific Behavior ---
+  describe "caching behavior (when enabled)" do
     test "lgettext caches results and avoids repeated source lookups" do
-      # Initial state: counter is 0 (from setup)
       assert CallCounterAgent.get_count() == 0
-
-      # First call: Hits the source
-      assert TestGettext.lgettext("fr", "default", nil, "Hello", %{}) == {:ok, "Bonjour"}
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello", %{}) == {:ok, "Bonjour"}
       assert CallCounterAgent.get_count() == 1
 
-      # Second identical call: Should hit cache, source count remains 1
-      assert TestGettext.lgettext("fr", "default", nil, "Hello", %{}) == {:ok, "Bonjour"}
+      # Cache Hit
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello", %{}) == {:ok, "Bonjour"}
 
       assert CallCounterAgent.get_count() == 1,
              "Cache miss: Source was called again for identical lgettext"
 
-      # Call with different locale: Hits the source again
-      assert TestGettext.lgettext("es", "default", nil, "Hello", %{}) == {:ok, "Hola"}
+      # Different locale
+      assert TestGettextWithCache.lgettext("es", "default", nil, "Hello", %{}) == {:ok, "Hola"}
       assert CallCounterAgent.get_count() == 2
 
-      # Call with same locale, different key: Hits the source again
-      assert TestGettext.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Test"}) ==
+      # Different key
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Test"}) ==
                {:ok, "Bonjour Test"}
 
       assert CallCounterAgent.get_count() == 3
 
-      # Repeat previous call: Should hit cache now
-      assert TestGettext.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Test"}) ==
+      # Cache Hit (interpolation happens after cache)
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Test"}) ==
                {:ok, "Bonjour Test"}
 
       assert CallCounterAgent.get_count() == 3,
              "Cache miss: Source was called again for identical lgettext with bindings"
 
-      # Test interpolation happens *after* cache retrieval
-      assert TestGettext.lgettext("fr", "default", nil, "Hello %{name}", %{name: "Cached"}) ==
-               {:ok, "Bonjour Cached"}
+      # Cache Hit (different bindings)
+      assert TestGettextWithCache.lgettext("fr", "default", nil, "Hello %{name}", %{
+               name: "Cached"
+             }) == {:ok, "Bonjour Cached"}
 
       assert CallCounterAgent.get_count() == 3,
              "Cache miss: Source was called again for cached key with different bindings"
     end
 
     test "lngettext caches results based on plural index and avoids repeated source lookups" do
-      # Initial state: counter is 0
       assert CallCounterAgent.get_count() == 0
 
-      # --- English ---
-      # First call (n=1 -> index 0): Hits the source
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "One item"}
+      # English n=1 -> index 0
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "One item"}
 
       assert CallCounterAgent.get_count() == 1
-
-      # Second identical call (n=1 -> index 0): Should hit cache
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "One item"}
+      # Cache Hit
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "One item"}
 
       assert CallCounterAgent.get_count() == 1,
              "Cache miss: Source called again for lngettext n=1 (index 0)"
 
-      # Third call (n=5 -> index 1): Hits the source (different plural index)
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 5, %{}) ==
-               {:ok, "5 items"}
+      # English n=5 -> index 1
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) == {:ok, "5 items"}
 
       assert CallCounterAgent.get_count() == 2
-
-      # Fourth call (n=2 -> index 1): Should hit cache (same plural index as n=5)
-      assert TestGettext.lngettext("en", "default", nil, "One item", "%{count} items", 2, %{}) ==
-               {:ok, "2 items"}
+      # Cache Hit (different n, same index)
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 items"}
 
       assert CallCounterAgent.get_count() == 2,
              "Cache miss: Source called again for lngettext n=2 (index 1)"
 
-      # --- French (Different locale, different plural rules) ---
-      # n=1 -> index 0
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 1, %{}) ==
-               {:ok, "Un objet"}
+      # French n=1 -> index 0
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "Un objet"}
 
-      # New source lookup
       assert CallCounterAgent.get_count() == 3
-
-      # n=0 -> index 0 (same index as n=1 for French)
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 0, %{}) ==
-               {:ok, "Un objet"}
+      # Cache Hit (different n, same index for fr)
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               0,
+               %{}
+             ) == {:ok, "Un objet"}
 
       assert CallCounterAgent.get_count() == 3,
              "Cache miss: Source called again for fr lngettext n=0 (index 0)"
 
-      # n=2 -> index 1
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 2, %{}) ==
-               {:ok, "2 objets"}
+      # French n=2 -> index 1
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 objets"}
 
-      # New source lookup
       assert CallCounterAgent.get_count() == 4
-
-      # n=5 -> index 1
-      assert TestGettext.lngettext("fr", "default", nil, "One item", "%{count} items", 5, %{}) ==
-               {:ok, "5 objets"}
+      # Cache Hit (different n, same index for fr)
+      assert TestGettextWithCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) == {:ok, "5 objets"}
 
       assert CallCounterAgent.get_count() == 4,
              "Cache miss: Source called again for fr lngettext n=5 (index 1)"
     end
 
-    test "missing translations are NOT cached" do
-      # Initial state: counter is 0
+    test "missing translations ARE cached (avoids repeated source lookups)" do
       assert CallCounterAgent.get_count() == 0
 
-      # First call for missing key: Hits the source (and gets :not_found)
-      assert TestGettext.lgettext("en", "default", nil, "Missing Key", %{}) ==
+      # First lookup for missing lgettext
+      assert TestGettextWithCache.lgettext("en", "default", nil, "Missing Key", %{}) ==
                {:default, "Missing Key"}
 
-      # Source lookup happened
+      # Source was called once
       assert CallCounterAgent.get_count() == 1
 
-      # Second call for same missing key: Should hit the source again
-      assert TestGettext.lgettext("en", "default", nil, "Missing Key", %{}) ==
+      # Second lookup for the SAME missing lgettext
+      assert TestGettextWithCache.lgettext("en", "default", nil, "Missing Key", %{}) ==
                {:default, "Missing Key"}
 
-      assert CallCounterAgent.get_count() == 2, "Missing translation was incorrectly cached"
+      # Source should NOT be called again due to cache hit on @not_found_marker
+      assert CallCounterAgent.get_count() == 1,
+             "Missing lgettext translation was NOT cached as expected"
 
-      # First call for missing plural: Hits the source
-      assert TestGettext.lngettext("en", "missing_domain", nil, "Sing", "Plur", 1, %{}) ==
+      # First lookup for missing lngettext
+      assert TestGettextWithCache.lngettext("en", "missing_domain", nil, "Sing", "Plur", 1, %{}) ==
                {:default, "Sing"}
+
+      # Source was called again (different key/type)
+      assert CallCounterAgent.get_count() == 2
+
+      # Second lookup for the SAME missing lngettext
+      assert TestGettextWithCache.lngettext("en", "missing_domain", nil, "Sing", "Plur", 1, %{}) ==
+               {:default, "Sing"}
+
+      # Source should NOT be called again due to cache hit on @not_found_marker
+      assert CallCounterAgent.get_count() == 2,
+             "Missing lngettext translation was NOT cached as expected"
+
+      # Third lookup for SAME missing lngettext, different n but same plural index (0 for en, n=1)
+      # This *should* still hit the same cache entry if the plural index is the same
+      assert TestGettextWithCache.lngettext("en", "missing_domain", nil, "Sing", "Plur", 1, %{}) ==
+               {:default, "Sing"}
+
+      assert CallCounterAgent.get_count() == 2,
+             "Missing lngettext translation (same index) was NOT cached as expected"
+
+      # Fourth lookup for SAME missing lngettext, different n AND different plural index (1 for en, n=2)
+      # This should be a new cache key lookup
+      # Default handler interpolates count into plural string
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "missing_domain",
+               nil,
+               "Sing",
+               "%{count} Plur",
+               2,
+               %{}
+             ) ==
+               {:default, "2 Plur"}
+
+      # Source should be called again (new plural index)
+      assert CallCounterAgent.get_count() == 3
+
+      # Fifth lookup for the index 1 missing key
+      assert TestGettextWithCache.lngettext(
+               "en",
+               "missing_domain",
+               nil,
+               "Sing",
+               "%{count} Plur",
+               2,
+               %{}
+             ) ==
+               {:default, "2 Plur"}
+
+      # Source should NOT be called again
+      assert CallCounterAgent.get_count() == 3,
+             "Missing lngettext translation (index 1) was NOT cached as expected"
+    end
+  end
+
+  # --- Non-Caching Behavior Tests ---
+  describe "non-caching behavior (when disabled)" do
+    test "lgettext always calls the source when cache is disabled" do
+      assert CallCounterAgent.get_count() == 0
+
+      # First call
+      assert TestGettextWithoutCache.lgettext("fr", "default", nil, "Hello", %{}) ==
+               {:ok, "Bonjour"}
+
+      assert CallCounterAgent.get_count() == 1
+
+      # Second call (identical) - should hit source again
+      assert TestGettextWithoutCache.lgettext("fr", "default", nil, "Hello", %{}) ==
+               {:ok, "Bonjour"}
+
+      assert CallCounterAgent.get_count() == 2,
+             "Source should be called again for lgettext when cache is disabled"
+
+      # Third call (different locale) - should hit source again
+      assert TestGettextWithoutCache.lgettext("es", "default", nil, "Hello", %{}) ==
+               {:ok, "Hola"}
 
       assert CallCounterAgent.get_count() == 3
 
-      # Second call for missing plural: Hits the source again
-      assert TestGettext.lngettext("en", "missing_domain", nil, "Sing", "Plur", 1, %{}) ==
-               {:default, "Sing"}
+      # Fourth call (different key) - should hit source again
+      assert TestGettextWithoutCache.lgettext("fr", "default", nil, "Hello %{name}", %{
+               name: "Test"
+             }) == {:ok, "Bonjour Test"}
+
+      assert CallCounterAgent.get_count() == 4
+
+      # Fifth call (same key, different bindings) - should hit source again
+      assert TestGettextWithoutCache.lgettext("fr", "default", nil, "Hello %{name}", %{
+               name: "Cached"
+             }) == {:ok, "Bonjour Cached"}
+
+      assert CallCounterAgent.get_count() == 5,
+             "Source should be called again for lgettext with different bindings when cache is disabled"
+    end
+
+    test "lngettext always calls the source when cache is disabled" do
+      assert CallCounterAgent.get_count() == 0
+
+      # First call (en, n=1)
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "One item"}
+
+      assert CallCounterAgent.get_count() == 1
+
+      # Second call (identical) - should hit source again
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "One item"}
+
+      assert CallCounterAgent.get_count() == 2,
+             "Source should be called again for same plural (n=1) when cache is disabled"
+
+      # Third call (en, n=5) - should hit source again
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               5,
+               %{}
+             ) == {:ok, "5 items"}
+
+      assert CallCounterAgent.get_count() == 3
+
+      # Fourth call (en, n=2 - same plural index as n=5) - should hit source again
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               2,
+               %{}
+             ) == {:ok, "2 items"}
 
       assert CallCounterAgent.get_count() == 4,
-             "Missing plural translation was incorrectly cached"
+             "Source should be called again for same plural index (n=2) when cache is disabled"
+
+      # Fifth call (fr, n=1) - should hit source again
+      assert TestGettextWithoutCache.lngettext(
+               "fr",
+               "default",
+               nil,
+               "One item",
+               "%{count} items",
+               1,
+               %{}
+             ) == {:ok, "Un objet"}
+
+      assert CallCounterAgent.get_count() == 5
+    end
+
+    test "missing translations always hit source when cache is disabled" do
+      assert CallCounterAgent.get_count() == 0
+
+      # First call (missing lgettext)
+      assert TestGettextWithoutCache.lgettext("en", "default", nil, "Missing Key", %{}) ==
+               {:default, "Missing Key"}
+
+      assert CallCounterAgent.get_count() == 1
+
+      # Second call (identical missing lgettext) - should hit source again
+      assert TestGettextWithoutCache.lgettext("en", "default", nil, "Missing Key", %{}) ==
+               {:default, "Missing Key"}
+
+      assert CallCounterAgent.get_count() == 2,
+             "Source should be called again for missing lgettext when cache disabled"
+
+      # Third call (missing lngettext, n=1)
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "missing_domain",
+               nil,
+               "Sing",
+               "Plur",
+               1,
+               %{}
+             ) == {:default, "Sing"}
+
+      assert CallCounterAgent.get_count() == 3
+
+      # Fourth call (identical missing lngettext) - should hit source again
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "missing_domain",
+               nil,
+               "Sing",
+               "Plur",
+               1,
+               %{}
+             ) == {:default, "Sing"}
+
+      assert CallCounterAgent.get_count() == 4,
+             "Source should be called again for missing lngettext when cache disabled"
+
+      # Fifth call (missing lngettext, n=2) - should hit source again
+      assert TestGettextWithoutCache.lngettext(
+               "en",
+               "missing_domain",
+               nil,
+               "Sing",
+               "%{count} Plur",
+               2,
+               %{}
+             ) == {:default, "2 Plur"}
+
+      assert CallCounterAgent.get_count() == 5,
+             "Source should be called again for missing lngettext (diff n) when cache disabled"
     end
   end
 end

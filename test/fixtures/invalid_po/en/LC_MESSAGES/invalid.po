@@ -1,0 +1,13 @@
+msgid "Valid message"
+msgstr "Valid translation"
+
+# Error starts here: Unclosed quote in msgid
+msgid "This message has an unclosed quote
+msgstr "This translation won't be reached"
+
+msgstr "This translation appears before its msgid"
+msgid "This msgid appears too late"
+
+# Error: Missing msgid keyword before the string
+"This is supposed to be a msgid"
+msgstr "This is a translation"

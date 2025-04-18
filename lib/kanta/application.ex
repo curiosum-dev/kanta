@@ -2,14 +2,14 @@ defmodule Kanta.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  require Logger
 
   use Application
 
   @impl true
   def start(_type, _args) do
     children = [
-      Kanta.Registry,
-      Kanta.Cache
+      Kanta.Registry
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

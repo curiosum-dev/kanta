@@ -38,7 +38,7 @@ defmodule Kanta.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:expo, "~> 0.5"},
+      {:expo, "~> 1.0"},
       {:ecto, "~> 3.12"},
       {:ecto_sql, "~> 3.12"},
       {:phoenix, "~> 1.7.0"},
@@ -62,7 +62,10 @@ defmodule Kanta.MixProject do
       {:gettext, "~> 0.26.0"},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:dialyxir, "~> 1.4", only: :dev, runtime: false},
-      {:postgrex, "~> 0.16", only: :test}
+      {:postgrex, "~> 0.16", only: :test},
+      {:flow, "~> 1.2.4"},
+      {:flop, "~> 0.26.0"},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 
@@ -72,7 +75,9 @@ defmodule Kanta.MixProject do
       "assets.build": [
         "esbuild default --minify",
         "tailwind default --minify"
-      ]
+      ],
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"]
     ]
   end
 
