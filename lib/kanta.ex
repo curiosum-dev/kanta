@@ -24,17 +24,8 @@ defmodule Kanta do
   def init(conf) do
     %Config{plugins: plugins} = conf
 
-    po_extractor_opts =
-      if conf.default_data_access,
-        do: [backends: conf.backends, default_data_access: conf.default_data_access],
-        else: [backends: conf.backends]
-
     children = [
-      {Kanta.MigrationVersionChecker, []},
-      {Kanta.POFiles.POExtractorTask, po_extractor_opts}
-      # TODO
-      # {Kanta.POFiles.MessagesExtractorAgent,
-      #  conf: conf, name: Registry.via(conf.name, MessagesExtractorAgent)}
+      {Kanta.MigrationVersionChecker, []}
     ]
 
     children = children ++ Enum.map(plugins, &plugin_child_spec(&1, conf))

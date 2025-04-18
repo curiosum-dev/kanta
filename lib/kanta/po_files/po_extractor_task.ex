@@ -1,4 +1,31 @@
 defmodule Kanta.POFiles.POExtractorTask do
+  @moduledoc """
+  Task module responsible for extracting PO (Portable Object) message files for internationalization.
+
+  This module provides functionality to:
+  - Extract PO messages from specified directories or modules implementing the `Kanta.Backend` behavior
+  - Process different input formats for extraction paths
+  - List all PO directories from registered Kanta backends
+
+  It's designed to be run as a Task that performs the extraction operation as defined by provided options.
+
+  ## Usage
+
+  In the `application.ex` file, you can start the task with the following code:
+
+  ```elixir
+  children = [
+    {Kanta.POFiles.POExtractorTask, extract_paths: [{"priv/gettext", MyApp.SomeDataAccess}]),
+    ...
+    ]
+  ```
+
+  where:
+
+  - `[{"priv/gettext", MyApp.SomeDataAccess}])` - list of tuples {directory_with_po_files, Kanta data access implementation module}
+
+  """
+
   require Logger
 
   alias Kanta.Services.POExtractor
@@ -13,18 +40,29 @@ defmodule Kanta.POFiles.POExtractorTask do
     allowed_locales = []
     extended_opts = Keyword.merge(opts, allowed_locales: allowed_locales)
 
-    inputs = Keyword.get(opts, :backends, [])
+    inputs = Keyword.get(opts, :extract_paths, [])
 
     dirs_data_access =
       Enum.reduce(inputs, [], fn
-        {backend_module, data_access_module}, acc ->
+        {dir, data_access_module}, acc when is_binary(dir) ->
+          [{dir, data_access_module} | acc]
+
+        {backend_module, data_access_module}, acc when is_atom(backend_module) ->
           dir = get_priv_dir(backend_module)
           if dir, do: [{dir, data_access_module} | acc], else: acc
 
-        backend_module, acc ->
+        {backend_module, data_access_module}, acc when is_atom(backend_module) ->
+          dir = get_priv_dir(backend_module)
+          if dir, do: [{dir, data_access_module} | acc], else: acc
+
+        backend_module, acc when is_atom(backend_module) ->
           default_data_access = Keyword.fetch!(opts, :default_data_access)
           dir = get_priv_dir(backend_module)
           if dir, do: [{dir, default_data_access} | acc], else: acc
+
+        dir, acc when is_binary(dir) ->
+          default_data_access = Keyword.fetch!(opts, :default_data_access)
+          [{dir, default_data_access} | acc]
       end)
 
     Logger.info("#{__MODULE__} Run")

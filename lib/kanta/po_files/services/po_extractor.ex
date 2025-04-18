@@ -56,7 +56,8 @@ defmodule Kanta.Services.POExtractor do
   Extracts all messages from PO files and stores them in the database.
 
   ## Parameters
-    * `dirs` - Directories containing the PO files (defaults to ["priv/gettext"])
+    * `dirs_data_access` - List of tuples containing {directory, data_access_module}
+      where directory contains PO files and data_access_module handles database operations
     * `opts` - Options for extraction:
       * `:async` - Boolean flag to use parallel processing (default: false)
       * `:flow_opts` - Options passed to Flow when using async mode
@@ -67,42 +68,52 @@ defmodule Kanta.Services.POExtractor do
 
   ## Examples
 
-      # Extract translations synchronously from default directory
-      iex> Kanta.Services.POExtractor.extract_all_po_messages()
+      # Extract translations synchronously
+      iex> Kanta.Services.POExtractor.extract_po_messages([{"priv/gettext", MyApp.DataAccess}])
       %Kanta.Services.POExtractor.ExtractResult{...}
 
       # Extract translations asynchronously with custom Flow options
-      iex> Kanta.Services.POExtractor.extract_all_po_messages("custom/path", async: true, flow_opts: [max_demand: 5])
+      iex> Kanta.Services.POExtractor.extract_po_messages([{"custom/path", MyApp.DataAccess}], async: true, flow_opts: [max_demand: 5])
       %Kanta.Services.POExtractor.ExtractResult{...}
 
       # Extract translations only for specified locales
-      iex> Kanta.Services.POExtractor.extract_all_po_messages("custom/path", allowed_locales: ["en", "fr"])
+      iex> Kanta.Services.POExtractor.extract_po_messages([{"custom/path", MyApp.DataAccess}], allowed_locales: ["en", "fr"])
       %Kanta.Services.POExtractor.ExtractResult{...}
   """
   @spec extract_po_messages(list({String.t(), module()}), keyword()) ::
           ExtractResult.t()
-
   def extract_po_messages(dirs_data_access, opts \\ []) when is_list(dirs_data_access) do
-    async? = Keyword.get(opts, :async, false)
-    flow_opts = Keyword.get(opts, :flow_opts, [])
-    allowed_locales = Keyword.get(opts, :allowed_locales, [])
+    # Extract options using pattern matching with defaults
+    %{
+      async: async?,
+      flow_opts: flow_opts,
+      allowed_locales: allowed_locales
+    } = parse_opts(opts)
 
-    paths_data_access =
-      dirs_data_access
-      |> Enum.flat_map(fn {backend_priv_dir, data_access} ->
-        paths =
-          backend_priv_dir
-          |> find_all_po_files()
-          |> maybe_restrict_locales(allowed_locales)
+    # Get all PO files with their data access modules
+    paths_with_data_access = collect_po_files(dirs_data_access, allowed_locales)
 
-        for path <- paths, do: {path, data_access}
-      end)
-
-    if async? do
-      extract_all_po_messages_async(paths_data_access, flow_opts)
-    else
-      extract_all_po_messages_sequential(paths_data_access)
+    # Choose processing method based on async setting
+    case async? do
+      true -> extract_all_po_messages_async(paths_with_data_access, flow_opts)
+      false -> extract_all_po_messages_sequential(paths_with_data_access)
     end
+  end
+
+  # Private helper function to collect and filter PO files
+  defp collect_po_files(dirs_data_access, allowed_locales) do
+    Enum.flat_map(dirs_data_access, fn {backend_priv_dir, data_access} ->
+      backend_priv_dir
+      |> find_all_po_files()
+      |> maybe_restrict_locales(allowed_locales)
+      |> Enum.map(fn path -> {path, data_access} end)
+    end)
+  end
+
+  defp parse_opts(opts) do
+    [async: false, flow_opts: [], allowed_locales: []]
+    |> Keyword.merge(opts)
+    |> Map.new()
   end
 
   @doc """
