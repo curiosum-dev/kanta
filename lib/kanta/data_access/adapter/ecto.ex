@@ -21,58 +21,46 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
     quote do
       @behaviour Kanta.DataAccess
-      alias Kanta.DataAccess.Adapter.Ecto
+      alias Kanta.DataAccess.Adapter.Ecto, as: EctoAdapter
       import Kanta.DataAccess, only: [is_resource: 1]
       @repo unquote(repo_module)
 
       @impl Kanta.DataAccess
       def init(_opts) do
-        Ecto.do_init(@repo)
+        EctoAdapter.do_init(@repo)
       end
 
       @impl Kanta.DataAccess
 
       def list_resources(resource_module, params, opts \\ [])
           when is_resource(resource_module),
-          do: Ecto.do_list(@repo, resource_module, params, opts)
+          do: EctoAdapter.do_list(@repo, resource_module, params, opts)
 
       @impl Kanta.DataAccess
       def get_resource(resource_module, id, opts)
           when is_resource(resource_module),
-          do: Ecto.do_get(@repo, resource_module, id, opts)
+          do: EctoAdapter.do_get(@repo, resource_module, id, opts)
 
       @impl Kanta.DataAccess
       def create_resource(resource_module, attrs, opts \\ [])
           when is_resource(resource_module),
-          do: Ecto.do_create(@repo, resource_module, attrs, opts)
+          do: EctoAdapter.do_create(@repo, resource_module, attrs, opts)
 
       @impl Kanta.DataAccess
       def update_resource(resource_module, id, attrs, opts)
           when is_resource(resource_module),
-          do: Ecto.do_update(@repo, resource_module, id, attrs, opts)
+          do: EctoAdapter.do_update(@repo, resource_module, id, attrs, opts)
 
       @impl Kanta.DataAccess
       def delete_resource(resource_module, id, opts),
-        do: Ecto.do_delete(@repo, resource_module, id, opts)
+        do: EctoAdapter.do_delete(@repo, resource_module, id, opts)
     end
   end
 
   # --- Actual Implementation Logic (do_*) ---
 
   def do_init(repo) do
-    migrator =
-      case repo.__adapter__() do
-        :postgres -> Kanta.Migrations.Postgresql
-        :sqlite -> Kanta.Migrations.SQLite3
-      end
-
-    migrated_version = migrator.migrated_version(%{repo: repo})
-
-    result =
-      case repo.__adapter__() do
-        :postgres -> migrated_version >= 3
-        :sqlite -> migrated_version >= 2
-      end
+    result = Kanta.MigrationVersionChecker.check_version(repo)
 
     case result do
       true -> :ok

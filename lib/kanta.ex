@@ -25,7 +25,7 @@ defmodule Kanta do
     %Config{plugins: plugins} = conf
 
     children = [
-      {Kanta.MigrationVersionChecker, []}
+      # {Kanta.MigrationVersionChecker, []}
     ]
 
     children = children ++ Enum.map(plugins, &plugin_child_spec(&1, conf))

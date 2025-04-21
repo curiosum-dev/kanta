@@ -23,26 +23,33 @@ defmodule Kanta.MigrationVersionChecker do
     reset: :reset
   ]
 
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, [repo: opts[:repo]], name: __MODULE__)
   end
 
   @impl true
-  def init(_) do
-    check_version()
+  def init(opts) do
+    check_version(opts[:repo])
 
     {:ok, %{}}
   end
 
-  defp check_version do
+  defp get_adapter_name(repo) do
+    case repo.__adapter__() do
+      Ecto.Adapters.Postgres -> :postgres
+      Ecto.Adapters.SQLite3 -> :sqlite
+    end
+  end
+
+  def check_version(repo) do
     migrator =
-      case Kanta.Repo.get_adapter_name() do
+      case get_adapter_name(repo) do
         :postgres -> Kanta.Migrations.Postgresql
         :sqlite -> Kanta.Migrations.SQLite3
       end
 
     latest_version = migrator.current_version()
-    migrated = migrator.migrated_version(%{repo: Kanta.Repo.get_repo()})
+    migrated = migrator.migrated_version(%{repo: repo})
 
     if migrated < latest_version do
       warning_message = """
@@ -78,6 +85,9 @@ defmodule Kanta.MigrationVersionChecker do
       """
 
       IO.puts(warning_message)
+      false
+    else
+      true
     end
   end
 

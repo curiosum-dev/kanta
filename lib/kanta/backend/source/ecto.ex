@@ -132,7 +132,7 @@ defmodule Kanta.Backend.Source.Ecto do
       from(s in Singular, distinct: [s.locale], select: s.locale)
 
     plural_locale =
-      from(p in Kanta.DataAccess.Adapter.Ecto.Plural, distinct: [p.locale], select: p.locale)
+      from(p in Plural, distinct: [p.locale], select: p.locale)
 
     union(singular_locale, ^plural_locale)
     |> repo.all()
