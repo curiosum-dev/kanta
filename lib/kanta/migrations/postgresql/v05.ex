@@ -1,64 +1,26 @@
+# kanta/lib/kanta/migrations/postgresql/v05.ex
 defmodule Kanta.Migrations.Postgresql.V05 do
+  @moduledoc """
+  Kanta PostgreSQL V5 Migration
+
+  This module delegates to the Common.V05 migration, which:
+  - Defines a new simplified schema with kanta_plurals and kanta_singulars tables
+  - Renames domain/context tables to kanta_domain_metadata and kanta_context_metadata
+  - Migrates data from the old schema using SQL INSERT INTO...SELECT
+  - Drops the old tables after successful migration
+  """
   use Ecto.Migration
 
-  def up(_) do
-    create table("plurals") do
-      add :locale, :string
-      add :domain, :string, null: true
-      add :msgctxt, :string, null: true
-      add :msgid, :string
-      add :msgid_plural, :string
-      add :msgstr, :string
-      add :plural_index, :integer
-      add :msgstr_origin, :string
-    end
+  # This PostgreSQL migration delegates all work to the Common module
+  # but reserves the space for potential PostgreSQL-specific logic if needed in the future.
 
-    create unique_index(
-             "plurals",
-             [
-               :locale,
-               :domain,
-               :msgctxt,
-               :msgid,
-               :msgid_plural,
-               :plural_index
-             ],
-             nulls_distinct: false
-           )
-
-    create table("singulars") do
-      add :locale, :string
-      add :domain, :string, null: true
-      add :msgctxt, :string, null: true
-      add :msgid, :string
-      add :msgstr, :string
-      add :msgstr_origin, :string
-    end
-
-    create unique_index("singulars", [:locale, :domain, :msgctxt, :msgid], nulls_distinct: false)
-
-    create table("domains") do
-      add :name, :string, null: false
-      add :description, :string
-      add :color, :string
-    end
-
-    create unique_index("domains", [:name])
-
-    create table("contexts") do
-      add :name, :string, null: false
-      add :description, :string, null: false
-      add :color, :string, null: false
-    end
-
-    create unique_index("contexts", [:name])
+  def up(opts) do
+    IO.puts("PostgreSQL V05: Delegating to Common.V1Denormalized")
+    Kanta.Migrations.Common.V1Denormalized.up(opts)
   end
 
-  def down(_) do
-    drop table("singulars")
-    drop table("plurals")
-    drop table("contexts")
-    drop table("domains")
-    execute "DROP SCHEMA IF EXISTS kanta CASCADE"
+  def down(opts) do
+    IO.puts("PostgreSQL V05: Delegating to Common.V1Denormalized")
+    Kanta.Migrations.Common.V1Denormalized.down(opts)
   end
 end
