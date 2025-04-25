@@ -124,7 +124,7 @@ defmodule Kanta.DataAccess do
   """
 
   # Define resource types using modules rather than atoms
-  @type resource_module :: :singular | :plural | :domain | :context
+  @type resource_module :: :singular | :plural | :domain | :context | :application_source
   @type id :: any()
   @type implementation_opts :: keyword()
 
@@ -190,5 +190,5 @@ defmodule Kanta.DataAccess do
               delete_result()
 
   defguard is_resource(resource_module)
-           when resource_module in [:singular, :plural, :context, :domain]
+           when resource_module in [:singular, :plural, :context, :domain, :application_source]
 end

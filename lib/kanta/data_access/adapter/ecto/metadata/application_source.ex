@@ -1,5 +1,4 @@
-defmodule Kanta.DataAccess.Adapter.Ecto.Metadata.Domain do
-  @moduledoc "Ecto Schema for Domain Metadata"
+defmodule Kanta.DataAccess.Adapter.Ecto.Metadata.ApplicationSource do
   use Ecto.Schema
   import Ecto.Changeset
 
