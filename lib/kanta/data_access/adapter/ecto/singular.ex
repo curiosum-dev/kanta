@@ -15,7 +15,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Singular do
     max_limit: 100
   }
 
-  schema "singulars" do
+  schema "kanta_singulars" do
     field :locale, :string
     field :domain, :string
     # Can be nil
@@ -24,7 +24,8 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Singular do
     # The actual translation
     field :msgstr, :string
     field :msgstr_origin, :string
-    # timestamps() # Uncomment if you add timestamps to your migration
+    # Uncomment if you add timestamps to your migration
+    timestamps()
   end
 
   # --- Changeset Functions ---

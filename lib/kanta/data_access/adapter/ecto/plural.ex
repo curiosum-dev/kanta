@@ -15,7 +15,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Plural do
     max_limit: 100
   }
 
-  schema "plurals" do
+  schema "kanta_plurals" do
     field :locale, :string
     field :domain, :string, default: "default"
     field :msgctxt, :string
@@ -24,7 +24,8 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Plural do
     field :plural_index, :integer
     field :msgstr, :string
     field :msgstr_origin, :string
-    # timestamps() # Uncomment if you add timestamps
+    # Uncomment if you add timestamps
+    timestamps()
   end
 
   # --- Changeset Functions ---
