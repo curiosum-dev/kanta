@@ -16,10 +16,11 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Metadata.Context do
     max_limit: 100
   }
 
-  schema "contexts" do
+  schema "kanta_context_metadata" do
     field :name, :string
     field :description, :string
     field :color, :string
+    timestamps()
   end
 
   @required_fields [:name, :description, :color]

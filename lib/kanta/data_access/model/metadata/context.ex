@@ -7,5 +7,5 @@ defmodule Kanta.DataAccess.Model.Metadata.Context do
           name: String.t(),
           description: String.t(),
           color: String.t()
-        } 
+        }
 end

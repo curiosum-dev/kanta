@@ -15,10 +15,11 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Metadata.Domain do
     max_limit: 100
   }
 
-  schema "domains" do
+  schema "kanta_domain_metadata" do
     field :name, :string
     field :description, :string
     field :color, :string
+    timestamps()
   end
 
   @required_fields [:name]
