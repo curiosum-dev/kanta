@@ -189,6 +189,13 @@ defmodule Kanta.DataAccess do
             ) ::
               delete_result()
 
+  @doc """
+    Updates all the metadata based on the translation data.
+
+    In particular updated: Context, Domain information.
+  """
+  @callback update_metadata() :: :ok | {:error, any()}
+
   defguard is_resource(resource_module)
            when resource_module in [:singular, :plural, :context, :domain, :application_source]
 end

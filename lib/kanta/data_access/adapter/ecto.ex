@@ -54,6 +54,9 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
       @impl Kanta.DataAccess
       def delete_resource(resource_module, id, opts),
         do: EctoAdapter.do_delete(@repo, resource_module, id, opts)
+
+      @impl Kanta.DataAccess
+      def update_metadata(), do: EctoAdapter.do_update_metadata(@repo)
     end
   end
 
@@ -172,6 +175,41 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
       nil -> {:error, :not_found}
       struct -> repo.delete(struct)
     end
+  end
+
+  # Updates the metadata based on the content of the data
+  def do_update_metadata(repo) do
+    # Update domains
+    update_schema_metadata(repo, DomainSchema, :domain)
+
+    # Update contexts
+    update_schema_metadata(repo, ContextSchema, :msgctxt)
+  end
+
+  # Extracts column from the translations table to inserts into the metadata tables.
+  defp update_schema_metadata(repo, target_schema, field_name) do
+    singular_query =
+      from s in SingularSchema,
+        select: %{
+          name: field(s, ^field_name),
+          inserted_at: s.inserted_at,
+          updated_at: s.updated_at
+        }
+
+    plural_query =
+      from p in PluralSchema,
+        select: %{
+          name: field(p, ^field_name),
+          inserted_at: p.inserted_at,
+          updated_at: p.updated_at
+        }
+
+    all_query = union_all(singular_query, ^plural_query)
+
+    repo.insert_all(target_schema, all_query,
+      on_conflict: :nothing,
+      conflict_target: [:name]
+    )
   end
 
   # --- Private Helpers ---

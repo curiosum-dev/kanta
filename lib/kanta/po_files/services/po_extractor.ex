@@ -94,10 +94,26 @@ defmodule Kanta.Services.POExtractor do
     paths_with_data_access = collect_po_files(dirs_data_access, allowed_locales)
 
     # Choose processing method based on async setting
-    case async? do
-      true -> extract_all_po_messages_async(paths_with_data_access, flow_opts)
-      false -> extract_all_po_messages_sequential(paths_with_data_access)
-    end
+    result =
+      case async? do
+        true -> extract_all_po_messages_async(paths_with_data_access, flow_opts)
+        false -> extract_all_po_messages_sequential(paths_with_data_access)
+      end
+
+    update_metadata(dirs_data_access)
+
+    result
+  end
+
+  defp update_metadata(dirs_data_access) do
+    # Update metadata here
+    dirs_data_access
+    |> Enum.map(fn {_path, data_access} -> data_access end)
+    |> Enum.uniq()
+    |> Enum.each(fn data_access ->
+      Logger.debug("Updating metadata for #{data_access}")
+      data_access.update_metadata()
+    end)
   end
 
   # Private helper function to collect and filter PO files
