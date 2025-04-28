@@ -138,7 +138,7 @@ defmodule Kanta.Migrations.Common.V1Denormalized do
 
     create_if_not_exists table(@plural_table, prefix: prefix) do
       add :locale, :string, null: false
-      add :domain, :string, null: false, default: ""
+      add :domain, :string, null: false, default: "default"
       add :msgctxt, :string, null: false, default: ""
       add :msgid, :text, null: false
       add :msgid_plural, :text, null: false
@@ -162,7 +162,7 @@ defmodule Kanta.Migrations.Common.V1Denormalized do
 
     create_if_not_exists table(@singular_table, prefix: prefix) do
       add :locale, :string, null: false
-      add :domain, :string, null: false, default: ""
+      add :domain, :string, null: false, default: "default"
       add :msgctxt, :string, null: false, default: ""
       add :msgid, :text, null: false
       add :msgstr, :text, null: true
