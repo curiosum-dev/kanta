@@ -123,6 +123,8 @@ defmodule Kanta.DataAccess do
   The returned data includes both the filtered results and pagination metadata to help with navigation.
   """
 
+  alias Kanta.DataAccess.PaginationMeta
+
   # Define resource types using modules rather than atoms
   @type resource_module :: :singular | :plural | :domain | :context | :application_source
   @type id :: any()
@@ -141,7 +143,7 @@ defmodule Kanta.DataAccess do
             optional(:pagination) => list_pagination()
           }
           | %{}
-  @type pagination_meta :: %{
+  @type pagination_meta :: %PaginationMeta{
           page: pos_integer(),
           page_size: pos_integer(),
           total_pages: non_neg_integer(),

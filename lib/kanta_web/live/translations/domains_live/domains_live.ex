@@ -1,4 +1,5 @@
 defmodule KantaWeb.Translations.DomainsLive do
+  alias Kanta.DataAccess.PaginationMeta
   use KantaWeb, :live_view
 
   alias Kanta.Translations
@@ -6,13 +7,18 @@ defmodule KantaWeb.Translations.DomainsLive do
 
   alias KantaWeb.Components.Shared.Pagination
 
-  def mount(_params, _session, socket) do
-    %{entries: domains, metadata: domains_metadata} = Translations.list_domains()
+  def mount(_params, session, socket) do
+    # %{entries: domains, metadata: domains_metadata} = Translations.list_domains()
+    data_access = session["data_access"]
+    {:ok, {domains, %PaginationMeta{} = pm}} = data_access.list_resources(:domain, %{}) |> dbg()
 
     socket =
       socket
-      |> assign(:domains, domains)
-      |> assign(:domains_metadata, domains_metadata)
+      |> assign(
+        domains: domains,
+        current_page: pm.page,
+        total_pages: pm.total_pages
+      )
 
     {:ok, socket}
   end

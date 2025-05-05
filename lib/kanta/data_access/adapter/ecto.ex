@@ -6,6 +6,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
   import Ecto.Query, warn: false
 
   alias Flop.Meta
+  alias Kanta.DataAccess.PaginationMeta
   alias Kanta.DataAccess.Adapter.Ecto.Singular, as: SingularSchema
   alias Kanta.DataAccess.Adapter.Ecto.Plural, as: PluralSchema
   alias Kanta.DataAccess.Adapter.Ecto.Metadata.Domain, as: DomainSchema
@@ -285,7 +286,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
   # Corrected flop_meta_to_pagination_meta to use :current_page
   defp flop_meta_to_pagination_meta(%Meta{} = flop_meta) do
-    %{
+    %PaginationMeta{
       # Correct field for page number
       page: flop_meta.current_page,
       page_size: flop_meta.page_size,
