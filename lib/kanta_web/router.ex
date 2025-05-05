@@ -141,14 +141,16 @@ defmodule KantaWeb.Router do
 
     on_mount = Keyword.get(options, :on_mount)
 
-    session_args = [
-      csp_nonce_assign_key
-    ]
+    session_args =
+      [
+        csp_nonce_assign_key: csp_nonce_assign_key
+      ]
+      |> Keyword.merge(options)
 
     {
       options[:live_session_name] || :kanta_dashboard,
       [
-        session: {__MODULE__, :__session__, session_args},
+        session: {__MODULE__, :__session__, [session_args]},
         root_layout: {KantaWeb.LayoutView, :dashboard},
         on_mount: on_mount
       ],
@@ -162,14 +164,20 @@ defmodule KantaWeb.Router do
   @doc false
   def __session__(
         conn,
-        csp_nonce_assign_key
+        session_opts
       ) do
-    %{
-      "csp_nonces" => %{
-        img: conn.assigns[csp_nonce_assign_key[:img]],
-        style: conn.assigns[csp_nonce_assign_key[:style]],
-        script: conn.assigns[csp_nonce_assign_key[:script]]
+    csp_nonce_assign_key = session_opts[:csp_nonce_assign_key]
+
+    csp_map =
+      %{
+        "csp_nonces" => %{
+          img: conn.assigns[csp_nonce_assign_key[:img]],
+          style: conn.assigns[csp_nonce_assign_key[:style]],
+          script: conn.assigns[csp_nonce_assign_key[:script]]
+        }
       }
-    }
+
+    # Convert keyword list to map, ensuring keys are strings
+    _session_map = Map.new(session_opts, fn {k, v} -> {to_string(k), v} end) |> Map.merge(csp_map)
   end
 end
