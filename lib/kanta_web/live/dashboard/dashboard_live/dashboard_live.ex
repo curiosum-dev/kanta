@@ -7,11 +7,8 @@ defmodule KantaWeb.Dashboard.DashboardLive do
   alias Kanta.Translations.Locale.Finders.GetLocaleTranslationProgress
 
   def mount(_params, session, socket) do
-    # messages_count = Translations.get_messages_count()
-    # %{entries: domains, metadata: _domains_metadata} = Translations.list_domains()
-    # %{entries: contexts, metadata: _contexts_metadata} = Translations.list_contexts()
-    # %{entries: locales, metadata: _locales_metadata} = Translations.list_locales()
     data_access = session["data_access"]
+    # TODO Cache cleaning
     cache = session["cache"]
 
     domain_count = data_access.count_resource(:domain)
