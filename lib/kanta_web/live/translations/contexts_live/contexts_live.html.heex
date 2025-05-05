@@ -10,5 +10,5 @@
 </div>
 <div class="mt-4">
   <.live_component module={ContextsTable} id="contexts-table" contexts={@contexts} />
-  <Pagination.render metadata={@contexts_metadata} on_page_change="page_changed" />
+  <Pagination.render metadata={%{page_number: @current_page, total_pages: @total_pages }} on_page_change="page_changed" />
 </div>
