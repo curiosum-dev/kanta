@@ -153,6 +153,8 @@ defmodule Kanta.DataAccess do
   @type get_result :: {:ok, map() | nil} | {:error, any()}
   @type command_result :: {:ok, map()} | {:error, any()}
   @type delete_result :: {:ok, map()} | {:error, :not_found | any()}
+  @type locale :: String.t()
+  @type locales :: [String.t()]
 
   # Core generic callbacks using module names
   @callback init(opts :: keyword()) :: :ok
@@ -188,6 +190,10 @@ defmodule Kanta.DataAccess do
               opts :: implementation_opts()
             ) ::
               delete_result()
+
+  @callback count_resource(resource_module :: resource_module) :: integer()
+  @callback locales() :: locales
+  @callback locales_translation_progress(locales) :: %{locale => float()}
 
   @doc """
     Updates all the metadata based on the translation data.

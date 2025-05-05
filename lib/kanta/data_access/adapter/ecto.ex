@@ -57,6 +57,28 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
       @impl Kanta.DataAccess
       def update_metadata(), do: EctoAdapter.do_update_metadata(@repo)
+
+      @impl Kanta.DataAccess
+      def count_resource(resource_module),
+        do: EctoAdapter.do_count_resource(@repo, resource_module)
+
+      @impl Kanta.DataAccess
+      def locales(), do: EctoAdapter.do_locales(@repo)
+
+      @doc """
+      Calculates the translation progress percentage for each locale.
+
+      This function takes a list of locales and returns a map where each key is a locale
+      and each value is the ratio of translated items to total items (as a float between 0 and 1).
+
+      ## Example
+
+          iex> DataAccess.locales_translation_progress(["en", "fr", "es"])
+          %{"en" => 0.95, "fr" => 0.84, "es" => 0.67}
+      """
+      @impl Kanta.DataAccess
+      def locales_translation_progress(locales),
+        do: EctoAdapter.do_locales_translation_progress(@repo, locales)
     end
   end
 
@@ -186,33 +208,69 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
     update_schema_metadata(repo, ContextSchema, :msgctxt)
   end
 
-  # Extracts column from the translations table to inserts into the metadata tables.
-  defp update_schema_metadata(repo, target_schema, field_name) do
+  @doc false
+  def do_locales(repo) do
     singular_query =
       from s in SingularSchema,
+        select: s.locale
+
+    plural_query =
+      from p in PluralSchema,
+        select: p.locale
+
+    query = union(singular_query, ^plural_query)
+
+    repo.all(query)
+  end
+
+  @doc false
+  def do_count_resource(repo, resource_module) do
+    module = model_to_schema(resource_module)
+
+    query =
+      from resource in module,
+        select: count()
+
+    repo.one(query)
+  end
+
+  @doc false
+  def do_locales_translation_progress(repo, _locales) do
+    import Kanta.DataAccess.Adapter.Ecto.CustomFunctions
+
+    singular_query =
+      from s in SingularSchema,
+        group_by: s.locale,
         select: %{
-          name: field(s, ^field_name),
-          inserted_at: s.inserted_at,
-          updated_at: s.updated_at
+          locale: s.locale,
+          count_translated: count_case(is_nil(s.msgstr), [[when: true, then: nil], [else: 1]]),
+          count_total: count(s.id)
         }
 
     plural_query =
       from p in PluralSchema,
+        group_by: p.locale,
         select: %{
-          name: field(p, ^field_name),
-          inserted_at: p.inserted_at,
-          updated_at: p.updated_at
+          locale: p.locale,
+          count_translated: count_case(is_nil(p.msgstr), [[when: true, then: nil], [else: 1]]),
+          count_total: count(p.id)
         }
 
-    all_query = union_all(singular_query, ^plural_query)
+    union_query = union(singular_query, ^plural_query)
 
-    repo.insert_all(target_schema, all_query,
-      on_conflict: :nothing,
-      conflict_target: [:name]
-    )
+    query =
+      from locale_progress in subquery(union_query),
+        group_by: locale_progress.locale,
+        select: {
+          locale_progress.locale,
+          sum(locale_progress.count_translated) / sum(locale_progress.count_total)
+        }
+
+    repo.all(query)
+    |> Map.new()
   end
 
-  # --- Private Helpers ---
+  ######## --- PRIVATE HELPERS  --- #######
 
   defp apply_changeset(schema, action, struct_or_map, attrs) do
     struct = if is_struct(struct_or_map), do: struct_or_map, else: struct!(schema, struct_or_map)
@@ -224,6 +282,24 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
       {:error, {:changeset_function_not_found, schema, func_name}}
     end
   end
+
+  # Corrected flop_meta_to_pagination_meta to use :current_page
+  defp flop_meta_to_pagination_meta(%Meta{} = flop_meta) do
+    %{
+      # Correct field for page number
+      page: flop_meta.current_page,
+      page_size: flop_meta.page_size,
+      total_pages: flop_meta.total_pages || 0,
+      total_entries: flop_meta.total_count || 0
+    }
+  end
+
+  defp maybe_preload(query, nil), do: query
+
+  defp maybe_preload(query, preloads) when is_list(preloads),
+    do: Ecto.Query.preload(query, ^preloads)
+
+  defp maybe_preload(query, preload), do: Ecto.Query.preload(query, ^preload)
 
   defp model_to_schema(resource_module) do
     case resource_module do
@@ -273,21 +349,29 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
     |> Map.put(:filters, flop_filters)
   end
 
-  # Corrected flop_meta_to_pagination_meta to use :current_page
-  defp flop_meta_to_pagination_meta(%Meta{} = flop_meta) do
-    %{
-      # Correct field for page number
-      page: flop_meta.current_page,
-      page_size: flop_meta.page_size,
-      total_pages: flop_meta.total_pages || 0,
-      total_entries: flop_meta.total_count || 0
-    }
+  # Extracts column from the translations table to inserts into the metadata tables.
+  defp update_schema_metadata(repo, target_schema, field_name) do
+    singular_query =
+      from s in SingularSchema,
+        select: %{
+          name: field(s, ^field_name),
+          inserted_at: s.inserted_at,
+          updated_at: s.updated_at
+        }
+
+    plural_query =
+      from p in PluralSchema,
+        select: %{
+          name: field(p, ^field_name),
+          inserted_at: p.inserted_at,
+          updated_at: p.updated_at
+        }
+
+    all_query = union(singular_query, ^plural_query)
+
+    repo.insert_all(target_schema, all_query,
+      on_conflict: :nothing,
+      conflict_target: [:name]
+    )
   end
-
-  defp maybe_preload(query, nil), do: query
-
-  defp maybe_preload(query, preloads) when is_list(preloads),
-    do: Ecto.Query.preload(query, ^preloads)
-
-  defp maybe_preload(query, preload), do: Ecto.Query.preload(query, ^preload)
 end

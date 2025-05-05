@@ -10,7 +10,7 @@
     <div class="col-span-1">
       <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= length(@languages) %></div>
+          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= length(@locales) %></div>
           <div class="text-slate-600 dark:text-content-light font-medium text-lg">Languages</div>
         </div>
       </div>
@@ -26,7 +26,7 @@
     <div class="col-span-1">
       <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= length(@contexts) %></div>
+          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @context_count %></div>
           <div class="text-slate-600 dark:text-content-light font-medium text-lg">Contexts</div>
         </div>
       </div>
@@ -34,7 +34,7 @@
     <div class="col-span-1">
       <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
         <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= length(@domains) %></div>
+          <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @domain_count %></div>
           <div class="text-slate-600 dark:text-content-light font-medium text-lg">Domains</div>
         </div>
       </div>
@@ -80,11 +80,11 @@
       </div>
       <div class="px-4 py-5 sm:p-6 flex flex-col space-y-2">
         <ul class="space-y-3">
-          <%= for language <- @languages do %>
+          <%= for {locale_str, _locale_info} = locale <- @locales do %>
             <li class="bg-white dark:bg-base-dark dark:border-accent-dark dark:border shadow overflow-hidden rounded-md px-6 py-4">
               <div class="flex flex-row items-center justify-between">
-                <div class="font-semibold text-lg text-slate-600 dark:text-content-light mr-6"><%= language.native_name %></div>
-                <div class="font-semibold text-lg text-primary dark:text-accent-dark"><%= translation_progress(language) %>%</div>
+                <div class="font-semibold text-lg text-slate-600 dark:text-content-light mr-6"><%= show_locale_label(locale)  %></div>
+                <div class="font-semibold text-lg text-primary dark:text-accent-dark"><%= show_translation_progress(@locales_translation_progress, locale_str) %>%</div>
               </div>
             </li>
           <% end %>
