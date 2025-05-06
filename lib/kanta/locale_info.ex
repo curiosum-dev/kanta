@@ -8,12 +8,16 @@ defmodule Kanta.LocaleInfo do
   - `flag_colors`: A list of hex color strings for the flag (List(String)), or `nil`.
   """
   @type t :: %__MODULE__{
+          locale: String.t(),
           language_name: String.t() | nil,
+          language_native_name: String.t() | nil,
           unicode_flag: String.t() | nil,
           flag_colors: list(String.t()) | nil
         }
 
-  defstruct language_name: nil,
+  defstruct locale: nil,
+            language_name: nil,
+            language_native_name: nil,
             unicode_flag: nil,
             flag_colors: nil
 
