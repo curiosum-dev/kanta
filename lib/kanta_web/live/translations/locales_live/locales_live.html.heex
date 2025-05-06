@@ -6,26 +6,26 @@
   </div>
 </div>
 <div class="grid grid-cols-1 gap-4 justify-start items-start mt-8">
-  <%= for locale <- @locales do %>
+  <%= for %LocaleInfo{} = locale_info <- @locales do %>
     <div class="col-span-1 my-1 w-full">
       <div>
         <div class="w-full">
           <div class="w-full bg-white dark:bg-stone-900 dark:border dark:border-accent-dark transition-all hover:bg-slate-100 overflow-hidden shadow rounded-lg items-center cursor-pointer relative">
-            <.link navigate={dashboard_path(@socket, "/locales/#{locale.id}/translations")}>
+            <.link navigate={dashboard_path(@socket, "/locales/#{locale_info.locale}/translations")}>
               <div class="flex flex-row justify-start px-4 py-5 sm:p-6 font-medium text-md text-slate-700">
                 <div class="relative w-12 h-12">
-                  <div class="absolute inset-0 w-12 h-12 border border-slate-400 dark:border-base-dark rounded-full" style={generate_locale_gradient(locale)} />
+                  <div class="absolute inset-0 w-12 h-12 border border-slate-400 dark:border-base-dark rounded-full" style={generate_locale_gradient(locale_info)} />
                   <div class="absolute inset-0 mx-auto my-auto w-10 h-10 p-4 bg-white dark:bg-base-dark text-primary-dark dark:text-accent-dark rounded-full flex justify-center items-center text-sm font-bold uppercase">
-                    <%= locale.iso639_code %>
+                    <%= locale_info.locale %>
                   </div>
                 </div>
                 <div class="flex flex-col space-y-2 ml-6">
-                  <div class="flex items-center text-md font-semibold text-slate-600 dark:text-content-light"><%= locale.native_name %></div>
-                  <div class="flex items-center text-sm font-semibold text-slate-400 dark:text-content-light/70"><%= locale.name %></div>
+                  <div class="flex items-center text-md font-semibold text-slate-600 dark:text-content-light"><%= locale_info.language_native_name %></div>
+                  <div class="flex items-center text-sm font-semibold text-slate-400 dark:text-content-light/70"><%= locale_info.language_name %></div>
                 </div>
               </div>
             </.link>
-            <.live_component :if={module_exists?(Kanta.DeepL.Plugin.TranslateAllComponent)} module={Kanta.DeepL.Plugin.TranslateAllComponent} locale_id={locale.id} locale_code={locale.iso639_code} id={"translate-all-button-#{locale.iso639_code}"} />
+            <!-- <.live_component :if={module_exists?(Kanta.DeepL.Plugin.TranslateAllComponent)} module={Kanta.DeepL.Plugin.TranslateAllComponent} locale_id={locale.id} locale_code={locale.iso639_code} id={"translate-all-button-#{locale.iso639_code}"} /> -->
           </div>
         </div>
       </div>
