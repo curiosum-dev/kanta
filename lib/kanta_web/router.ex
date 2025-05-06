@@ -46,11 +46,9 @@ defmodule KantaWeb.Router do
               scope "/locales", Translations do
                 live "/", LocalesLive, :index, route_opts
 
-                scope "/:locale_id" do
-                  scope "/translations" do
-                    live "/", TranslationsLive, :index, route_opts
-                    live "/:message_id", TranslationFormLive, :show, route_opts
-                  end
+                scope "/:locale_id/translations" do
+                  live "/", TranslationsLive, :index, route_opts
+                  live "/:message_id", TranslationFormLive, :show, route_opts
                 end
               end
             end
