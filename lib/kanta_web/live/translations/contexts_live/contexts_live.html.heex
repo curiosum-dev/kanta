@@ -9,6 +9,33 @@
   </div>
 </div>
 <div class="mt-4">
-  <.live_component module={ContextsTable} id="contexts-table" contexts={@contexts} />
+
+  <div>
+       <.data_table
+         id="contexts-table"
+         rows={@contexts}
+         row_click={fn context -> JS.push("edit_context", value: %{id: context.id}) end}
+       >
+         <:col :let={context} label="Name">
+           <div class="text-sm font-medium text-primary-dark dark:text-accent-dark truncate">
+             <%= String.slice(context.name, 0..30) %>
+           </div>
+         </:col>
+
+         <:col :let={context} label="Description">
+           <div class="text-sm font-medium text-primary-dark dark:text-accent-dark truncate">
+             <%= context.description && String.slice(context.description, 0..30) %>
+           </div>
+         </:col>
+
+         <:col :let={context} label="Color">
+           <div class="text-sm font-medium text-primary-dark dark:text-accent-dark truncate">
+             <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary text-white font-bold" style={"background-color:#{context.color};"}>
+               <%= context.color %>
+             </span>
+           </div>
+         </:col>
+       </.data_table>
+     </div>
   <Pagination.render metadata={%{page_number: @current_page, total_pages: @total_pages }} on_page_change="page_changed" />
 </div>

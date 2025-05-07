@@ -9,6 +9,33 @@
   </div>
 </div>
 <div class="mt-4">
-  <.live_component module={DomainsTable} id="domains-table" domains={@domains} />
+  <%!-- <.live_component module={DomainsTable} id="domains-table" domains={@domains} /> --%>
+  <div>
+    <.data_table
+      id="domains-table"
+      rows={@domains}
+      row_click={fn domain -> JS.push("edit_domain", value: %{id: domain.id}) end}
+    >
+      <:col :let={domain} label="Name">
+        <div class="text-sm font-medium text-primary-dark dark:text-accent-dark truncate">
+          <%= String.slice(domain.name, 0..30) %>
+        </div>
+      </:col>
+
+      <:col :let={domain} label="Description">
+        <div class="text-sm font-medium text-primary-dark dark:text-accent-dark truncate">
+          <%= domain.description && String.slice(domain.description, 0..30) %>
+        </div>
+      </:col>
+
+      <:col :let={domain} label="Color">
+        <div class="text-sm font-medium text-primary-dark dark:text-accent-dark truncate">
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary text-white font-bold" style={"background-color:#{domain.color};"}>
+            <%= domain.color %>
+          </span>
+        </div>
+      </:col>
+    </.data_table>
+  </div>
   <Pagination.render metadata={%{page_number: @current_page, total_pages: @total_pages }} on_page_change="page_changed" />
 </div>

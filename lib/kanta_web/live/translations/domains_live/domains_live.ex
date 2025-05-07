@@ -1,10 +1,10 @@
 defmodule KantaWeb.Translations.DomainsLive do
-  alias Kanta.DataAccess.PaginationMeta
   use KantaWeb, :live_view
 
-  alias KantaWeb.Translations.DomainsTable
-
+  alias Kanta.DataAccess.PaginationMeta
   alias KantaWeb.Components.Shared.Pagination
+  alias Phoenix.LiveView.JS
+  import KantaWeb.Components.Shared.Table
 
   @page_size 50
 
@@ -33,6 +33,10 @@ defmodule KantaWeb.Translations.DomainsLive do
       assign_domains(socket, %{pagination: pagination_params(page_number)})
 
     {:noreply, socket}
+  end
+
+  def handle_event("edit_domain", %{"id" => id}, socket) do
+    {:noreply, push_navigate(socket, to: dashboard_path(socket, "/domains/#{id}"))}
   end
 
   defp assign_domains(socket, list_params) do

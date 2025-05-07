@@ -1,11 +1,11 @@
 defmodule KantaWeb.Translations.ContextsLive do
-  alias Kanta.DataAccess.PaginationMeta
-  alias KantaWeb.Translations.ContextsTable
   use KantaWeb, :live_view
+  alias Kanta.DataAccess.PaginationMeta
+  alias KantaWeb.Components.Shared.Pagination
+  alias Phoenix.LiveView.JS
+  import KantaWeb.Components.Shared.Table
 
   @page_size 50
-
-  alias KantaWeb.Components.Shared.Pagination
 
   def mount(_params, session, socket) do
     data_access = session["data_access"]
@@ -30,6 +30,10 @@ defmodule KantaWeb.Translations.ContextsLive do
       assign_contexts(socket, %{pagination: pagination_params(page_number)})
 
     {:noreply, socket}
+  end
+
+  def handle_event("edit_context", %{"id" => id}, socket) do
+    {:noreply, push_navigate(socket, to: dashboard_path(socket, "/contexts/#{id}"))}
   end
 
   defp assign_contexts(socket, list_params) do
