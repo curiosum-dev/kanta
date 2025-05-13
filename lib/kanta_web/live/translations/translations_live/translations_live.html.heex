@@ -17,7 +17,7 @@
         <li>
           <div class="flex items-center">
             <Icons.chevron_right class="flex-shrink-0 h-5 w-5 text-slate-400" aria-hidden="true" />
-            <.link navigate="#" aria-current="page" class="ml-4 text-sm font-medium text-slate-500 dark:text-content-light hover:text-slate-700 dark:hover:text-white"><%= @locale.native_name %></.link>
+            <.link navigate="#" aria-current="page" class="ml-4 text-sm font-medium text-slate-500 dark:text-content-light hover:text-slate-700 dark:hover:text-white"><%= @locale_info.language_native_name %></.link>
           </div>
         </li>
       </ol>
@@ -26,13 +26,78 @@
   <div class="mt-2 md:flex md:items-center md:justify-between">
     <div class="flex-1 min-w-0">
       <h2 class="text-2xl font-bold leading-7 text-primary-dark dark:text-accent-dark sm:text-3xl sm:truncate">
-        <%= @locale.native_name %>
+        <%= @locale_info.language_native_name %>
       </h2>
     </div>
   </div>
 </div>
 <div class="mt-4">
-  <.live_component module={FiltersBar} filters={@filters} not_translated_default={@not_translated_default} application_sources_empty?={@application_sources_empty?} locale_id={@locale.id} id="filters-bar" />
-  <.live_component module={MessagesTable} messages={@messages} filters={@filters} locale={@locale} application_sources_empty?={@application_sources_empty?} id="messages-table" />
-  <Pagination.render metadata={@messages_metadata} on_page_change="page_changed" />
+<.data_table
+  id="messages-table"
+  rows={@translations}
+  row_click={fn message -> JS.push("edit_message", value: %{id: message.id, type: message.type}) end}
+>
+  <:col :let={translation} label="Message ID">
+    <div class="text-md font-medium text-primary-dark dark:text-accent-dark truncate">
+      <%= print_msgid(translation.msgid) %>
+    </div>
+  </:col>
+
+  <:col :let={translation} label="PO Translation">
+    <div class={[
+      "text-md font-medium tracking-wide",
+      (if (translation.msgstr_origin && translation.msgstr_origin == ""), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500")
+    ]}>
+      <%= print_translation(translation.msgstr_origin) %>
+    </div>
+  </:col>
+  <:col :let={translation} label="Kanta Translation">
+    <div class={[
+      "text-md font-medium tracking-wide",
+      (if (translation.msgstr && translation.msgstr == ""), do: "text-green-700 dark:text-green-500", else: "text-red-700 dark:text-red-500")
+    ]}>
+      <%= print_translation(translation.msgstr) %>
+    </div>
+  </:col>
+
+  <:col :let={%{domain: domain}} label="Domain">
+  <div class="text-sm font-medium text-primary-dark truncate">
+    <span class={
+    [
+      "inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark",
+      is_nil(domain) && "text-primary-dark dark:text-accent-dark",
+      !is_nil(domain) && "text-white",
+      "font-bold"]
+    }
+    style={"background-color: #{lookup_domain_color(domain, @domain_colors)}"}>
+      <%= print_domain(domain) %>
+    </span>
+  </div>
+  </:col>
+  <:col :let={%{msgctxt: msgctxt}} label="Context">
+  <div class="text-sm font-medium text-primary-dark truncate">
+    <span class={
+    [
+      "inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark",
+      "text-white",
+      "font-bold"]
+    }
+    style={"background-color: #{lookup_context_color(msgctxt, @context_colors)}"}>
+      <%= print_context(msgctxt) %>
+    </span>
+  </div>
+  </:col>
+
+  <:col :let={translation} label="Type">
+  <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark text-primary-dark dark:text-accent-dark font-bold">
+
+    <%= print_translation_type(translation) %>
+  </span>
+  </:col>
+
+
+  </.data_table>
+  <%!-- <.live_component module={FiltersBar} filters={@filters} not_translated_default={@not_translated_default} application_sources_empty?={@application_sources_empty?} locale_id={@locale.id} id="filters-bar" /> --%>
+  <%!-- <.live_component module={MessagesTable} messages={@messages} filters={@filters} locale={@locale} application_sources_empty?={@application_sources_empty?} id="messages-table" /> --%>
+  <Pagination.render metadata={@pagination_meta} on_page_change="page_changed" />
 </div>
