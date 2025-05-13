@@ -11,6 +11,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
   alias Kanta.DataAccess.Adapter.Ecto.Plural, as: PluralSchema
   alias Kanta.DataAccess.Adapter.Ecto.Metadata.Domain, as: DomainSchema
   alias Kanta.DataAccess.Adapter.Ecto.Metadata.Context, as: ContextSchema
+  alias Kanta.DataAccess.Adapter.Ecto.Converter
 
   import Kanta.DataAccess, only: [is_resource: 1]
 
@@ -32,7 +33,10 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
       end
 
       @impl Kanta.DataAccess
+      def list_translations(params, opts \\ []),
+        do: EctoAdapter.do_list_translations(@repo, params, opts)
 
+      @impl Kanta.DataAccess
       def list_resources(resource_module, params, opts \\ [])
           when is_resource(resource_module),
           do: EctoAdapter.do_list(@repo, resource_module, params, opts)
@@ -95,15 +99,82 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
   end
 
   @doc false
+  def do_list_translations(repo, params, _opts) do
+    flop_params = translate_to_flop_params(params)
+    flop = Flop.validate!(flop_params)
 
-  def do_list(repo, model, params, opts) when is_resource(model) do
+    singular_sub =
+      from s in SingularSchema,
+        select: %{
+          type: "singular",
+          id: s.id,
+          msgid: s.msgid,
+          domain: s.domain,
+          msgctxt: s.msgctxt,
+          locale: s.locale
+        }
+
+    plural_sub =
+      from p in PluralSchema,
+        select: %{
+          type: "plural",
+          id: p.id,
+          msgid: p.msgid,
+          domain: p.domain,
+          msgctxt: p.msgctxt,
+          locale: p.locale
+        }
+
+    union_sub =
+      union(singular_sub, ^plural_sub)
+      |> subquery()
+
+    {:ok, {results, flop_meta}} = Flop.validate_and_run(union_sub, flop, repo: repo)
+
+    singular_ids = for result <- results, result.type == "singular", do: result.id
+
+    plural_ids = for result <- results, result.type == "plural", do: result.id
+
+    singulars = from(s in SingularSchema, where: s.id in ^singular_ids) |> repo.all()
+    plurals = from(p in PluralSchema, where: p.id in ^plural_ids) |> repo.all()
+
+    results =
+      Enum.map(results, fn %{type: type, id: id} ->
+        search_list =
+          case type do
+            "singular" -> singulars
+            "plural" -> plurals
+          end
+
+        result = Enum.find(search_list, fn %{id: result_id} -> result_id == id end)
+
+        case result do
+          %SingularSchema{} -> Converter.to_singular(result)
+          %PluralSchema{} -> Converter.to_plural(result)
+          # Fallback, though this shouldn't happen
+          _ -> result
+        end
+      end)
+
+    meta = flop_meta_to_pagination_meta(flop_meta)
+    {:ok, {results, meta}}
+  end
+
+  @doc false
+  def do_list(repo, model, params, _opts) when is_resource(model) do
     schema = model_to_schema(model)
     flop_params = translate_to_flop_params(params)
-    backend_opts = [preload: opts[:preload] || []]
 
     with {:ok, {results, flop_meta}} <-
-           Flop.validate_and_run(schema, flop_params, repo: repo, backend_opts: backend_opts) do
-      {:ok, {results, flop_meta_to_pagination_meta(flop_meta)}}
+           Flop.validate_and_run(schema, flop_params, repo: repo) do
+      converted_results =
+        case model do
+          :singular -> Converter.to_singular(results)
+          :plural -> Converter.to_plural(results)
+          _ -> results
+        end
+
+      {:ok, {converted_results, flop_meta_to_pagination_meta(flop_meta)}}
     else
       # Propagate Flop/Repo errors
       {:error, error} ->
@@ -120,8 +191,18 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
     try do
       case repo.one(query) do
-        nil -> {:ok, nil}
-        struct -> {:ok, struct}
+        nil ->
+          {:ok, nil}
+
+        struct ->
+          converted =
+            case model do
+              :singular -> Converter.to_singular(struct)
+              :plural -> Converter.to_plural(struct)
+              _ -> struct
+            end
+
+          {:ok, converted}
       end
     rescue
       # Catch any runtime error during the Repo operation
@@ -130,14 +211,16 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
   end
 
   @doc false
-
   def do_create(repo, :singular, attrs, _opts) do
     case apply_changeset(SingularSchema, :create, %{}, attrs) do
       {:ok, %Ecto.Changeset{valid?: true} = changeset} ->
-        repo.insert(changeset,
-          on_conflict: {:replace, [SingularSchema.msgstr_origin()]},
-          conflict_target: SingularSchema.unique_fields()
-        )
+        case repo.insert(changeset,
+               on_conflict: {:replace, [SingularSchema.msgstr_origin()]},
+               conflict_target: SingularSchema.unique_fields()
+             ) do
+          {:ok, struct} -> {:ok, Converter.to_singular(struct)}
+          error -> error
+        end
 
       {:ok, %Ecto.Changeset{valid?: false} = changeset} ->
         {:error, changeset}
@@ -150,10 +233,13 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
   def do_create(repo, :plural, attrs, _opts) do
     case apply_changeset(PluralSchema, :create, %{}, attrs) do
       {:ok, %Ecto.Changeset{valid?: true} = changeset} ->
-        repo.insert(changeset,
-          on_conflict: {:replace, [PluralSchema.msgstr_origin()]},
-          conflict_target: PluralSchema.unique_fields()
-        )
+        case repo.insert(changeset,
+               on_conflict: {:replace, [PluralSchema.msgstr_origin()]},
+               conflict_target: PluralSchema.unique_fields()
+             ) do
+          {:ok, struct} -> {:ok, Converter.to_plural(struct)}
+          error -> error
+        end
 
       {:ok, %Ecto.Changeset{valid?: false} = changeset} ->
         {:error, changeset}
@@ -167,9 +253,27 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
     schema = model_to_schema(model)
 
     case apply_changeset(schema, :create, %{}, attrs) do
-      {:ok, %Ecto.Changeset{valid?: true} = changeset} -> repo.insert(changeset)
-      {:ok, %Ecto.Changeset{valid?: false} = changeset} -> {:error, changeset}
-      {:error, reason} -> {:error, reason}
+      {:ok, %Ecto.Changeset{valid?: true} = changeset} ->
+        case repo.insert(changeset) do
+          {:ok, struct} ->
+            converted =
+              case model do
+                :singular -> Converter.to_singular(struct)
+                :plural -> Converter.to_plural(struct)
+                _ -> struct
+              end
+
+            {:ok, converted}
+
+          error ->
+            error
+        end
+
+      {:ok, %Ecto.Changeset{valid?: false} = changeset} ->
+        {:error, changeset}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -183,9 +287,27 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
       struct ->
         case apply_changeset(schema, :update, struct, attrs) do
-          {:ok, %Ecto.Changeset{valid?: true} = changeset} -> repo.update(changeset)
-          {:ok, %Ecto.Changeset{valid?: false} = changeset} -> {:error, changeset}
-          {:error, reason} -> {:error, reason}
+          {:ok, %Ecto.Changeset{valid?: true} = changeset} ->
+            case repo.update(changeset) do
+              {:ok, updated_struct} ->
+                converted =
+                  case model do
+                    :singular -> Converter.to_singular(updated_struct)
+                    :plural -> Converter.to_plural(updated_struct)
+                    _ -> updated_struct
+                  end
+
+                {:ok, converted}
+
+              error ->
+                error
+            end
+
+          {:ok, %Ecto.Changeset{valid?: false} = changeset} ->
+            {:error, changeset}
+
+          {:error, reason} ->
+            {:error, reason}
         end
     end
   end

@@ -126,7 +126,8 @@ defmodule Kanta.DataAccess do
   alias Kanta.DataAccess.PaginationMeta
 
   # Define resource types using modules rather than atoms
-  @type resource_module :: :singular | :plural | :domain | :context | :application_source
+  @type resource_module ::
+          :singular | :plural | :domain | :context | :application_source
   @type id :: any()
   @type implementation_opts :: keyword()
 
@@ -160,6 +161,12 @@ defmodule Kanta.DataAccess do
 
   # Core generic callbacks using module names
   @callback init(opts :: keyword()) :: :ok
+
+  @callback list_translations(
+              params :: list_params(),
+              opts :: implementation_opts()
+            ) ::
+              list_result()
 
   @callback list_resources(
               resource_module :: resource_module,

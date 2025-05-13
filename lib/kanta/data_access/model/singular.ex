@@ -15,7 +15,8 @@ defmodule Kanta.DataAccess.Model.Singular do
           msgctxt: String.t() | nil,
           msgid: String.t(),
           msgstr: String.t() | nil,
-          msgstr_origin: String.t()
+          msgstr_origin: String.t(),
+          type: :singular
           # Add timestamps if they exist in your schema and you want them here
           # inserted_at: NaiveDateTime.t(),
           # updated_at: NaiveDateTime.t()
