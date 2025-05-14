@@ -123,7 +123,13 @@ defmodule Kanta.DataAccess do
   The returned data includes both the filtered results and pagination metadata to help with navigation.
   """
 
+  alias Ecto.Changeset
   alias Kanta.DataAccess.PaginationMeta
+  alias Kanta.DataAccess.Model.Singular
+  alias Kanta.DataAccess.Model.Plural
+  alias Kanta.DataAccess.Model.Metadata.Domain
+  alias Kanta.DataAccess.Model.Metadata.Context
+  alias Kanta.DataAccess.Model.Metadata.ApplicationSource
 
   # Define resource types using modules rather than atoms
   @type resource_module ::
@@ -152,10 +158,17 @@ defmodule Kanta.DataAccess do
         }
 
   @type resource_result(type) :: {:ok, type} | {:error, any()}
-  @type list_result :: {:ok, {list(map()), pagination_meta()}} | {:error, any()}
-  @type get_result :: {:ok, map() | nil} | {:error, any()}
-  @type command_result :: {:ok, map()} | {:error, any()}
-  @type delete_result :: {:ok, map()} | {:error, :not_found | any()}
+  @type resource_struct ::
+          Singular.t()
+          | Plural.t()
+          | Domain.t()
+          | Context.t()
+          | ApplicationSource.t()
+
+  @type list_result :: {:ok, {list(resource_struct()), pagination_meta()}} | {:error, any()}
+  @type get_result :: {:ok, resource_struct() | nil} | {:error, Changeset.t()}
+  @type command_result :: {:ok, resource_struct()} | {:error, Changeset.t()}
+  @type delete_result :: {:ok, resource_struct()} | {:error, :not_found | any()}
   @type locale :: String.t()
   @type locales :: [String.t()]
 

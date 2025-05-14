@@ -21,7 +21,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Converter do
     * The corresponding domain model map
     * `nil` if the input is nil
   """
-  @spec to_model(struct() | nil) :: map() | nil
+  @spec to_model(struct() | nil) :: SingularModel.t() | PluralModel.t() | struct() | nil
   def to_model(nil), do: nil
   def to_model(%SingularSchema{} = struct), do: to_singular(struct)
   def to_model(%PluralSchema{} = struct), do: to_plural(struct)
@@ -36,7 +36,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Converter do
   ## Returns
     * A list of corresponding domain model maps
   """
-  @spec to_models([struct()]) :: [map()]
+  @spec to_models([struct()]) :: [SingularModel.t() | PluralModel.t() | struct()]
   def to_models(structs) when is_list(structs) do
     Enum.map(structs, &to_model/1)
   end
@@ -52,15 +52,14 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Converter do
   """
   @spec to_singular(%SingularSchema{}) :: SingularModel.t()
   def to_singular(%SingularSchema{} = schema) do
-    %{
+    %SingularModel{
       id: schema.id,
       locale: schema.locale,
       domain: schema.domain,
       msgctxt: schema.msgctxt,
       msgid: schema.msgid,
       msgstr: schema.msgstr,
-      msgstr_origin: schema.msgstr_origin,
-      type: :singular
+      msgstr_origin: schema.msgstr_origin
     }
   end
 
@@ -80,7 +79,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Converter do
   """
   @spec to_plural(%PluralSchema{}) :: PluralModel.t()
   def to_plural(%PluralSchema{} = schema) do
-    %{
+    %PluralModel{
       id: schema.id,
       locale: schema.locale,
       domain: schema.domain,
@@ -89,8 +88,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Converter do
       msgid_plural: schema.msgid_plural,
       plural_index: schema.plural_index,
       msgstr: schema.msgstr,
-      msgstr_origin: schema.msgstr_origin,
-      type: :plural
+      msgstr_origin: schema.msgstr_origin
     }
   end
 

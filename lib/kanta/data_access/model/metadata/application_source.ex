@@ -1,8 +1,19 @@
 defmodule Kanta.DataAccess.Model.Metadata.ApplicationSource do
-  @type t :: %{
-          id: any(),
-          name: String.t(),
-          description: String.t(),
-          color: String.t()
-        }
+  @moduledoc """
+  Represents a source of translations within the application.
+  """
+  
+  defstruct [
+    :id,
+    :name,
+    :description,
+    :color
+  ]
+  
+  @type t :: %__MODULE__{
+    id: any(),
+    name: String.t(),
+    description: String.t(),
+    color: String.t()
+  }
 end
