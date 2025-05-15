@@ -143,11 +143,13 @@ defmodule Kanta.DataAccess do
           %{type: :page, page: pos_integer(), size: pos_integer()}
           | %{type: :offset, offset: non_neg_integer(), limit: pos_integer()}
           | %{}
+  @type list_search :: String.t() | nil
   @type list_params ::
           %{
             optional(:filters) => list_filters(),
             optional(:sort) => list_sort(),
-            optional(:pagination) => list_pagination()
+            optional(:pagination) => list_pagination(),
+            optional(:search_text) => list_search()
           }
           | %{}
   @type pagination_meta :: %PaginationMeta{

@@ -100,8 +100,11 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
   @doc false
   def do_list_translations(repo, params, _opts) do
-    flop_params = translate_to_flop_params(params)
-    flop = Flop.validate!(flop_params)
+    import Ecto.Query
+
+    flop = translate_to_flop_params(params) |> Flop.validate!()
+    search_text = params[:search_text]
+    search_str = "%#{search_text}%"
 
     singular_sub =
       from s in SingularSchema,
@@ -114,6 +117,11 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
           locale: s.locale
         }
 
+    singular_sub =
+      if is_nil(search_text) || search_text == "",
+        do: singular_sub,
+        else: singular_sub |> where([t], like(t.msgid, ^search_str))
+
     plural_sub =
       from p in PluralSchema,
         select: %{
@@ -124,6 +132,13 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
           msgctxt: p.msgctxt,
           locale: p.locale
         }
+
+    plural_sub =
+      if is_nil(search_text) || search_text == "",
+        do: plural_sub,
+        else:
+          plural_sub
+          |> where([t], like(t.msgid, ^search_str) or like(t.msgid_plural, ^search_str))
 
     union_sub =
       union(singular_sub, ^plural_sub)
