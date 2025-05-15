@@ -24,7 +24,6 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Singular do
     # The actual translation
     field :msgstr, :string
     field :msgstr_origin, :string
-    # Uncomment if you add timestamps to your migration
     timestamps()
   end
 

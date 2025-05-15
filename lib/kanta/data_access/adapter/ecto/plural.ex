@@ -24,6 +24,7 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Plural do
     field :plural_index, :integer
     field :msgstr, :string
     field :msgstr_origin, :string
+    field :plural_id, :string
     # Uncomment if you add timestamps
     timestamps()
   end
@@ -37,11 +38,21 @@ defmodule Kanta.DataAccess.Adapter.Ecto.Plural do
     :msgid_plural,
     :plural_index,
     :msgstr,
-    :msgstr_origin
+    :msgstr_origin,
+    :plural_id
   ]
-  @required_create_fields [:locale, :domain, :msgid, :msgid_plural, :plural_index]
+  @required_create_fields [:locale, :domain, :msgid, :msgid_plural, :plural_index, :plural_id]
   @unique_key_fields [:locale, :domain, :msgctxt, :msgid, :msgid_plural, :plural_index]
-  @update_fields [:locale, :domain, :msgid, :msgid_plural, :plural_index, :msgstr]
+  @update_fields [
+    :locale,
+    :domain,
+    :msgid,
+    :msgid_plural,
+    :plural_index,
+    :msgstr,
+    :msgstr_origin,
+    :plural_id
+  ]
 
   def msgstr_origin(), do: :msgstr_origin
   def msgstr(), do: :msgstr

@@ -5,6 +5,7 @@ defmodule Kanta.Services.POExtractor do
   Provides both sequential and parallel (Flow-based) methods for processing.
   """
 
+  alias Ecto.UUID
   alias Expo.Messages
   alias Expo.Message
   alias Expo.PO
@@ -249,7 +250,8 @@ defmodule Kanta.Services.POExtractor do
     msgid = IO.iodata_to_binary(message.msgid)
     msgid_plural = IO.iodata_to_binary(message.msgid_plural)
     msgctxt = message.msgctxt && IO.iodata_to_binary(message.msgctxt)
-
+    # Create unique id for grooping plural translations
+    plural_id = UUID.generate()
     # Process each plural form
     Enum.reduce(message.msgstr, result, fn {plural_index, plural_str}, current_result ->
       plural_str = IO.iodata_to_binary(plural_str)
@@ -264,7 +266,8 @@ defmodule Kanta.Services.POExtractor do
                msgid_plural: msgid_plural,
                plural_index: plural_index,
                msgstr: nil,
-               msgstr_origin: plural_str
+               msgstr_origin: plural_str,
+               plural_id: plural_id
              },
              []
            ) do

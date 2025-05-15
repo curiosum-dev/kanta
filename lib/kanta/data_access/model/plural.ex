@@ -17,7 +17,8 @@ defmodule Kanta.DataAccess.Model.Plural do
     :msgid_plural,
     :plural_index,
     :msgstr,
-    :msgstr_origin
+    :msgstr_origin,
+    :plural_id
     # Add timestamps if needed
   ]
 
@@ -30,6 +31,7 @@ defmodule Kanta.DataAccess.Model.Plural do
           msgid_plural: String.t(),
           plural_index: non_neg_integer(),
           msgstr: String.t() | nil,
-          msgstr_origin: String.t()
+          msgstr_origin: String.t(),
+          plural_id: String.t()
         }
 end

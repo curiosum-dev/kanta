@@ -145,6 +145,7 @@ defmodule Kanta.Migrations.Common.V1Denormalized do
       add :msgstr, :text, null: true
       add :plural_index, :integer, null: false
       add :msgstr_origin, :string, null: true
+      add :plural_id, :string, null: false
       timestamps()
     end
 
