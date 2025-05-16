@@ -29,7 +29,7 @@ defmodule KantaWeb.Components.Shared.Pagination do
           metadata: %{page_number: p_num, total_pages: total_pages}
         } = assigns
       )
-      when is_integer(p_num) and p_num > 0 and is_integer(total_pages) and total_pages > 0 do
+      when is_integer(p_num) and p_num > 0 and is_integer(total_pages) and total_pages >= 0 do
     assigns = assign(assigns, current_page: p_num, total_pages: total_pages)
 
     ~H"""
