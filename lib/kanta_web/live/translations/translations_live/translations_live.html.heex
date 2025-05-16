@@ -47,18 +47,20 @@
     <:col :let={translation} label="PO Translation">
       <div class={[
         "text-md font-medium tracking-wide",
-        (translation.msgstr_origin == "" || is_nil(translation.msgstr_origin)) && "text-red-700 dark:text-red-500" || "text-green-700 dark:text-green-500"
+        "text-green-700 dark:text-green-500",
+        translated?(translation) && "text-red-700 dark:text-red-500",
       ]}>
-        <%= print_translation(translation.msgstr_origin) %>
+        <%= print_original_translation(translation) %>
       </div>
     </:col>
 
     <:col :let={translation} label="Kanta Translation">
       <div class={[
         "text-md font-medium tracking-wide",
-        (translation.msgstr == "" || is_nil(translation.msgstr)) && "text-red-700 dark:text-red-500" || "text-green-700 dark:text-green-500"
+        "text-green-700 dark:text-green-500",
+        translated?(translation) && "text-red-700 dark:text-red-500"
       ]}>
-        <%= print_translation(translation.msgstr) %>
+        <%= print_kanta_translation(translation) %>
       </div>
     </:col>
 
@@ -70,7 +72,7 @@
           !is_nil(domain) && "text-white",
           "font-bold"
         ]}
-        style={"background-color: #{lookup_domain_color(domain, @domain_colors)}"}>
+        style={"background-color: #{lookup_domain_color(domain, @domain_colors ) }"}>
           <%= print_domain(domain) %>
         </span>
       </div>

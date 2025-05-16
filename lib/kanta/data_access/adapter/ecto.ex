@@ -104,7 +104,29 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
 
     flop = translate_to_flop_params(params) |> Flop.validate!()
     search_text = params[:search_text]
+
+    # Build queries with proper filtering
+    union_sub = build_translation_queries(search_text)
+
+    # Combine the queries
+
+    # Run the query with pagination
+    {:ok, {results, flop_meta}} = Flop.validate_and_run(union_sub, flop, repo: repo)
+    # Fetch full records for the results
+    {singulars, plurals} = fetch_translation_records(repo, results)
+    # Convert the results to the proper format
+    results = convert_translation_results(results, singulars, plurals)
+
+    # Return with pagination metadata
+    meta = flop_meta_to_pagination_meta(flop_meta)
+    {:ok, {results, meta}}
+  end
+
+  # Helper functions for do_list_translations
+
+  defp build_translation_queries(search_text) do
     search_str = "%#{search_text}%"
+    empty_search = is_nil(search_text) || search_text == ""
 
     singular_sub =
       from s in SingularSchema,
@@ -114,65 +136,69 @@ defmodule Kanta.DataAccess.Adapter.Ecto do
           msgid: s.msgid,
           domain: s.domain,
           msgctxt: s.msgctxt,
-          locale: s.locale
+          locale: s.locale,
+          plural_id: ""
         }
 
     singular_sub =
-      if is_nil(search_text) || search_text == "",
+      if empty_search,
         do: singular_sub,
         else: singular_sub |> where([t], like(t.msgid, ^search_str))
 
     plural_sub =
       from p in PluralSchema,
+        distinct: true,
         select: %{
           type: "plural",
-          id: p.id,
+          id: -1,
           msgid: p.msgid,
           domain: p.domain,
           msgctxt: p.msgctxt,
-          locale: p.locale
+          locale: p.locale,
+          plural_id: p.plural_id
         }
 
+    # For plurals we search in both msgid and msgid plural
     plural_sub =
-      if is_nil(search_text) || search_text == "",
+      if empty_search,
         do: plural_sub,
         else:
           plural_sub
           |> where([t], like(t.msgid, ^search_str) or like(t.msgid_plural, ^search_str))
 
-    union_sub =
-      union(singular_sub, ^plural_sub)
-      |> subquery()
+    _union_sub = union(singular_sub, ^plural_sub) |> subquery()
+  end
 
-    {:ok, {results, flop_meta}} = Flop.validate_and_run(union_sub, flop, repo: repo)
+  defp fetch_translation_records(repo, results) do
+    singular_ids =
+      results
+      |> Enum.filter(&(&1.type == "singular"))
+      |> Enum.map(& &1.id)
 
-    singular_ids = for result <- results, result.type == "singular", do: result.id
-
-    plural_ids = for result <- results, result.type == "plural", do: result.id
+    plural_ids =
+      results
+      |> Enum.filter(&(&1.type == "plural"))
+      |> Enum.map(& &1.plural_id)
+      |> Enum.uniq()
 
     singulars = from(s in SingularSchema, where: s.id in ^singular_ids) |> repo.all()
-    plurals = from(p in PluralSchema, where: p.id in ^plural_ids) |> repo.all()
+    plurals = from(p in PluralSchema, where: p.plural_id in ^plural_ids) |> repo.all()
 
-    results =
-      Enum.map(results, fn %{type: type, id: id} ->
-        search_list =
-          case type do
-            "singular" -> singulars
-            "plural" -> plurals
-          end
+    {singulars, plurals}
+  end
 
-        result = Enum.find(search_list, fn %{id: result_id} -> result_id == id end)
+  defp convert_translation_results(results, singulars, plurals) do
+    Enum.map(results, fn
+      %{type: "singular", id: id} ->
+        result = Enum.find(singulars, fn %{id: result_id} -> result_id == id end)
+        Converter.to_singular(result)
 
-        case result do
-          %SingularSchema{} -> Converter.to_singular(result)
-          %PluralSchema{} -> Converter.to_plural(result)
-          # Fallback, though this shouldn't happen
-          _ -> result
-        end
-      end)
+      %{type: "plural", plural_id: plural_group_id} ->
+        plural_translations =
+          for plural = %PluralSchema{plural_id: ^plural_group_id} <- plurals, do: plural
 
-    meta = flop_meta_to_pagination_meta(flop_meta)
-    {:ok, {results, meta}}
+        Converter.to_plurals(plural_translations)
+    end)
   end
 
   @doc false
