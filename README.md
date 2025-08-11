@@ -192,9 +192,9 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
 
 ## Kanta UI
 
-Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro. 
+Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
 
-```elixir 
+```elixir
 import KantaWeb.Router
 
 scope "/" do
@@ -238,7 +238,7 @@ Not all of us are polyglots, and sometimes we need the help of machine translati
 
 ```elixir
 # mix.exs
-defp deps do 
+defp deps do
   ...
   {:kanta_deep_l_plugin, "~> 0.1.1"}
 end
@@ -253,27 +253,27 @@ config :kanta,
   ]
 ```
 
-## KantaSync 
+## KantaSync
 
 The [KantaSync plugin](https://github.com/curiosum-dev/kanta_sync_plugin) allows you to synchronize translations between your production and staging/dev environments. It ensures that any changes made to translations in one are reflected in the others, helping you maintain consistency across different stages of development.
 
-```elixir 
-# mix.exs 
-defp deps do 
+```elixir
+# mix.exs
+defp deps do
   ...
   {:kanta_sync_plugin, "~> 0.1.0"}
 end
 ```
 
-You need to have Kanta API configured by using kanta_api macro. 
+You need to have Kanta API configured by using kanta_api macro.
 
 ```elixir
-# router.ex 
+# router.ex
 import KantaWeb.Router
 
-scope "/" do 
+scope "/" do
   kanta_api("/kanta-api")
-end 
+end
 ```
 
 ### Authorization
@@ -338,6 +338,13 @@ Don't forget to give the project a star! Thanks again!
 
 <!-- LICENSE -->
 
+## Community
+
+- **Slack channel**: [Elixir Slack / #kanta](https://elixir-lang.slack.com/archives/C099BMEN5BP)
+- **Issues**: [GitHub Issues](https://github.com/curiosum-dev/kanta/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/curiosum-dev/kanta/discussions)
+- **Blog**: [Curiosum Blog](https://curiosum.com/blog?search=kanta)
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
@@ -352,8 +359,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Michał Buszkiewicz - michal@curiosum.com
 
-Krzysztof Janiec - krzysztof.janiec@curiosum.com
+Maksymilian Jodłowski - maksymilian.jodlowski@curiosum.com
 
 Artur Ziętkiewicz - artur.zietkiewicz@curiosum.com
+
+Jakub Lambrych - jakub.lambrych@curiosum.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
