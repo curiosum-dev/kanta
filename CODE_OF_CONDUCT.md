@@ -6,11 +6,11 @@ Contact: [contact@curiosum.com][0]
 
 As contributors and maintainers of this project, we are committed to providing a friendly, safe and welcoming environment for all, regardless of age, disability, gender, nationality, race, religion, sexuality, or similar personal characteristic.
 
-The goal of the Code of Conduct is to specify a baseline standard of behavior so that people with different social values and communication styles can talk about Elixir effectively, productively, and respectfully, even in face of disagreements. The Code of Conduct also provides a mechanism for resolving conflicts in the community when they arise.
+The goal of the Code of Conduct is to specify a baseline standard of behavior so that people with different social values and communication styles can talk about Kanta effectively, productively, and respectfully, even in face of disagreements. The Code of Conduct also provides a mechanism for resolving conflicts in the community when they arise.
 
 ## Our Values
 
-These are the values Elixir developers should aspire to:
+These are the values Kanta developers should aspire to:
 
   * Be friendly and welcoming
   * Be kind
@@ -41,15 +41,13 @@ The following actions are explicitly forbidden:
 
 ## Where does the Code of Conduct apply?
 
-If you participate in or contribute to the Elixir ecosystem in any way, you are encouraged to follow the Code of Conduct while doing so.
+If you contribute to or support Kanta in any way, you are encouraged to follow the Code of Conduct while doing so.
 
-Explicit enforcement of the Code of Conduct applies to the official mediums operated by the Elixir project:
+Explicit enforcement of the Code of Conduct applies to the official mediums operated by the Kanta project:
 
 * The official [Kanta][1] GitHub project and code reviews.
 * The official [GitHub Discussions][2] for Kanta.
 * The official [Kanta channel][3] in Elixir's Slack workspace.
-
-Other Elixir activities (such as conferences, meetups, and unofficial forums) are encouraged to adopt this Code of Conduct. Such groups must provide their own contact information.
 
 Project maintainers may block, remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct.
 
