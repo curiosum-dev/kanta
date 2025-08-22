@@ -31,14 +31,28 @@ defmodule KantaWeb do
   end
 
   def controller do
-    quote do
-      use Phoenix.Controller, formats: [:html, :json]
+    {_, _, phoenix_version, _, _, _, _, _} = Mix.Dep.Lock.read()[:phoenix]
 
-      import Plug.Conn
-      alias KantaWeb.Router.Helpers, as: Routes
-      unquote(verified_routes())
+    if String.starts_with?(phoenix_version, "1.7") do
+      # Phoenix 1.7
+      quote do
+        use Phoenix.Controller, namespace: KantaWeb
 
-      plug :put_layout, html: KantaWeb.LayoutView
+        import Plug.Conn
+        alias KantaWeb.Router.Helpers, as: Routes
+        unquote(verified_routes())
+      end
+    else
+      # Phoenix 1.8+
+      quote do
+        use Phoenix.Controller, formats: [:html, :json]
+
+        import Plug.Conn
+        alias KantaWeb.Router.Helpers, as: Routes
+        unquote(verified_routes())
+
+        plug :put_layout, html: KantaWeb.LayoutView
+      end
     end
   end
 
