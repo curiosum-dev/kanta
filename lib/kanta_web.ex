@@ -32,11 +32,13 @@ defmodule KantaWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: KantaWeb
+      use Phoenix.Controller, formats: [:html, :json]
 
       import Plug.Conn
       alias KantaWeb.Router.Helpers, as: Routes
       unquote(verified_routes())
+
+      plug :put_layout, html: KantaWeb.LayoutView
     end
   end
 
