@@ -6,6 +6,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+## [v0.4.2]
+### Fixed
+- Fix Dialyzer errors related to Phoenix version detection (#122)
+- Replace Mix.Dep.Lock.read/0 with Application.spec/2 for better static analysis compatibility
+- Add .dialyzer_ignore.exs to handle Phoenix dependency warnings
+
+### Added
 - Add Phoenix 1.8 and Phoenix LiveView 1.x compatibility (#122)
 
 ## [v0.4.1]

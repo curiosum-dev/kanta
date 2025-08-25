@@ -103,7 +103,7 @@ _Note: Official documentation for Kanta library is [available on hexdocs][hexdoc
 ## Prerequisites
 
 - Elixir (tested on 1.18.4)
-- Phoenix (tested on 1.8.0 and LiveView 1.1.8)
+- Phoenix (tested on 1.7.x and 1.8.x with LiveView 1.x)
 - Ecto SQL (tested on 3.13)
 
 ## Installation
