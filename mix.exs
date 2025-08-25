@@ -82,7 +82,8 @@ defmodule Kanta.MixProject do
   defp dialyzer do
     [
       plt_file:
-        {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"}
+        {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"},
+      ignore_warnings: ".dialyzer_ignore.exs"
     ]
   end
 end

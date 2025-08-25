@@ -31,7 +31,12 @@ defmodule KantaWeb do
   end
 
   def controller do
-    {_, _, phoenix_version, _, _, _, _, _} = Mix.Dep.Lock.read()[:phoenix]
+    phoenix_version =
+      case Application.spec(:phoenix, :vsn) do
+        vsn when is_list(vsn) -> List.to_string(vsn)
+        # default to 1.8 if version can't be determined
+        _ -> "1.8"
+      end
 
     if String.starts_with?(phoenix_version, "1.7") do
       # Phoenix 1.7
