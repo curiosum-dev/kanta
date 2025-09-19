@@ -6,7 +6,7 @@ defmodule Kanta.MixProject do
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
       package: package(),
-      version: "0.4.1",
+      version: "0.4.2",
       elixir: "~> 1.14",
       elixirc_options: [
         warnings_as_errors: true
@@ -34,10 +34,10 @@ defmodule Kanta.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:expo, "~> 0.3"},
+      {:expo, ">= 0.3.0"},
       {:ecto, "~> 3.12"},
       {:ecto_sql, "~> 3.12"},
-      {:phoenix, "~> 1.7.0"},
+      {:phoenix, "~> 1.7"},
       {:phoenix_view, "~> 2.0"},
       {:phoenix_live_view, ">= 0.20.0"},
       {:phoenix_html, "~> 4.0"},
@@ -53,7 +53,7 @@ defmodule Kanta.MixProject do
       {:versioce, "~> 2.0.0"},
       {:git_cli, "~> 0.3.0"},
       {:esbuild, "~> 0.7", only: :dev},
-      {:credo, "~> 1.7.7", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
       {:gettext, github: "ravensiris/gettext", branch: "runtime-gettext", only: [:dev, :test]},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
@@ -82,7 +82,8 @@ defmodule Kanta.MixProject do
   defp dialyzer do
     [
       plt_file:
-        {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"}
+        {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"},
+      ignore_warnings: ".dialyzer_ignore.exs"
     ]
   end
 end

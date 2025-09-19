@@ -1,0 +1,100 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for Kanta
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - vincentvanbush
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please provide as much detail as possible to help us understand your request.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem description
+      description: Is your feature request related to an usage pattern you've identified as needing improvement? Please describe.
+      placeholder: I've noticed that often when ... / I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the solution you'd like to see implemented
+      placeholder: I would like to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any alternative solutions or features you've considered
+      placeholder: I have also considered...
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: Describe your specific use case and how this feature would help
+      placeholder: In my application, I need to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: Desired API/code example
+      description: If possible, show what the API or code usage would look like
+      render: elixir
+      placeholder: |
+        # Example of how you'd like to use this feature
+
+        # For API features:
+        Kanta.bulk_import_translations(file_path, locale: "en")
+
+        # For plugin features:
+        defmodule MyApp.CustomTranslationPlugin do
+          use Kanta.Plugin
+
+          def translate(text, from_locale, to_locale) do
+            # custom translation logic
+          end
+        end
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (1-5)
+      description: How important is this feature to you?
+      options:
+        - 1 - Low - Nice to have
+        - 2 - Medium - Would be helpful
+        - 3 - High - Blocking my work
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples about the feature request
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for existing issues before creating this one
+          required: true
+        - label: I have checked the roadmap in the README
+          required: true
+        - label: This is a feature request, not a bug report or question. For general questions, please use [Kanta Slack channel](https://elixir-lang.slack.com/archives/C099BMEN5BP) or [GitHub Discussions](https://github.com/curiosum-dev/kanta/discussions).
+          required: true
+
+
