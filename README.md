@@ -65,6 +65,12 @@
     </ul>
   </li>
   <li><a href="#roadmap">Roadmap</a></li>
+  <li>
+    <a href="#development">Development</a>
+    <ul>
+      <li><a href="#running-tests">Running Tests</a></li>
+    </ul>
+  </li>
   <li><a href="#contributing">Contributing</a></li>
   <li><a href="#license">License</a></li>
   <li><a href="#contact">Contact</a></li>
@@ -340,6 +346,25 @@ config :kanta,
 See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+# Development
+
+## Running Tests
+
+If you're contributing to Kanta development, you'll need to run the test suite. The tests require a PostgreSQL database.
+
+### Prerequisites for Development
+- PostgreSQL 15+ (for running tests)
+- All prerequisites listed in [Getting Started](#prerequisites)
+
+### Test Setup
+
+First-time setup (or if tests are failing due to database issues):
+
+```bash
+# Setup test database and run migrations
+MIX_ENV=test mix ecto.drop && MIX_ENV=test mix ecto.create && MIX_ENV=test mix ecto.migrate
+```
 
 <!-- CONTRIBUTING -->
 
