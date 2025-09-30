@@ -154,6 +154,12 @@ mix ecto.gen.migration add_kanta_translations_table
 
 Open the generated migration file and set up `up` and `down` functions.
 
+**Current Migration Versions:**
+- PostgreSQL: **v4** (adds default context support for Gettext 0.26 backend)
+- SQLite: **v3** (adds default context support for Gettext 0.26 backend)
+
+If you're upgrading from an earlier version of Kanta, update your migration version to the latest.
+
 ### PostgreSQL
 
 ```elixir
@@ -166,12 +172,29 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
 
   # We specify `version: 1` because we want to rollback all the way down including the first migration.
   def down do
-    Kanta.Migration.down(version: 4, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
 
-after that run
+### SQLite
+
+```elixir
+defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
+  use Ecto.Migration
+
+  def up do
+    Kanta.Migration.up(version: 3)
+  end
+
+  # We specify `version: 1` because we want to rollback all the way down including the first migration.
+  def down do
+    Kanta.Migration.down(version: 1)
+  end
+end
+```
+
+After that run:
 
 ```bash
 mix ecto.migrate
@@ -238,7 +261,9 @@ Kanta is based on the Phoenix Framework's default localization tool, GNU gettext
 
 <img style="margin-top: 1rem; margin-bottom: 1rem;" src="./singular.png" alt="singular">
 
-Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
+Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools.
+
+With Gettext 0.26+, Kanta uses a custom backend adapter system (`Kanta.Backend.Adapter.CachedDB`) that fetches translations from the database/cache at runtime instead of compiled PO files. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
 
 ## Translation progress
 
