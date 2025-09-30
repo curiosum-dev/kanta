@@ -122,12 +122,9 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 def deps do
   [
     {:kanta, "~> 0.4.2"},
-    {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
 ```
-
-The dependency on this specific `gettext` version is because this library depends on an in-progress feature, to be included in a future release of `gettext` (see discussion in elixir-gettext/gettext#280 and pull request elixir-gettext/gettext#305). As of March 2023, this has been approved by an Elixir core team member, so we are eagerly awaiting for it being merged upstream.
 
 ## Configuration
 
