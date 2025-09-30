@@ -1,4 +1,11 @@
 defmodule Kanta.Utils.GettextRecompiler do
+  @moduledoc """
+  Handles recompilation detection for Gettext backends during extraction.
+
+  This module manages flag files that track when Gettext extraction occurs,
+  allowing the system to trigger recompilation when needed.
+  """
+
   require Logger
 
   def setup_recompile_flag(flag_file) do

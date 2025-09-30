@@ -1,4 +1,8 @@
 defmodule Kanta.Utils.ModuleFolder do
+  @moduledoc """
+  Utilities for converting module names to filesystem-safe folder names.
+  """
+
   @doc """
   Converts a module name to a safe folder name.
 

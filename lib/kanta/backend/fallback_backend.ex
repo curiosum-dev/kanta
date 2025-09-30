@@ -11,6 +11,8 @@ defmodule Kanta.Backend.GettextFallback do
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
       defmodule GettextFallbackBackend do
+        @moduledoc false
+
         require Logger
         @flag_file "priv/kanta/.fallback_recompiled"
 
