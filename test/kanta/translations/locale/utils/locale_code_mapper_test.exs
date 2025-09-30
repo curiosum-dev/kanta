@@ -109,12 +109,23 @@ defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapperTest do
 
   describe "get_wiki_url/1" do
     test "returns wiki URL for valid ISO639 codes" do
-      assert LocaleCodeMapper.get_wiki_url("en") == "https://en.wikipedia.org/wiki/English_language"
-      assert LocaleCodeMapper.get_wiki_url("es") == "https://en.wikipedia.org/wiki/Spanish_language"
-      assert LocaleCodeMapper.get_wiki_url("uk") == "https://en.wikipedia.org/wiki/Ukrainian_language"
-      assert LocaleCodeMapper.get_wiki_url("mk") == "https://en.wikipedia.org/wiki/Macedonian_language"
-      assert LocaleCodeMapper.get_wiki_url("bm") == "https://en.wikipedia.org/wiki/Bambara_language"
-      assert LocaleCodeMapper.get_wiki_url("tk") == "https://en.wikipedia.org/wiki/Turkmen_language"
+      assert LocaleCodeMapper.get_wiki_url("en") ==
+               "https://en.wikipedia.org/wiki/English_language"
+
+      assert LocaleCodeMapper.get_wiki_url("es") ==
+               "https://en.wikipedia.org/wiki/Spanish_language"
+
+      assert LocaleCodeMapper.get_wiki_url("uk") ==
+               "https://en.wikipedia.org/wiki/Ukrainian_language"
+
+      assert LocaleCodeMapper.get_wiki_url("mk") ==
+               "https://en.wikipedia.org/wiki/Macedonian_language"
+
+      assert LocaleCodeMapper.get_wiki_url("bm") ==
+               "https://en.wikipedia.org/wiki/Bambara_language"
+
+      assert LocaleCodeMapper.get_wiki_url("tk") ==
+               "https://en.wikipedia.org/wiki/Turkmen_language"
     end
 
     test "returns 'unknown' as fallback for invalid ISO639 codes" do
@@ -138,7 +149,9 @@ defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapperTest do
     test "is case sensitive" do
       # Assuming the JSON contains lowercase codes
       assert LocaleCodeMapper.get_wiki_url("EN") == "unknown"
-      assert LocaleCodeMapper.get_wiki_url("en") == "https://en.wikipedia.org/wiki/English_language"
+
+      assert LocaleCodeMapper.get_wiki_url("en") ==
+               "https://en.wikipedia.org/wiki/English_language"
     end
   end
 
@@ -301,31 +314,35 @@ defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapperTest do
       # Test that multiple processes can call the functions simultaneously
       parent = self()
 
-      tasks = Enum.map(1..10, fn i ->
-        Task.async(fn ->
-          code = if rem(i, 2) == 0, do: "en", else: "invalid_#{i}"
-          result = {
-            LocaleCodeMapper.get_name(code),
-            LocaleCodeMapper.get_native_name(code),
-            LocaleCodeMapper.get_family(code),
-            LocaleCodeMapper.get_wiki_url(code),
-            LocaleCodeMapper.get_colors(code)
-          }
-          send(parent, {:result, i, result})
+      tasks =
+        Enum.map(1..10, fn i ->
+          Task.async(fn ->
+            code = if rem(i, 2) == 0, do: "en", else: "invalid_#{i}"
+
+            result = {
+              LocaleCodeMapper.get_name(code),
+              LocaleCodeMapper.get_native_name(code),
+              LocaleCodeMapper.get_family(code),
+              LocaleCodeMapper.get_wiki_url(code),
+              LocaleCodeMapper.get_colors(code)
+            }
+
+            send(parent, {:result, i, result})
+          end)
         end)
-      end)
 
       # Wait for all tasks to complete
       Enum.each(tasks, &Task.await/1)
 
       # Verify we received all results
-      results = Enum.map(1..10, fn i ->
-        receive do
-          {:result, ^i, result} -> result
-        after
-          1000 -> :timeout
-        end
-      end)
+      results =
+        Enum.map(1..10, fn i ->
+          receive do
+            {:result, ^i, result} -> result
+          after
+            1000 -> :timeout
+          end
+        end)
 
       refute Enum.member?(results, :timeout)
     end
