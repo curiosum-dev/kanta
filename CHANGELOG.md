@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+- Allow custom locales (ex. `es-es`) (#100)
+
 ## [v0.4.2]
 ### Fixed
 - Fix Dialyzer errors related to Phoenix version detection (#122)
