@@ -31,12 +31,33 @@ defmodule KantaWeb do
   end
 
   def controller do
-    quote do
-      use Phoenix.Controller, namespace: KantaWeb
+    phoenix_version =
+      case Application.spec(:phoenix, :vsn) do
+        vsn when is_list(vsn) -> List.to_string(vsn)
+        # default to 1.8 if version can't be determined
+        _ -> "1.8"
+      end
 
-      import Plug.Conn
-      alias KantaWeb.Router.Helpers, as: Routes
-      unquote(verified_routes())
+    if String.starts_with?(phoenix_version, "1.7") do
+      # Phoenix 1.7
+      quote do
+        use Phoenix.Controller, namespace: KantaWeb
+
+        import Plug.Conn
+        alias KantaWeb.Router.Helpers, as: Routes
+        unquote(verified_routes())
+      end
+    else
+      # Phoenix 1.8+
+      quote do
+        use Phoenix.Controller, formats: [:html, :json]
+
+        import Plug.Conn
+        alias KantaWeb.Router.Helpers, as: Routes
+        unquote(verified_routes())
+
+        plug :put_layout, html: KantaWeb.LayoutView
+      end
     end
   end
 
