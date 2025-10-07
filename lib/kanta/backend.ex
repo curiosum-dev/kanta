@@ -30,7 +30,7 @@ defmodule Kanta.Backend do
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
       require Logger
-      @flag_file "priv/kanta/.gettext_recompiled"
+      @flag_file Path.join([Mix.Project.build_path(), "kanta_recompile", ".gettext_recompiled"])
       @adapter Keyword.get(opts, :kanta_adapter, Kanta.Backend.Adapter.CachedDB)
       opts = Keyword.drop(opts, [:kanta_adapter])
       # Generate fallback Gettext backend form PO files
