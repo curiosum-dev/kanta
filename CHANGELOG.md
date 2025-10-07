@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## Unreleased
+## [v0.5.0]
 
+### Breaking Changes
+- **Gettext 0.26.0 Migration**: This version requires updating your Gettext module definition to use the new backend adapter system. You must define `use Kanta.Gettext.Backend` in your Gettext module and configure the adapter.
+
+### Added
 - Adds Gettext 0.26.0 compatibility with a custom backend adapter system
 
 ## [v0.4.2]

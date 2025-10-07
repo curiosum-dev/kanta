@@ -1,4 +1,4 @@
-defmodule Kanta.Backend.Adapter.KantaCachedDB do
+defmodule Kanta.Backend.Adapter.CachedDB do
   @moduledoc """
   Kanta adapter used in *gettext functions from Kanta.Gettext.Macros.
 
@@ -121,7 +121,8 @@ defmodule Kanta.Backend.Adapter.KantaCachedDB do
     end
   end
 
-  @spec apply_bindings(String.t(), Keyword.t() | map()) :: {:ok, String.t()} | :not_found
+  @spec apply_bindings(String.t(), Keyword.t() | map()) ::
+          {:ok, String.t()} | {:error, :not_found}
   defp apply_bindings(text, bindings) when is_list(bindings) do
     apply_bindings(text, Map.new(bindings))
   end
@@ -138,7 +139,7 @@ defmodule Kanta.Backend.Adapter.KantaCachedDB do
           missing_bindings: missing_bindings
         })
 
-        :not_found
+        {:error, :not_found}
     end
   end
 end
