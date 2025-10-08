@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [v0.5.0]
+
+### Breaking Changes
+- **Gettext 0.26.0 Migration**: This version requires updating your Gettext module definition to use the new backend adapter system. You must define `use Kanta.Gettext.Backend` in your Gettext module and configure the adapter.
+
+### Added
+- Adds Gettext 0.26.0 compatibility with a custom backend adapter system
+
+## [v0.4.2]
+### Fixed
+- Fix Dialyzer errors related to Phoenix version detection (#122)
+- Replace Mix.Dep.Lock.read/0 with Application.spec/2 for better static analysis compatibility
+- Add .dialyzer_ignore.exs to handle Phoenix dependency warnings
+
+### Added
+- Add Phoenix 1.8 and Phoenix LiveView 1.x compatibility (#122)
+
 ## [v0.4.1]
 ### Other
 - feat: Expand Kanta.Query module (#86)
@@ -415,4 +432,3 @@ PETAL stack init & db structure rework
 - Proof of concept
 - Create file structure
 - First commit
-

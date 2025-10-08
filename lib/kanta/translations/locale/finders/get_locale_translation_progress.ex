@@ -15,7 +15,7 @@ defmodule Kanta.Translations.Locale.Finders.GetLocaleTranslationProgress do
         0
 
       translations_count ->
-        Float.ceil(translated_count(locale_id) / translations_count * 100)
+        Float.floor(translated_count(locale_id) / translations_count * 100)
     end
   end
 

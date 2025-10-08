@@ -69,7 +69,7 @@ jobs:
           POSTGRES_HOSTNAME: ${{ vars.POSTGRES_HOSTNAME }}
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
           MIX_ENV: test
-        run: mix ecto.drop && mix ecto.create
+        run: mix ecto.drop && mix ecto.create && mix ecto.migrate
       - name: Compile code
         run: mix compile --warnings-as-errors
       - name: Check Formatting

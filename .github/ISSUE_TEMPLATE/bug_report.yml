@@ -1,0 +1,124 @@
+name: Bug Report
+description: File a bug report to help us improve Kanta
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - vincentvanbush
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible to help us understand and reproduce the issue.
+
+  - type: input
+    id: kanta-version
+    attributes:
+      label: Kanta version
+      description: What version of Kanta are you using?
+      placeholder: e.g., 0.4.1
+    validations:
+      required: true
+
+  - type: input
+    id: elixir-version
+    attributes:
+      label: Elixir/OTP/Phoenix version
+      description: What versions are you using?
+      placeholder: e.g., Elixir 1.17.0, OTP 27, Phoenix 1.7.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: database-type
+    attributes:
+      label: Database
+      description: What database are you using?
+      options:
+        - PostgreSQL
+        - MySQL
+        - SQLite
+        - Other (specify in additional context)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Set up Kanta with...
+        2. Configure translations for...
+        3. Perform translation operation...
+        4. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-sample
+    attributes:
+      label: Code sample
+      description: Please provide a minimal code example that demonstrates the issue
+      render: elixir
+      placeholder: |
+        # config/config.exs
+        config :my_app, Kanta,
+          endpoint: MyAppWeb.Endpoint,
+          repo: MyApp.Repo,
+          otp_name: :my_app
+
+        # Or show the problematic translation code
+        Kanta.get_translation("hello", "en")
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include error messages if any.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error logs/stack trace
+      description: If applicable, add error logs or stack traces
+      render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here (plugins used, Gettext configuration, custom translation setup, etc.)
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for existing issues before creating this one
+          required: true
+        - label: I have provided all the requested information
+          required: true
+        - label: This is a bug report, not a feature request or question. For general questions, please use [Kanta Slack channel](https://elixir-lang.slack.com/archives/C099BMEN5BP) or [GitHub Discussions](https://github.com/curiosum-dev/kanta/discussions).
+          required: true
+

@@ -1,15 +1,26 @@
-<a id="readme-top" name="readme-top"></a>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/f0352656-397d-4d90-999a-d3adbae1095f">
+
+  <h1>Kanta</h1>
+  <p><strong>User-friendly translations manager for Elixir/Phoenix projects</strong></p>
+
+  [![Contact Us](https://img.shields.io/badge/Contact%20Us-%23F36D2E?style=for-the-badge&logo=maildotru&logoColor=white&labelColor=F36D2E)](https://curiosum.com/contact)
+  [![Visit Curiosum](https://img.shields.io/badge/Visit%20Curiosum-%236819E6?style=for-the-badge&logo=elixir&logoColor=white&labelColor=6819E6)](https://curiosum.com/services/elixir-software-development)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-1D0642?style=for-the-badge&logo=open-source-initiative&logoColor=white&labelColor=1D0642)](https://github.com/curiosum-dev/kanta/blob/main/LICENSE.md)
+</div>
+
 <br />
 
-<div align="center">
+# About The Project
+
+
+<div align="left">
   <a href="https://github.com/curiosum-dev/kanta">
-    <img src="./logo.png" alt="Logo" height="111">
+    <img src="./logo.png" alt="Logo" height="80">
   </a>
   <br />
   <br />
-  <p style="margin-top: 3rem; font-size: 14pt;" align="center">
-    User-friendly translations manager for Elixir/Phoenix projects.
-    <br />
+  <p style="margin-top: 3rem; font-size: 14pt;" align="left">
     <a href="https://kanta.curiosum.com">View Demo</a>
     ·
     <a href="https://github.com/curiosum-dev/kanta/issues">Report Bug</a>
@@ -17,6 +28,8 @@
     <a href="https://github.com/curiosum-dev/kanta/issues">Request Feature</a>
   </p>
 </div>
+
+If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
 
 <div>
   <a href="https://github.com/curiosum-dev/kanta/actions/workflows/development.yml">
@@ -31,6 +44,8 @@
 </div>
 
 <br/>
+
+# Table of contents
 
 <ul style="margin-top: 3rem; margin-bottom: 3rem;">
   <li>
@@ -65,6 +80,12 @@
     </ul>
   </li>
   <li><a href="#roadmap">Roadmap</a></li>
+  <li>
+    <a href="#development">Development</a>
+    <ul>
+      <li><a href="#running-tests">Running Tests</a></li>
+    </ul>
+  </li>
   <li><a href="#contributing">Contributing</a></li>
   <li><a href="#license">License</a></li>
   <li><a href="#contact">Contact</a></li>
@@ -81,21 +102,15 @@ _Note: Official documentation for Kanta library is [available on hexdocs][hexdoc
 
 <br />
 
-# About The Project
-
-If you're working on an Elixir/Phoenix project and need to manage translations, you know how time-consuming and error-prone it can be. That's where Kanta comes in. Our tool simplifies the process of managing translations by providing an intuitive interface for adding, editing, and deleting translations. Our tool also makes it easy to keep translations up-to-date as your project evolves. With Kanta, you can streamline your workflow and focus on building great software, not managing translations.
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # Getting Started
 
 ## Prerequisites
 
-- Elixir (tested on 1.14.0)
-- Phoenix (tested on 1.7.0)
-- Ecto SQL (tested on 3.6)
-- Phoenix LiveView 0.18.0+
-- Gettext 0.26.0+
+- Elixir (tested on 1.18.4)
+- Phoenix (tested on 1.7.x and 1.8.x with LiveView 1.x)
+- Ecto SQL (tested on 3.13)
 - PostgreSQL 15+ or SQLite 3.31.0+
 
 ## Installation
@@ -106,13 +121,10 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.4.1"},
-    {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
+    {:kanta, "~> 0.4.2"},
   ]
 end
 ```
-
-The dependency on this specific `gettext` version is because this library depends on an in-progress feature, to be included in a future release of `gettext` (see discussion in elixir-gettext/gettext#280 and pull request elixir-gettext/gettext#305). As of March 2023, this has been approved by an Elixir core team member, so we are eagerly awaiting for it being merged upstream.
 
 ## Configuration
 
@@ -139,6 +151,12 @@ mix ecto.gen.migration add_kanta_translations_table
 
 Open the generated migration file and set up `up` and `down` functions.
 
+**Current Migration Versions:**
+- PostgreSQL: **v4** (adds default context support for Gettext 0.26 backend)
+- SQLite: **v3** (adds default context support for Gettext 0.26 backend)
+
+If you're upgrading from an earlier version of Kanta, update your migration version to the latest.
+
 ### PostgreSQL
 
 ```elixir
@@ -146,17 +164,17 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
   use Ecto.Migration
 
   def up do
-    Kanta.Migration.up(version: 4)
+    Kanta.Migration.up(version: 4, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 
   # We specify `version: 1` because we want to rollback all the way down including the first migration.
   def down do
-    Kanta.Migration.down(version: 1)
+    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
 
-### SQLite3
+### SQLite
 
 ```elixir
 defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
@@ -173,7 +191,7 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
 end
 ```
 
-after that run
+After that run:
 
 ```bash
 mix ecto.migrate
@@ -240,7 +258,9 @@ Kanta is based on the Phoenix Framework's default localization tool, GNU gettext
 
 <img style="margin-top: 1rem; margin-bottom: 1rem;" src="./singular.png" alt="singular">
 
-Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
+Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools.
+
+With Gettext 0.26+, Kanta uses a custom backend adapter system (`Kanta.Backend.Adapter.CachedDB`) that fetches translations from the database/cache at runtime instead of compiled PO files. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
 
 ## Translation progress
 
@@ -341,6 +361,25 @@ See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full l
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+# Development
+
+## Running Tests
+
+If you're contributing to Kanta development, you'll need to run the test suite. The tests require a PostgreSQL database.
+
+### Prerequisites for Development
+- PostgreSQL 15+ (for running tests)
+- All prerequisites listed in [Getting Started](#prerequisites)
+
+### Test Setup
+
+First-time setup (or if tests are failing due to database issues):
+
+```bash
+# Setup test database and run migrations
+MIX_ENV=test mix ecto.drop && MIX_ENV=test mix ecto.create && MIX_ENV=test mix ecto.migrate
+```
+
 <!-- CONTRIBUTING -->
 
 ## Contributing
@@ -360,6 +399,13 @@ Don't forget to give the project a star! Thanks again!
 
 <!-- LICENSE -->
 
+## Community
+
+- **Slack channel**: [Elixir Slack / #kanta](https://elixir-lang.slack.com/archives/C099BMEN5BP)
+- **Issues**: [GitHub Issues](https://github.com/curiosum-dev/kanta/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/curiosum-dev/kanta/discussions)
+- **Blog**: [Curiosum Blog](https://curiosum.com/blog?search=kanta)
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
@@ -374,8 +420,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Michał Buszkiewicz - michal@curiosum.com
 
-Krzysztof Janiec - krzysztof.janiec@curiosum.com
+Maksymilian Jodłowski - maksymilian.jodlowski@curiosum.com
 
 Artur Ziętkiewicz - artur.zietkiewicz@curiosum.com
+
+Jakub Lambrych - jakub.lambrych@curiosum.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
