@@ -74,8 +74,7 @@ defmodule Kanta.Backend.Adapter.CachedDBTest do
     end
 
     test "returns error for non-existing translation" do
-      result =
-        CachedDB.lgettext("fr", "test_domain", "test_context", "Non-existent message", %{})
+      result = CachedDB.lgettext("fr", "test_domain", "test_context", "Non-existent message", %{})
 
       assert result == {:error, :not_found}
     end
