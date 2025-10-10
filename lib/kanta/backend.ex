@@ -18,7 +18,7 @@ defmodule Kanta.Backend do
 
   * `:otp_app` - The OTP application that contains the backend
   * `:priv` - The directory where the translations are stored (defaults to "priv/YOUR_MODULE")
-  * `:kanta_adapter` - The adapter module to use for database lookups (defaults to `Kanta.Backend.Adapter.KantaCachedDB`)
+  * `:kanta_adapter` - The adapter module to use for database lookups (defaults to `Kanta.Backend.Adapter.CachedDB`)
 
   it also accepts all the Gettext.Backend options. See the official Gettext documentation for more details.
 
@@ -30,8 +30,8 @@ defmodule Kanta.Backend do
   defmacro __using__(opts) do
     quote bind_quoted: [opts: opts] do
       require Logger
-      @flag_file "priv/kanta/.gettext_recompiled"
-      @adapter Keyword.get(opts, :kanta_adapter, Kanta.Backend.Adapter.KantaCachedDB)
+      @flag_file Path.join([Mix.Project.build_path(), "kanta_recompile", ".gettext_recompiled"])
+      @adapter Keyword.get(opts, :kanta_adapter, Kanta.Backend.Adapter.CachedDB)
       opts = Keyword.drop(opts, [:kanta_adapter])
       # Generate fallback Gettext backend form PO files
       use Kanta.Backend.GettextFallback, opts
@@ -56,7 +56,7 @@ defmodule Kanta.Backend do
       end
 
       def handle_missing_translation(locale, domain, msgctxt, msgid, bindings) do
-        case Kanta.Backend.Adapter.KantaCachedDB.lgettext(
+        case Kanta.Backend.Adapter.CachedDB.lgettext(
                locale,
                domain,
                msgctxt,
@@ -81,7 +81,7 @@ defmodule Kanta.Backend do
             n,
             bindings
           ) do
-        case Kanta.Backend.Adapter.KantaCachedDB.lngettext(
+        case Kanta.Backend.Adapter.CachedDB.lngettext(
                locale,
                domain,
                msgctxt,

@@ -14,7 +14,12 @@ defmodule Kanta.Backend.GettextFallback do
         @moduledoc false
 
         require Logger
-        @flag_file "priv/kanta/.fallback_recompiled"
+
+        @flag_file Path.join([
+                     Mix.Project.build_path(),
+                     "kanta_recompile",
+                     ".fallback_recompiled"
+                   ])
 
         # When `mix gettext extract` create empty stub so that the  Kanta.Backend can compile.
         if Gettext.Extractor.extracting?() do

@@ -1,9 +1,9 @@
-defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
+defmodule Kanta.Backend.Adapter.CachedDBTest do
   # Changing back to async: false for now
   use Kanta.Test.DataCase, async: false
 
   alias Kanta.Translations
-  alias Kanta.Backend.Adapter.KantaCachedDB
+  alias Kanta.Backend.Adapter.CachedDB
 
   setup do
     # Clear the cache before each test
@@ -69,19 +69,18 @@ defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
 
   describe "lgettext/5" do
     test "returns translation from database for existing message" do
-      result = KantaCachedDB.lgettext("fr", "test_domain", "test_context", "Hello world", %{})
+      result = CachedDB.lgettext("fr", "test_domain", "test_context", "Hello world", %{})
       assert result == {:ok, "Bonjour le monde"}
     end
 
     test "returns error for non-existing translation" do
-      result =
-        KantaCachedDB.lgettext("fr", "test_domain", "test_context", "Non-existent message", %{})
+      result = CachedDB.lgettext("fr", "test_domain", "test_context", "Non-existent message", %{})
 
       assert result == {:error, :not_found}
     end
 
     test "returns error for non-existing locale" do
-      result = KantaCachedDB.lgettext("de", "test_domain", "test_context", "Hello world", %{})
+      result = CachedDB.lgettext("de", "test_domain", "test_context", "Hello world", %{})
       assert result == {:error, :not_found}
     end
 
@@ -105,7 +104,7 @@ defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
       # Clear cache to ensure fresh state
       Kanta.Cache.delete_all()
 
-      result = KantaCachedDB.lgettext("fr", "test_domain", nil, "Hello %{name}", %{name: "Alice"})
+      result = CachedDB.lgettext("fr", "test_domain", nil, "Hello %{name}", %{name: "Alice"})
       assert result == {:ok, "Bonjour Alice"}
     end
   end
@@ -138,7 +137,7 @@ defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
       Kanta.Cache.delete_all()
 
       result =
-        KantaCachedDB.lngettext(
+        CachedDB.lngettext(
           "fr",
           "test_domain",
           "test_context",
@@ -155,7 +154,7 @@ defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
     test "returns plural form for count > 1" do
       # Use the plural message set up in the main setup block
       result =
-        KantaCachedDB.lngettext(
+        CachedDB.lngettext(
           "fr",
           "test_domain",
           "test_context",
@@ -170,7 +169,7 @@ defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
 
     test "returns error for non-existing translation" do
       result =
-        KantaCachedDB.lngettext(
+        CachedDB.lngettext(
           "fr",
           "test_domain",
           "test_context",
@@ -213,7 +212,7 @@ defmodule Kanta.Backend.Adapter.KantaCachedDBTest do
       Kanta.Cache.delete_all()
 
       result =
-        KantaCachedDB.lngettext(
+        CachedDB.lngettext(
           "fr",
           "test_domain",
           nil,
