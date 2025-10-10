@@ -10,18 +10,22 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   alias KantaWeb.Components.Shared.Pagination
 
-  @available_filters ~w(application_source_id domain_id context_id search not_translated page)
+  @available_filters ~w(application_source_id domain_id context_id search not_translated stale page)
   @available_params ~w(page search filter)
-  @params_in_filter ~w(application_source_id domain_id context_id not_translated)
+  @params_in_filter ~w(application_source_id domain_id context_id not_translated stale)
   @ids_to_parse ~w(application_source_id domain_id context_id locale_id)
 
   def mount(%{"locale_id" => locale_id} = params, _session, socket) do
     socket =
       case get_locale(locale_id) do
         {:ok, locale} ->
+          # Get system-wide stale message IDs
+          stale_ids = Kanta.POFiles.MessagesExtractorAgent.get_stale_message_ids()
+
           socket
           |> assign(:locale, locale)
           |> assign(:application_sources_empty?, Translations.application_sources_empty?())
+          |> assign(:stale_message_ids, stale_ids)
           |> assign(get_assigns_from_params(params))
 
         _ ->
@@ -37,14 +41,18 @@ defmodule KantaWeb.Translations.TranslationsLive do
     singular_translation_query = ListSingularTranslations.filter_query(preload_filters)
     plural_translation_query = ListPluralTranslations.filter_query(preload_filters)
 
+    filters =
+      params["filter"]
+      |> Kernel.||(%{})
+      |> Map.put("locale_id", locale_id)
+      |> Map.put("stale_message_ids", socket.assigns.stale_message_ids)
+
     %{entries: messages, metadata: messages_metadata} =
       Translations.list_messages(
         []
         |> Keyword.merge(search: params["search"] || "")
         |> Keyword.merge(page: parse_page(params["page"] || "1"))
-        |> Keyword.merge(
-          filter: parse_filters(Map.put(params["filter"] || %{}, "locale_id", locale_id))
-        )
+        |> Keyword.merge(filter: parse_filters(filters))
         |> Keyword.merge(
           preloads: [
             :application_source,
@@ -103,6 +111,52 @@ defmodule KantaWeb.Translations.TranslationsLive do
      )}
   end
 
+  def handle_info(:refresh_messages, socket) do
+    locale_id = socket.assigns.locale.id
+
+    # Re-detect system-wide stale message IDs after deletion
+    {:ok, result} = Kanta.POFiles.Services.IdentifyStaleTranslations.call()
+    stale_ids = result.stale_message_ids
+
+    # Update the agent's cache so page refresh shows correct data
+    Kanta.POFiles.MessagesExtractorAgent.update_stale_message_ids(stale_ids)
+
+    # Re-fetch messages with current filters
+    preload_filters = %{"locale_id" => locale_id}
+    singular_translation_query = ListSingularTranslations.filter_query(preload_filters)
+    plural_translation_query = ListPluralTranslations.filter_query(preload_filters)
+
+    filters =
+      socket.assigns.filters
+      |> Map.put("locale_id", to_string(locale_id))
+      |> Map.put("stale_message_ids", stale_ids)
+
+    %{entries: messages, metadata: messages_metadata} =
+      Translations.list_messages(
+        []
+        |> Keyword.merge(search: socket.assigns.filters["search"] || "")
+        |> Keyword.merge(page: parse_page(socket.assigns.filters["page"] || "1"))
+        |> Keyword.merge(filter: parse_filters(filters))
+        |> Keyword.merge(
+          preloads: [
+            :application_source,
+            :context,
+            :domain,
+            singular_translations: singular_translation_query,
+            plural_translations: plural_translation_query
+          ]
+        )
+      )
+
+    socket =
+      socket
+      |> assign(:messages, messages)
+      |> assign(:messages_metadata, messages_metadata)
+      |> assign(:stale_message_ids, stale_ids)
+
+    {:noreply, socket}
+  end
+
   defp get_locale(id) do
     case parse_id_filter(id) do
       {:ok, id} -> Translations.get_locale(filter: [id: id])
@@ -122,6 +176,10 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   defp update_filters_acc({"not_translated", value}, acc) do
     Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, "not_translated", value))
+  end
+
+  defp update_filters_acc({"stale", value}, acc) do
+    Keyword.put(acc, :filter, Map.put(acc[:filter] || %{}, "stale", value))
   end
 
   defp update_filters_acc({key, value}, acc) do
@@ -147,6 +205,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
     |> then(fn filters ->
       %{
         not_translated_default: get_not_translated_default_value(params),
+        stale_default: get_stale_default_value(params),
         filters: filters
       }
     end)
@@ -160,6 +219,15 @@ defmodule KantaWeb.Translations.TranslationsLive do
   end
 
   defp get_not_translated_default_value(_), do: false
+
+  defp get_stale_default_value(%{"filter" => filter}) do
+    case filter["stale"] do
+      "true" -> true
+      _ -> false
+    end
+  end
+
+  defp get_stale_default_value(_), do: false
 
   defp parse_filters(filters) do
     Enum.reduce(filters, %{}, &parse_filter/2)

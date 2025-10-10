@@ -8,10 +8,14 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
   alias Kanta.Translations.{Message, SingularTranslation}
 
   @available_params ~w(page search filter)
-  @params_in_filter ~w(domain_id context_id not_translated)
+  @params_in_filter ~w(domain_id context_id not_translated stale)
 
   def update(socket, assigns) do
     {:ok, assign(assigns, socket)}
+  end
+
+  def message_stale?(message, stale_message_ids) do
+    MapSet.member?(stale_message_ids, message.id)
   end
 
   def handle_event("edit_message", %{"id" => id}, socket) do
@@ -27,6 +31,23 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
              URI.encode_query(query)
          )
      )}
+  end
+
+  def handle_event("delete_stale", %{"message-id" => message_id}, socket) do
+    require Logger
+    message_id = String.to_integer(message_id)
+
+    case Kanta.Translations.delete_stale_message(message_id) do
+      {:ok, stats} ->
+        Logger.debug("Deleted message and translations: #{inspect(stats)}")
+        Logger.debug("Sending refresh_messages to parent PID: #{inspect(self())}")
+        send(self(), :refresh_messages)
+        {:noreply, socket}
+
+      {:error, reason} ->
+        Logger.error("Failed to delete: #{inspect(reason)}")
+        {:noreply, socket}
+    end
   end
 
   def translated?(%Message{message_type: :singular} = message, locale, source) do

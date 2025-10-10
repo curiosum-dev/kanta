@@ -7,6 +7,7 @@ defmodule KantaWeb.Dashboard.DashboardLive do
 
   def mount(_params, _session, socket) do
     messages_count = Translations.get_messages_count()
+    stale_messages_count = Translations.get_stale_messages_count()
     %{entries: domains, metadata: _domains_metadata} = Translations.list_domains()
     %{entries: contexts, metadata: _contexts_metadata} = Translations.list_contexts()
     %{entries: locales, metadata: _locales_metadata} = Translations.list_locales()
@@ -14,6 +15,7 @@ defmodule KantaWeb.Dashboard.DashboardLive do
     socket =
       socket
       |> assign(:messages_count, messages_count)
+      |> assign(:stale_messages_count, stale_messages_count)
       |> assign(:languages, locales)
       |> assign(:contexts, contexts)
       |> assign(:domains, domains)
@@ -26,6 +28,12 @@ defmodule KantaWeb.Dashboard.DashboardLive do
     Cache.delete_all()
 
     {:noreply, assign(socket, :cache_count, Cache.count_all())}
+  end
+
+  def handle_event("delete-stale", _, socket) do
+    Translations.delete_all_stale_messages()
+
+    {:noreply, assign(socket, :stale_messages_count, 0)}
   end
 
   def translation_progress(language) do

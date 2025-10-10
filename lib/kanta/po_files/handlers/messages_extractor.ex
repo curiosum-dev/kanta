@@ -3,36 +3,33 @@ defmodule Kanta.POFiles.MessagesExtractor do
   Handler responsible for extracting data from .po files
   """
 
-  @po_wildcard "**/*.po"
   @default_context "default"
 
-  alias Expo.{Messages, PO}
-
+  alias Kanta.POFiles.POFileParser
   alias Kanta.PoFiles.Services.{ExtractPluralTranslation, ExtractSingularTranslation}
 
   def call do
-    opts = [
-      otp_name: Kanta.config().otp_name,
-      allowed_locales: Application.get_env(:kanta, :allowed_locales)
-    ]
+    # Get config at top level
+    otp_name = Kanta.config().otp_name
+    allowed_locales = Application.get_env(:kanta, :allowed_locales)
 
-    priv = :code.priv_dir(opts[:otp_name])
-    priv_gettext_po_files = po_files_in_priv(priv)
-    known_po_files = known_po_files(priv_gettext_po_files, opts)
+    # Construct full base path including "gettext" subdirectory
+    base_path =
+      :code.priv_dir(otp_name)
+      |> to_string()
+      |> Path.join("gettext")
 
-    extract_translations(known_po_files)
+    # Pass explicitly to POFileParser
+    POFileParser.parse_all_po_files(base_path, allowed_locales)
+    |> Enum.flat_map(&extract_translations_from_parsed_file/1)
   end
 
-  defp extract_translations(known_po_files) do
-    known_po_files
-    |> Enum.flat_map(&extract_translations_from_file(&1))
-  end
-
-  defp extract_translations_from_file(po_file) do
-    %{locale: locale, domain: domain, path: path} = po_file
-    %Messages{messages: messages} = messages_struct = PO.parse_file!(path)
-
-    plurals_header = get_plurals_header(messages_struct, locale)
+  defp extract_translations_from_parsed_file(%{
+         locale: locale,
+         domain: domain,
+         messages: messages
+       }) do
+    plurals_header = get_plurals_header(messages, locale)
 
     messages
     |> Stream.map(fn
@@ -75,37 +72,6 @@ defmodule Kanta.POFiles.MessagesExtractor do
         })
     end)
     |> Stream.filter(&(!is_nil(&1)))
-  end
-
-  defp locale_and_domain_from_path(path) do
-    [file, "LC_MESSAGES", locale | _rest] = path |> Path.split() |> Enum.reverse()
-    domain = Path.rootname(file, ".po")
-    {locale, domain}
-  end
-
-  defp po_files_in_priv(priv) do
-    priv
-    |> Path.join("gettext")
-    |> Path.join(@po_wildcard)
-    |> Path.wildcard()
-  end
-
-  defp known_po_files(all_po_files, opts) do
-    all_po_files
-    |> Enum.map(fn path ->
-      {locale, domain} = locale_and_domain_from_path(path)
-      %{locale: locale, path: path, domain: domain}
-    end)
-    |> maybe_restrict_locales(opts[:allowed_locales])
-  end
-
-  defp maybe_restrict_locales(po_files, nil) do
-    po_files
-  end
-
-  defp maybe_restrict_locales(po_files, allowed_locales) when is_list(allowed_locales) do
-    allowed_locales = MapSet.new(Enum.map(allowed_locales, &to_string/1))
-    Enum.filter(po_files, &MapSet.member?(allowed_locales, &1[:locale]))
   end
 
   defp get_plurals_header(messages, locale) do
