@@ -46,6 +46,7 @@ defmodule Kanta.Translations do
   defdelegate list_locales(params \\ []), to: Locales
   defdelegate get_locale(params \\ []), to: Locales
   defdelegate update_locale(locale, attrs, opts \\ []), to: Locales
+  defdelegate create_locale(attrs, opts \\ []), to: Locales
 
   # TRANSLATIONS
   defdelegate list_plural_translations(params \\ []), to: PluralTranslations

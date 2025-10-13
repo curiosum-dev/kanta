@@ -80,6 +80,12 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
     </ul>
   </li>
   <li><a href="#roadmap">Roadmap</a></li>
+  <li>
+    <a href="#development">Development</a>
+    <ul>
+      <li><a href="#running-tests">Running Tests</a></li>
+    </ul>
+  </li>
   <li><a href="#contributing">Contributing</a></li>
   <li><a href="#license">License</a></li>
   <li><a href="#contact">Contact</a></li>
@@ -116,12 +122,9 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 def deps do
   [
     {:kanta, "~> 0.4.2"},
-    {:gettext, git: "git@github.com:ravensiris/gettext.git", branch: "runtime-gettext"}
   ]
 end
 ```
-
-The dependency on this specific `gettext` version is because this library depends on an in-progress feature, to be included in a future release of `gettext` (see discussion in elixir-gettext/gettext#280 and pull request elixir-gettext/gettext#305). As of March 2023, this has been approved by an Elixir core team member, so we are eagerly awaiting for it being merged upstream.
 
 ## Configuration
 
@@ -148,6 +151,12 @@ mix ecto.gen.migration add_kanta_translations_table
 
 Open the generated migration file and set up `up` and `down` functions.
 
+**Current Migration Versions:**
+- PostgreSQL: **v4** (adds default context support for Gettext 0.26 backend)
+- SQLite: **v3** (adds default context support for Gettext 0.26 backend)
+
+If you're upgrading from an earlier version of Kanta, update your migration version to the latest.
+
 ### PostgreSQL
 
 ```elixir
@@ -160,12 +169,29 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
 
   # We specify `version: 1` because we want to rollback all the way down including the first migration.
   def down do
-    Kanta.Migration.down(version: 4, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
+    Kanta.Migration.down(version: 1, prefix: prefix()) # Prefix is needed if you are using multitenancy with i.e. triplex
   end
 end
 ```
 
-after that run
+### SQLite
+
+```elixir
+defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
+  use Ecto.Migration
+
+  def up do
+    Kanta.Migration.up(version: 3)
+  end
+
+  # We specify `version: 1` because we want to rollback all the way down including the first migration.
+  def down do
+    Kanta.Migration.down(version: 1)
+  end
+end
+```
+
+After that run:
 
 ```bash
 mix ecto.migrate
@@ -173,11 +199,21 @@ mix ecto.migrate
 
 ## Gettext module
 
-We now need to pass information to our project's `Gettext` module that we want Kanta to manage translations. To do this add `Kanta.Gettext.Repo` as a default translation repository inside your `Gettext` module.
+Configuring Gettext requires just a single change.
+
+Wherever you have:
 
 ```elixir
-use Gettext, ..., repo: Kanta.Gettext.Repo
+use Gettext, backend: YourApp.Gettext
 ```
+
+replace it with:
+
+```elixir
+use Kanta.Gettext, backend: YourApp.Gettext
+```
+
+If you're using a Gettext version lower than 0.26, refer to the [official documentation](https://github.com/elixir-gettext/gettext) for migration instructions.
 
 ## Kanta Supervisor
 
@@ -222,7 +258,9 @@ Kanta is based on the Phoenix Framework's default localization tool, GNU gettext
 
 <img style="margin-top: 1rem; margin-bottom: 1rem;" src="./singular.png" alt="singular">
 
-Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
+Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools.
+
+With Gettext 0.26+, Kanta uses a custom backend adapter system (`Kanta.Backend.Adapter.CachedDB`) that fetches translations from the database/cache at runtime instead of compiled PO files. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
 
 ## Translation progress
 
@@ -322,6 +360,25 @@ config :kanta,
 See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+# Development
+
+## Running Tests
+
+If you're contributing to Kanta development, you'll need to run the test suite. The tests require a PostgreSQL database.
+
+### Prerequisites for Development
+- PostgreSQL 15+ (for running tests)
+- All prerequisites listed in [Getting Started](#prerequisites)
+
+### Test Setup
+
+First-time setup (or if tests are failing due to database issues):
+
+```bash
+# Setup test database and run migrations
+MIX_ENV=test mix ecto.drop && MIX_ENV=test mix ecto.create && MIX_ENV=test mix ecto.migrate
+```
 
 <!-- CONTRIBUTING -->
 
