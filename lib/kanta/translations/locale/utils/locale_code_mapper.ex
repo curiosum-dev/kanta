@@ -9,7 +9,7 @@ defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapper do
 
     case Map.fetch(dictionary, code) do
       {:ok, info} -> info["nativeName"]
-      _ -> "unknown"
+      _ -> code
     end
   end
 
@@ -19,7 +19,7 @@ defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapper do
 
     case Map.fetch(dictionary, code) do
       {:ok, info} -> info["name"]
-      _ -> "unknown"
+      _ -> code
     end
   end
 
@@ -49,7 +49,7 @@ defmodule Kanta.Translations.Locale.Utils.LocaleCodeMapper do
 
     case Map.fetch(dictionary, code) do
       {:ok, info} -> info["colors"]
-      _ -> "unknown"
+      _ -> ["#000000"]
     end
   end
 end
