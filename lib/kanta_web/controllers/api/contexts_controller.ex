@@ -2,6 +2,8 @@ defmodule KantaWeb.Api.ContextsController do
   @moduledoc false
   use KantaWeb, :controller
 
+  plug :put_layout, false
+
   alias Kanta.Translations.Contexts.Finders.ListContexts
   alias Kanta.Utils.DatabasePopulator
 

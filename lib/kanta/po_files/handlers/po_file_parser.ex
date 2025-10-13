@@ -1,4 +1,4 @@
-defmodule Kanta.POFiles.POFileParser do
+defmodule Kanta.PoFiles.POFileParser do
   @moduledoc """
   Shared logic for parsing PO files and extracting message data.
   Used by both sync (MessagesExtractor) and stale detection.
@@ -109,6 +109,29 @@ defmodule Kanta.POFiles.POFileParser do
       Enum.map(messages, &extract_key_from_message(&1, domain))
     end)
     |> MapSet.new()
+  end
+
+  @doc """
+  Extracts message keys for a single locale only.
+
+  Convenience wrapper around `extract_message_keys/2` for per-locale detection.
+
+  ## Arguments
+
+    * `base_path` - Base directory to search for PO files
+    * `locale_code` - Single locale code (e.g., "en", "it")
+
+  ## Examples
+
+      iex> POFileParser.extract_message_keys_for_locale("/path/to/priv/gettext", "en")
+      #MapSet<[
+        {"Welcome", "default", "default"},
+        {"Hello %{name}", "default", "greetings"}
+      ]>
+
+  """
+  def extract_message_keys_for_locale(base_path, locale_code) do
+    extract_message_keys(base_path, [locale_code])
   end
 
   # Private helpers

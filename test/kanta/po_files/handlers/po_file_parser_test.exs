@@ -1,7 +1,7 @@
-defmodule Kanta.POFiles.POFileParserTest do
+defmodule Kanta.PoFiles.POFileParserTest do
   use ExUnit.Case, async: true
 
-  alias Kanta.POFiles.POFileParser
+  alias Kanta.PoFiles.POFileParser
 
   @test_base_path "test/fixtures/single_messages"
 

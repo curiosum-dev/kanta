@@ -37,7 +37,7 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
     require Logger
     message_id = String.to_integer(message_id)
 
-    case Kanta.Translations.delete_stale_message(message_id) do
+    case Kanta.Translations.delete_message(message_id) do
       {:ok, stats} ->
         Logger.debug("Deleted message and translations: #{inspect(stats)}")
         Logger.debug("Sending refresh_messages to parent PID: #{inspect(self())}")
@@ -46,6 +46,31 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
       {:error, reason} ->
         Logger.error("Failed to delete: #{inspect(reason)}")
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event(
+        "merge_messages",
+        %{"from-id" => from_id, "to-id" => to_id},
+        socket
+      ) do
+    require Logger
+    from_message_id = String.to_integer(from_id)
+    to_message_id = String.to_integer(to_id)
+
+    case Kanta.Translations.merge_messages(from_message_id, to_message_id) do
+      {:ok, target_message} ->
+        Logger.debug(
+          "Merged message #{from_message_id} into #{to_message_id}: #{inspect(target_message)}"
+        )
+
+        Logger.debug("Sending refresh_messages to parent PID: #{inspect(self())}")
+        notify_parent_refresh()
+        {:noreply, socket}
+
+      {:error, reason} ->
+        Logger.error("Failed to merge messages: #{inspect(reason)}")
         {:noreply, socket}
     end
   end
@@ -176,5 +201,9 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
       |> Map.reject(fn {_, value} -> is_nil(value) or value == "" end)
 
     %{"filters" => params}
+  end
+
+  defp notify_parent_refresh do
+    send(self(), :refresh_messages)
   end
 end

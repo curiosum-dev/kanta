@@ -7,7 +7,7 @@
 </div>
 <div class="mt-8 grid grid-cols-12 gap-8">
   <div class="col-span-12 xl:col-span-6">
-    <div class="grid grid-cols-4 gap-2 mb-4">
+    <div class="grid grid-cols-3 gap-2 mb-4">
       <div class="col-span-1">
         <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg">
           <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
@@ -43,11 +43,35 @@
       <div class="col-span-1">
         <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg relative">
           <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
-            <div class="text-3xl font-bold text-orange-600 dark:text-orange-400"><%= @stale_messages_count %></div>
-            <div class="text-slate-600 dark:text-content-light font-medium text-lg">Stale</div>
+            <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @mergeable_messages_count %></div>
+            <div class="text-slate-600 dark:text-content-light font-medium text-lg">Stale & Mergeable</div>
+          </div>
+          <%= if @mergeable_messages_count > 0 do %>
+            <button class="bg-primary hover:bg-primary-dark text-white font-semibold rounded p-1 absolute top-2 right-2" phx-click="restore-mergeable" data-confirm={"⚠️ Merge All Stale & Mergeable Messages
+
+This will:
+1. Move translations from stale messages to their best matching messages
+2. Overwrite existing translations in target messages (unless missing in source)
+3. Delete the stale message IDs from all locales
+
+This action is irreversible. Are you sure?"} title="Merge all mergeable messages">
+              <%= Icons.replace() %>
+            </button>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-span-1">
+        <div class="bg-white dark:bg-stone-900 overflow-hidden shadow rounded-lg relative">
+          <div class="flex flex-col items-center justify-center px-4 py-5 sm:p-6">
+            <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @stale_messages_count %></div>
+            <div class="text-slate-600 dark:text-content-light font-medium text-lg">All Stale</div>
           </div>
           <%= if @stale_messages_count > 0 do %>
-            <button class="bg-primary hover:bg-primary-dark text-white font-semibold rounded p-1 absolute top-2 right-2" phx-click="delete-stale" data-confirm="Are you sure you want to delete all stale messages?">
+            <button class="bg-primary hover:bg-primary-dark text-white font-semibold rounded p-1 absolute top-2 right-2" phx-click="delete-stale" data-confirm={"⚠️ Delete All Stale Messages
+
+This will permanently delete all stale messages and their translations across ALL locales.
+
+This action is irreversible. Are you sure?"} title="Delete all stale messages">
               <Icons.trash class="flex-shrink-0 h-6 w-6 text-white dark:text-accent-dark" />
             </button>
           <% end %>
@@ -78,7 +102,7 @@
               <div class="text-3xl font-bold text-primary dark:text-accent-light"><%= @cache_count %></div>
               <div class="text-slate-600 dark:text-content-light font-medium text-lg">Items</div>
             </div>
-            <button class="bg-primary hover:bg-primary-dark text-white font-semibold rounded p-1 absolute top-2 right-2" phx-click="clear-cache" data-confirm="Are you sure?">
+            <button class="bg-primary hover:bg-primary-dark text-white font-semibold rounded p-1 absolute top-2 right-2" phx-click="clear-cache" data-confirm="Are you sure you want to clear the translation cache?">
               <Icons.trash class="flex-shrink-0 h-6 w-6 text-white dark:text-accent-dark" />
             </button>
           </div>

@@ -31,3 +31,12 @@ kanta-*.tar
 /assets/.DS_Store
 /.DS_Store
 .DS_Store
+
+CLAUDE.md
+GEMINI.md
+
+.tool-versions
+
+.claude
+/.elixir_ls
+/.expert

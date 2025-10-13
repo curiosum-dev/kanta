@@ -3,6 +3,8 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
   import Kanta.Utils.ParamParsers
 
+  alias Kanta.PoFiles.MessagesExtractorAgent
+  alias Kanta.PoFiles.Services.StaleDetection.Result
   alias Kanta.Translations
   alias Kanta.Translations.SingularTranslations.Finders.ListSingularTranslations
   alias Kanta.Translations.PluralTranslations.Finders.ListPluralTranslations
@@ -19,13 +21,15 @@ defmodule KantaWeb.Translations.TranslationsLive do
     socket =
       case get_locale(locale_id) do
         {:ok, locale} ->
-          # Get system-wide stale message IDs
-          stale_ids = Kanta.POFiles.MessagesExtractorAgent.get_stale_message_ids()
+          # Get system-wide stale detection with fuzzy matching
+          {:ok, stale_result} =
+            Kanta.PoFiles.Services.StaleDetection.call()
 
           socket
           |> assign(:locale, locale)
           |> assign(:application_sources_empty?, Translations.application_sources_empty?())
-          |> assign(:stale_message_ids, stale_ids)
+          |> assign(:stale_message_ids, stale_result.stale_message_ids)
+          |> assign(:fuzzy_matches, stale_result.fuzzy_matches_map)
           |> assign(get_assigns_from_params(params))
 
         _ ->
@@ -114,12 +118,9 @@ defmodule KantaWeb.Translations.TranslationsLive do
   def handle_info(:refresh_messages, socket) do
     locale_id = socket.assigns.locale.id
 
-    # Re-detect system-wide stale message IDs after deletion
-    {:ok, result} = Kanta.POFiles.Services.IdentifyStaleTranslations.call()
-    stale_ids = result.stale_message_ids
-
-    # Update the agent's cache so page refresh shows correct data
-    Kanta.POFiles.MessagesExtractorAgent.update_stale_message_ids(stale_ids)
+    # Re-detect system-wide stale messages with fuzzy matching
+    %Result{stale_message_ids: stale_message_ids, fuzzy_matches_map: fuzzy_matches_map} =
+      MessagesExtractorAgent.get_stale_detection_result(true)
 
     # Re-fetch messages with current filters
     preload_filters = %{"locale_id" => locale_id}
@@ -129,7 +130,7 @@ defmodule KantaWeb.Translations.TranslationsLive do
     filters =
       socket.assigns.filters
       |> Map.put("locale_id", to_string(locale_id))
-      |> Map.put("stale_message_ids", stale_ids)
+      |> Map.put("stale_message_ids", stale_message_ids)
 
     %{entries: messages, metadata: messages_metadata} =
       Translations.list_messages(
@@ -152,7 +153,8 @@ defmodule KantaWeb.Translations.TranslationsLive do
       socket
       |> assign(:messages, messages)
       |> assign(:messages_metadata, messages_metadata)
-      |> assign(:stale_message_ids, stale_ids)
+      |> assign(:stale_message_ids, stale_message_ids)
+      |> assign(:fuzzy_matches, fuzzy_matches_map)
 
     {:noreply, socket}
   end

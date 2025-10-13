@@ -2,6 +2,8 @@ defmodule KantaWeb.Api.SingularTranslationsController do
   @moduledoc false
   use KantaWeb, :controller
 
+  plug :put_layout, false
+
   alias Kanta.Translations.SingularTranslations.Finders.ListSingularTranslations
   alias Kanta.Utils.DatabasePopulator
 

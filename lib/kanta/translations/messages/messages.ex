@@ -26,22 +26,6 @@ defmodule Kanta.Translations.Messages do
     Repo.get_repo().aggregate(Message, :count)
   end
 
-  @doc """
-  Returns the count of stale messages in the system.
-
-  A message is considered "stale" if it doesn't exist in ANY locale's PO files.
-  This reads from the cached state in MessagesExtractorAgent.
-
-  ## Returns
-
-    * Integer count of stale messages
-
-  """
-  def get_stale_messages_count do
-    Kanta.POFiles.MessagesExtractorAgent.get_stale_message_ids()
-    |> MapSet.size()
-  end
-
   def create_message(attrs, opts \\ []) do
     %Message{} |> Message.changeset(attrs) |> Repo.get_repo().insert(opts)
   end
@@ -71,11 +55,11 @@ defmodule Kanta.Translations.Messages do
 
   ## Examples
 
-      iex> Kanta.Translations.Messages.delete_stale_message(123)
+      iex> Kanta.Translations.Messages.delete_message(123)
       {:ok, %{translations_deleted: 5, message_deleted: true}}
 
   """
-  def delete_stale_message(message_id) do
+  def delete_message(message_id) do
     import Ecto.Query
 
     # Delete all translations and message in a transaction
@@ -106,33 +90,10 @@ defmodule Kanta.Translations.Messages do
     end)
   end
 
-  @doc """
-  Deletes all stale messages and their translations from the database.
-
-  This function reads stale message IDs from the MessagesExtractorAgent
-  and deletes each stale message along with ALL their translations across ALL locales.
-
-  ## Returns
-
-    * `{:ok, stats}` - Map containing deletion statistics:
-      * `:messages_deleted` - Number of messages deleted
-      * `:translations_deleted` - Number of translations deleted
-    * `{:error, reason}` - If deletion fails
-
-  ## Examples
-
-      iex> Kanta.Translations.Messages.delete_all_stale_messages()
-      {:ok, %{messages_deleted: 3, translations_deleted: 12}}
-
-  """
-  def delete_all_stale_messages do
-    stale_ids =
-      Kanta.POFiles.MessagesExtractorAgent.get_stale_message_ids()
-      |> MapSet.to_list()
-
+  def delete_messages(message_ids) when is_list(message_ids) do
     {total_messages, total_translations} =
-      Enum.reduce(stale_ids, {0, 0}, fn message_id, {msg_count, trans_count} ->
-        case delete_stale_message(message_id) do
+      Enum.reduce(message_ids, {0, 0}, fn message_id, {msg_count, trans_count} ->
+        case delete_message(message_id) do
           {:ok, stats} ->
             {
               msg_count + if(stats.message_deleted, do: 1, else: 0),
@@ -144,9 +105,76 @@ defmodule Kanta.Translations.Messages do
         end
       end)
 
-    # Update the agent to clear stale IDs since we just deleted them
-    Kanta.POFiles.MessagesExtractorAgent.update_stale_message_ids(MapSet.new())
-
     {:ok, %{messages_deleted: total_messages, translations_deleted: total_translations}}
+  end
+
+  @doc """
+  Merges two messages by moving all translations from one message to another.
+
+  This operation:
+  1. Deletes all existing translations from the target message
+  2. Moves all translations from the source message to the target message
+  3. Deletes the source message
+
+  This is useful when a stale message needs to be merged with its replacement
+  (e.g., when msgid changes due to typo fixes or wording changes).
+
+  ## Arguments
+
+    * `from_message_id` - ID of the source message (will be deleted)
+    * `to_message_id` - ID of the target message (will receive translations)
+
+  ## Returns
+
+    * `{:ok, target_message}` - Target message with merged translations
+    * `{:error, :not_found}` - One or both messages not found
+    * `{:error, reason}` - Merge failed
+
+  ## Examples
+
+      iex> merge_messages(123, 456)
+      {:ok, %Message{id: 456, ...}}
+
+  """
+  def merge_messages(from_message_id, to_message_id) do
+    import Ecto.Query
+
+    with {:ok, from_message} <- get_message(filter: [id: from_message_id]),
+         {:ok, to_message} <- get_message(filter: [id: to_message_id]) do
+      # Perform merge in transaction
+      Repo.get_repo().transaction(fn ->
+        # Delete all translations from target message
+        Repo.get_repo().delete_all(
+          from st in SingularTranslation,
+            where: st.message_id == ^to_message.id
+        )
+
+        Repo.get_repo().delete_all(
+          from pt in PluralTranslation,
+            where: pt.message_id == ^to_message.id
+        )
+
+        # Move all singular translations from source to target
+        from(st in SingularTranslation,
+          where: st.message_id == ^from_message.id
+        )
+        |> Repo.get_repo().update_all(set: [message_id: to_message.id])
+
+        # Move all plural translations from source to target
+        from(pt in PluralTranslation,
+          where: pt.message_id == ^from_message.id
+        )
+        |> Repo.get_repo().update_all(set: [message_id: to_message.id])
+
+        # Delete the source message
+        Repo.get_repo().delete(from_message)
+
+        # Invalidate cache
+        Kanta.Cache.delete_all()
+
+        # Return the target message
+        to_message
+      end)
+    end
   end
 end

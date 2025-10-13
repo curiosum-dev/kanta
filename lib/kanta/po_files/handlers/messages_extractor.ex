@@ -1,11 +1,11 @@
-defmodule Kanta.POFiles.MessagesExtractor do
+defmodule Kanta.PoFiles.MessagesExtractor do
   @moduledoc """
   Handler responsible for extracting data from .po files
   """
 
   @default_context "default"
 
-  alias Kanta.POFiles.POFileParser
+  alias Kanta.PoFiles.POFileParser
   alias Kanta.PoFiles.Services.{ExtractPluralTranslation, ExtractSingularTranslation}
 
   def call do

@@ -6,7 +6,7 @@ defmodule Kanta do
   use Supervisor
 
   alias Kanta.{Config, Registry}
-  alias Kanta.POFiles.MessagesExtractorAgent
+  alias Kanta.PoFiles.MessagesExtractorAgent
 
   def start_link(opts) when is_list(opts) do
     conf = Config.new(opts)
