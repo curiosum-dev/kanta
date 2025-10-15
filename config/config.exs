@@ -22,7 +22,7 @@ if config_env() == :dev do
     ]
 
   config :tailwind,
-    version: "3.4.13",
+    version: "3.4.17",
     default: [
       args: ~w(
       --config=tailwind.config.js
