@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - Adds Gettext 0.26.0 compatibility with a custom backend adapter system
 
+- Allow custom locales (ex. `es-es`) (#100)
+
 ## [v0.4.2]
 ### Fixed
 - Fix Dialyzer errors related to Phoenix version detection (#122)
