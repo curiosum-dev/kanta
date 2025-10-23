@@ -20,8 +20,11 @@ defmodule Kanta.PoFiles.MessagesExtractor do
       |> Path.join("gettext")
 
     # Pass explicitly to POFileParser
-    POFileParser.parse_all_po_files(base_path, allowed_locales)
-    |> Enum.flat_map(&extract_translations_from_parsed_file/1)
+    result =
+      POFileParser.parse_all_po_files(base_path, allowed_locales)
+      |> Enum.flat_map(&extract_translations_from_parsed_file/1)
+
+    {:ok, result}
   end
 
   defp extract_translations_from_parsed_file(%{

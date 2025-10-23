@@ -15,7 +15,7 @@ defmodule Kanta.PoFiles.MessagesExtractorAgent do
   def init(_) do
     state =
       if message_extractor_available?() do
-        MessagesExtractor.call()
+        {:ok, _messages} = MessagesExtractor.call()
 
         # Detect stale translations system-wide with fuzzy matching
         {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()

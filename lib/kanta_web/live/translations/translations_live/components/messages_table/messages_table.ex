@@ -5,6 +5,8 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
   use KantaWeb, :live_component
 
+  require Logger
+
   alias Kanta.Translations.{Message, SingularTranslation}
 
   @available_params ~w(page search filter)
@@ -34,13 +36,10 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
   end
 
   def handle_event("delete_stale", %{"message-id" => message_id}, socket) do
-    require Logger
     message_id = String.to_integer(message_id)
 
     case Kanta.Translations.delete_message(message_id) do
-      {:ok, stats} ->
-        Logger.debug("Deleted message and translations: #{inspect(stats)}")
-        Logger.debug("Sending refresh_messages to parent PID: #{inspect(self())}")
+      {:ok, _stats} ->
         send(self(), :refresh_messages)
         {:noreply, socket}
 
@@ -55,17 +54,11 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
         %{"from-id" => from_id, "to-id" => to_id},
         socket
       ) do
-    require Logger
     from_message_id = String.to_integer(from_id)
     to_message_id = String.to_integer(to_id)
 
     case Kanta.Translations.merge_messages(from_message_id, to_message_id) do
-      {:ok, target_message} ->
-        Logger.debug(
-          "Merged message #{from_message_id} into #{to_message_id}: #{inspect(target_message)}"
-        )
-
-        Logger.debug("Sending refresh_messages to parent PID: #{inspect(self())}")
+      {:ok, _target_message} ->
         notify_parent_refresh()
         {:noreply, socket}
 

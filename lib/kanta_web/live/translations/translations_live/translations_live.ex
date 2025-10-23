@@ -134,19 +134,16 @@ defmodule KantaWeb.Translations.TranslationsLive do
 
     %{entries: messages, metadata: messages_metadata} =
       Translations.list_messages(
-        []
-        |> Keyword.merge(search: socket.assigns.filters["search"] || "")
-        |> Keyword.merge(page: parse_page(socket.assigns.filters["page"] || "1"))
-        |> Keyword.merge(filter: parse_filters(filters))
-        |> Keyword.merge(
-          preloads: [
-            :application_source,
-            :context,
-            :domain,
-            singular_translations: singular_translation_query,
-            plural_translations: plural_translation_query
-          ]
-        )
+        search: socket.assigns.filters["search"] || "",
+        page: parse_page(socket.assigns.filters["page"] || "1"),
+        filter: parse_filters(filters),
+        preloads: [
+          :application_source,
+          :context,
+          :domain,
+          singular_translations: singular_translation_query,
+          plural_translations: plural_translation_query
+        ]
       )
 
     socket =
