@@ -49,7 +49,6 @@ defmodule Kanta.MixProject do
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
       {:nebulex, "~> 2.5"},
-      {:shards, "~> 1.0"},
       {:scrivener, "~> 2.0"},
       {:scrivener_ecto, "~> 3.0"},
       {:uri_query, "~> 0.2"},

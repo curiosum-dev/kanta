@@ -3,7 +3,7 @@ import Config
 config :kanta, Kanta.Cache,
   primary: [
     gc_interval: :timer.hours(24),
-    backend: :shards
+    backend: :ets
   ]
 
 config :phoenix, :json_library, Jason
