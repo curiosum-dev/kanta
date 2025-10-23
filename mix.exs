@@ -16,11 +16,7 @@ defmodule Kanta.MixProject do
       aliases: aliases(),
       deps: deps(),
       dialyzer: dialyzer(),
-      docs: [
-        extras: ["docs/how-to-write-plugins.md"],
-        assets: "docs/assets",
-        main: "Kanta"
-      ]
+      docs: docs()
     ]
   end
 
@@ -88,6 +84,15 @@ defmodule Kanta.MixProject do
       plt_file:
         {:no_warn, ".dialyzer/elixir-#{System.version()}-erlang-otp-#{System.otp_release()}.plt"},
       ignore_warnings: ".dialyzer_ignore.exs"
+    ]
+  end
+
+  defp docs do
+    [
+      extras: ["CHANGELOG.md", "README.md", "docs/how-to-write-plugins.md"],
+      assets: %{"docs/assets" => "assets", "assets/images/readme" => "assets/images/readme"},
+      main: "Kanta",
+      logo: "logo.png"
     ]
   end
 end

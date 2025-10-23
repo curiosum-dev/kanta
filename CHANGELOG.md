@@ -1,437 +1,213 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
-This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
-
-## [v0.5.0]
+## [0.5.0]
 
 ### Breaking Changes
 - **Gettext 1.0.0 Migration**: This version requires updating your Gettext module definition to use the new backend adapter system. You must define `use Kanta.Gettext.Backend` in your Gettext module and configure the adapter.
 
 ### Added
-- Adds Gettext 1.0.0 compatibility with a custom backend adapter system
-- Allow custom locales (ex. `es-es`) (#100)
-- Stale messages detection nd merging (#120)
+- Gettext versions v0.26 and v1.0.0 compatibility with via custom backend adapter system
+- Allow custom locales (i.e. "`es-es`") (#100)
+- Stale messages detection and merging (#120)
 - Updated Tailwind to v3.4.17 (#130)
 
-## [v0.4.2]
+## [0.4.2] - 2025-08-25
 ### Fixed
-- Fix Dialyzer errors related to Phoenix version detection (#122)
+- Dialyzer errors related to Phoenix version detection (#122)
 - Replace Mix.Dep.Lock.read/0 with Application.spec/2 for better static analysis compatibility
-- Add .dialyzer_ignore.exs to handle Phoenix dependency warnings
+- .dialyzer_ignore.exs to handle Phoenix dependency warnings
 
 ### Added
-- Add Phoenix 1.8 and Phoenix LiveView 1.x compatibility (#122)
+- Phoenix 1.8 and Phoenix LiveView 1.x compatibility (#122)
 
-## [v0.4.1]
-### Other
-- feat: Expand Kanta.Query module (#86)
-- Merge pull request #71 from kubosuke/feat/fix-pagination
+Authored by: Jakub Lambrych <jakub.lambrych@curiosum.com>
+Signed-off-by: Michał Buszkiewicz <michal@curiosum.com>
 
-Fix pagination logic for not showing many pages
-- Merge pull request #85 from curiosum-dev/feature/command-to-invalidate-cache
+## [0.4.1] - 2024-10-09
 
-Command to invalidate cache
-- feat: Add button for manual cache clearing
-- Merge remote-tracking branch upstream/develop into feat/fix-pagination
-- Merge pull request #84 from curiosum-dev/feature/improve-filter-bar-ui
+### Added
+- Expand Kanta.Query module (#86)
+- Button for manual cache clearing (#85)
+- Application source support
+- Support for multiline msgids (#56)
+- Support for nested scopes and different main path (#61)
+- Support for different ID types (#52)
+- Way to create new application source
+- Way to clear all filters at once
+- `dashboard_path` helper to verified routes
+- `Colors` module
+- Chevrons to `Icons` module
+- Missing @moduledoc
+- Versioce for version bumping
+- Support for SQLite3 (#51)
+- Doc to `compiling?` function
+- Child LV dashboard components support (#42)
+- Docs to DashboardLive
 
-Improve filter bar UI
+### Changed
+- Improve UX when editing many translations (#62)
+- Improve filter bar UI (#84)
 - Make filters bar responsive
-- Merge branch main into develop
-- chore: :bookmark: Bump version to 0.4.0 (#82)
-- Release/0.4.0 (#81)
+- Improve readability of `Router`
+- Improve CI (#80)
+- Improve UX when using filters (#49)
+- Improve efficiency of messages list query
+- Refactor translations_live.ex
+- Update pagination.ex
+- Replace `parse_msgid/1` with just `Enum.join`
+- Extract logic of `parse_filters/1`s reduce to `parse_filter/2`
+- Support for newer phoenix_html 4 with phoenix_html_helpers (#47)
+- Support translations during compilation (#48)
+- Search for PO files only in priv/gettext (#41)
+- PO Extractor - allow to import multi-lines msgstr (#40)
 
-* Add application source
+### Fixed
+- Pagination logic for not showing many pages (#71)
+- Translation preloads to preload only necessary data (#60)
+- `application_source_form_live`
+- Migrations
+- Pagination failing to parse int (#44)
+- Credo issues
+- Naming across file
 
-* Add support for multiline msgids
+### Changed (Dependencies)
+- Bump ecto versions
+- Bump uri_query version
+- Bump credo and dialyxir versions
+- Use Ubuntu 24.04 LTS in CI
+- Add supported Elixir versions
+- Remove unsupported OTP version
 
-* Replace `parse_msgid/1` with just `Enum.join`
+### Changed (Configuration)
+- Restore params after saving a translation
+- Recover filters from params on mount in the translations list (#49)
+- Properly find index in Select
+- Parse params and add redirects
+- Return error when `id_parse_function` provided with MFA with invalid arity
+- Suppress warning about router.ex
+- Changes to make import export plugin work
 
-* Changes to make import export plugin work
-
-* Fix translation preloads to preload only necessary data
-
-* Add support for nested scopes and different main path
-
-* Add a way to create new application source
-
-* Fix to `application_source_form_live`
-
-* Fixes to migrations
-
-* Add a way to clear all filters at once
-
-* Restore params after saving a translation
-
-* Add `dashboard_path` helper to verified routes
-
-* Improve readability of `Router`
-
-* Add `Colors` module
-
-* Add chevrons to `Icons` module
-
-* ❄️ Remove devenv
-
-* Fix credo
-
-* Remove autogenerated dummy test
-
-* Improve CI
-
-* Fix naming
-
-* Fix naming across file
-
-* Add supported Elixir versions
-
-* Remove unsupported OTP version
-
-* Set env
-
-* Use Ubuntu 24.04 LTS
-
-* Bump ecto versions
-
-* Bump uri_query version
-
-* Suppress warning about router.ex
-
-* Bump credo and dialyxir versions
-
-* Parse params and and redirects
-
-* Add support for different ID types
-
-* Return error when `id_parse_function` provided with MFA with invalid arity
-
-* Extract logic of `parse_filters/1`s reduce to `parse_filter/2`
-
-* Trigger workflow
-
-* Refactor translations_live.ex
-
-* Trigger workflow
-
-* Trigger workflow
-
-* Trigger workflow
-
-* Add missing @moduledoc
-
-* Fix
-
-* feat: :sparkles: add versioce for version bumping
-
-* chore: :bookmark: Bump version to 0.4.0
-
----------
+### Removed
+- Remove devenv (#77)
+- Remove autogenerated dummy test
+- Remove Logger
 
 Co-authored-by: Jakub Melkowski <9402720+Blatts12@users.noreply.github.com>
 Co-authored-by: Maksymilian Jodłowski <maksymilian.jodlowski@gmail.com>
 Co-authored-by: Jan Świątek <jan.swiatek@curiosum.com>
-- feat: :sparkles: add versioce for version bumping
-- Merge pull request #62 from curiosum-dev/feature/ui-translation-improvements
-
-Improve UX when editing many translations
-- Fix
-- Merge branch develop into feature/ui-translation-improvements
-- Merge pull request #59 from curiosum-dev/feature/add_support_for_multiple_apps
-
-Add support for multiple apps
-- Add missing @moduledoc
-- Merge branch develop into feature/add_support_for_multiple_apps
-- Merge pull request #61 from curiosum-dev/feature/support-nested-scopes
-
-Add support for nested scopes and different main path
-- Merge branch develop into feature/support-nested-scopes
-- Trigger workflow
-- Merge pull request #60 from curiosum-dev/fix/multiple-locales-for-messages-fixes
-
-Fix translation preloads to preload only necessary data
-- Merge branch develop into fix/multiple-locales-for-messages-fixes
-- Trigger workflow
-- Merge pull request #56 from curiosum-dev/fix/multiline-translations
-
-Add support for multi-line msgids
-- Merge branch develop into fix/multiline-translations
-- Trigger workflow
-- Merge pull request #52 from curiosum-dev/fix/parse_params_to_avoid_500s
-
-Parse params and add support for different ID types
-- Refactor translations_live.ex
-- Trigger workflow
-- Extract logic of `parse_filters/1`s reduce to `parse_filter/2`
-- Return error when `id_parse_function` provided with MFA with invalid arity
-- Add support for different ID types
-- Parse params and and redirects
-- Merge pull request #80 from curiosum-dev/feature/improve-ci
-
-Feature/improve ci
-- Bump credo and dialyxir versions
-- Suppress warning about router.ex
-- Bump uri_query version
-- Bump ecto versions
-- Use Ubuntu 24.04 LTS
-- Set env
-- Remove unsupported OTP version
-- Add supported Elixir versions
-- Fix naming across file
-- Fix naming
-- Improve CI
-- Merge pull request #77 from curiosum-dev/feat/remove-devenv
-
-❄️ Remove devenv
-- Merge pull request #79 from curiosum-dev/fix/align-with-main
-
-Fix/align with main
-- Remove autogenerated dummy test
-- Fix credo
-- ❄️ Remove devenv
-- Add chevrons to `Icons` module
-- Add `Colors` module
-- Improve readability of `Router`
-- Add `dashboard_path` helper to verified routes
-- Update pagination.ex
-- Restore params after saving a translation
-- Add a way to clear all filters at once
-- Fixes to migrations
-- Fix to `application_source_form_live`
-- Add a way to create new application source
-- Add support for nested scopes and different main path
-- Fix translation preloads to preload only necessary data
-- Changes to make import export plugin work
-- Replace `parse_msgid/1` with just `Enum.join`
-- Add support for multiline msgids
-- Add application source
-- Add support for SQLite3 (#51)
-
-* Add support for SQLite3
-
-* Fix current version
-- Recover filters from params on mount in the translations list (#49)
-
-* Improve UX when using filters
-
-* Properly find index in Select
-- 🐛 Fix pagination failing to parse int (#44)
-- Support translations during compilation (#48)
-
-* Support translations during compilation
-
-* Remove Logger
-
-* Fix credo issues
-
-* Add doc to `compiling?` function
-- Support for newer phoenix_html 4 with phoenix_html_helpers because newer version has a little different api (#47)
-
-* html_helpers
 
 Signed-off-by: Jan Jakůbek <jan.jakubek96@gmail.com>
 
-* delete_use_PhoenixHtml
+## [0.3.1] - 2023-10-13
 
-Signed-off-by: Jan Jakůbek <jan.jakubek96@gmail.com>
+### Added
+- API endpoints (#36)
+- Optional API authorization
+- @moduledoc to APIAuthPlug
+- API scaffolding
 
----------
+### Fixed
+- Minor naming issues
 
-Signed-off-by: Jan Jakůbek <jan.jakubek96@gmail.com>
-- Merge pull request #42 from curiosum-dev/feature/child-lv-components
+## [0.3.0] - 2023-09-26
 
-Dashboard allow child live view components
-- 📝 Add docs to DashboardLive
-- 💫 Support child LV dashboard components
-- Merge pull request #41 from curiosum-dev/feature/stricter-po-file-search
-
-🚦 Search for PO files only in priv/gettext
-- Merge pull request #40 from oliver-kriska/feature/multi-line-msgstr
-
-PO Extractor - allow to import multi-lines msgstr
-- 🚦 Search for PO files only in priv/gettext
-- Update README.md
-- PO Extractor - allow to import multi-lines msgstr
-- Merge pull request #38 from curiosum-dev/chore/kanta-sync-readme-plugins-list-update
-
-Update README.md
-- Update README.md
-
-Adds Kanta sync to the plugins list in README Table of contents
-
-## [0.3.1]
-### Other
-- Merge pull request #37 from curiosum-dev/release/0.3.1
-
-Release/0.3.1
-- Merge branch main into release/0.3.1
-- Merge pull request #36 from curiosum-dev/feature/api-endpoint
-
-Feature/api endpoint
-- Add optional API authorization, resolve minor naming issues
-- Add @moduledoc to APIAuthPlug
-- Add API endpoints
-- Merge branch develop into feature/api-endpoint
-- Create API scaffolding
-
-## [0.3.0]
-### Other
-- Merge pull request #35 from curiosum-dev/release/0.3.0
-
-Release/0.3.0
+### Changed
 - Update phoenix_live_view to 0.20
 - Update Kanta version to 0.3.0
-- Merge pull request #34 from curiosum-dev/fix/js-error-on-liveview-page-change
-
-Fix JS error on LiveView page change
-- Get rid of deprecated live_component/2
-- Fix JS error on LiveView page change
-- Merge pull request #32 from FranciscoLira/fix/router-import-missing
-
-Fix/router import missing
-- Merge pull request #21 from curiosum-dev/feature/improved-translations-search
-
-Improve translations search
-- Require opts keyword list in join_resource/3
+- Improve translations search (#21)
 - Improve efficiency of messages list query
-- Merge branch develop into feature/improved-translations-search
-- fix:README missing import in router
-- Improve translations search
+- Require opts keyword list in join_resource/3
 
-## [0.2.2]
-### Other
-- Merge pull request #30 from curiosum-dev/release/0.2.2
+### Fixed
+- JS error on LiveView page change (#34)
+- README missing import in router (#32)
 
-Release/0.2.2
-- Merge branch main into release/0.2.2
-- Merge pull request #29 from curiosum-dev/chore/update-powriter-information-in-readme
+### Deprecated
+- Get rid of deprecated live_component/2
 
-Update information about POWriter
-- Update information about POWriter
-- Merge pull request #27 from curiosum-dev/feature/readme-and-sidebar-badges
+## [0.2.2] - 2023-09-05
 
-Add badges
-- Add badges
+### Changed
+- Update information about POWriter (#29)
+- Add badges (#27)
 
-## [0.2.1]
-### Other
+## [0.2.1] - 2023-09-04
+
+### Changed
 - Add badges (#28)
-- Merge pull request #26 from curiosum-dev/chore/update-readme
+- Update README to match Kanta version (#26)
 
-Update README to match Kanta version
-- Update README to match Kanta version
+## [0.2.0] - 2023-09-04
 
-## [0.2.0]
-### Other
-- Merge pull request #25 from curiosum-dev/release/0.2.0
+### Added
+- Dialyzer (#18)
+- Plugin docs, specs and conditional components rendering (#18)
 
-Release/0.2.0
-- Merge pull request #24 from curiosum-dev/feature/set-docs-entry-and-bump-mix-version
+### Changed
+- Set docs entry and bump mix version (#24)
+- Update "How to write plugins?" tutorial (#18)
+- Update gettext repo (#22)
+- Update demo link in README (#20)
+- Module names consistency, explicit ArgumentError rescue (#18)
 
-Set docs entry and bump mix version
-- Set docs entry and bump mix version
-- Merge pull request #23 from curiosum-dev/fix/plural-translations-form
-
-Improve UI and fix plural translations form
+### Fixed
+- Improve UI and plural translations form (#23)
 - Use truncate CSS prop instead of String.slice
-- Improve UI and plural translations form
-- Merge pull request #22 from curiosum-dev/chore/update-gettext-repo
+- Credo and dialyzer warnings (#18)
+- Wrong type (it was a Map all along)
+- Multitenancy projects issues (#14)
+- Down migration order (#14)
+- prefix() calls into prefix (#14)
+- Phoenix VerifiedRoutes issues & missing views (#10)
+- Kanta in mix release projects (#8)
 
-Update gettext repo
-- Update gettext repo
-- Merge pull request #20 from curiosum-dev/chore/update-demo-link
+### Changed
+- Fallback to public prefix for messages (#14)
+- Pass on_mount option to live_session opts (#14)
+- Use https instead ssh connection for gettext (#14)
+- Pass down opts to respective up&down migrations (#14)
+- Add limit 1 (#14)
+- Rework plural messages handling (#14)
+- Change unverified url to unverified path (#11)
+- Extract DeepL plugin to external package (#12)
 
-Update demo link in README
-- Update demo link in README
-- Merge pull request #18 from curiosum-dev/feature/plugin-docs
+### Added
+- Devenv (#14)
 
-Feature/plugin docs
-- Module names consistency, explicit ArgumentError rescue
-- Add dialyzer, fix credo and dialyzer warnings
-- Update "How to write plugins?" tutorial
-- Plugin docs, specs and conditional components rendering
-- 🐛 Hotfix wrong type
+## [0.1.0] - 2023-05-18
 
-It was a Map all along
-- Merge pull request #14 from curiosum-dev/bugfix/prerelease-fixes
+Initial version of Kanta translations manager.
 
-Bugfix/prerelease fixes
-- 🔧 Fallback to public prefix for messages
-- 🔧 Pass on_mount option to live_session opts
-- 🐛 Use https instead ssh connection for gettext
-- 🐛 Fix down migration order
-- 🐛 Fix prefix() calls into prefix
-- 🔧 Pass down opts to respective up&down migrations
-- 🐛 Add limit 1
-- ❄ Add devenv
-- fix: multitenancy projects issues
-- feat: rework plural messages handling
-- Merge pull request #12 from curiosum-dev/feature/kanta-plugins-extraction
+### Added
+- Basic rwd (responsive web design)
+- Dark mode
+- Messages filters
+- Plugins management
+- Gettext contexts
+- Form for plural translation updates
+- Form for singular translation updates
+- Plural translations
+- Nebulex as a caching tool
+- Sample pages in petal
+- Basic configuration for semi-PETAL stack
+- PopulateCacheWithStoredDataService
+- File structure
 
-feat: extract DeepL plugin to the external package
-- feat: extract DeepL plugin to the external package
-- Merge pull request #11 from curiosum-dev/fix/phoenix-verified-url
-
-fix: change unverified url to unverified path
-- fix: change unverified url to unverified path
-- Merge pull request #10 from curiosum-dev/fix/phoenix-verified-paths
-
-fix: Phoenix VerifiedRoutes issues & missing views
-- fix: Phoenix VerifiedRoutes issues & missing views
-- Merge pull request #8 from curiosum-dev/fix/kanta-in-mix-release-setup
-
-fix: Kanta in a mix release projects
-- fix: Kanta in a mix release projects
-- Merge tag 0.1.0 into develop
-
-Initial version of Kanta
-
-## [0.1.0]
-### Other
-- Merge branch release/0.1.0 into main
-- chore: bump version
-- docs: update readme
-- feat: basic rwd
-- feat: dark mode
-- feat: add messages filters
-- feat: plugins management
-- feat: small refactoring
-- fix: paths resolution
-- feat: add gettext contexts & fix plural translations
-- feat: mainly UI adjusts
-- Merge pull request #6 from curiosum-dev/1-fix_github_dependency_on_gettext_fork
-
-Fix github dependency on gettext fork (#1)
-- Fix github dependency on gettext fork (#1)
-- Merge tag 0.0.1-rc1 into develop
-
-First release candidate of Kanta translations manager.
-- Merge branch release/0.0.1-rc1
-- chore: update package version
-- Merge pull request #4 from curiosum-dev/feature/KNT-2
-
-fix: cached translations in UI
-- fix: cached translations in UI
-- Merge pull request #3 from curiosum-dev/feature/KNT-1
-
-KNT-1 mimic LiveDashboard mechanism in Kanta
-- fix: LV redirect loop
-- feat: reverse engineering of live dashboard (WIP)
-- feat: adjust gettext repo for plural messages handling
-- feat: add form for plural translation updates
-- feat: add form for singular translation updates
-- Merge pull request #1 from curiosum-dev/feature/petal_init
-
-PETAL stack init & db structure rework
-- feat: rework translation listings
-- feat: add plural translations
-- feat: add nebulex as a caching tool
-- feat: add sample pages in petal
-- feat: add basic configuration for semi-PETAL stack
-- chore: update deps & readme
+### Changed
+- Update readme
+- Update package version
+- Update deps & readme
+- Rework translation listings
 - Change translations to singular translations
-- Create PopulateCacheWithStoredDataService
-- Proof of concept
-- Create file structure
-- First commit
+- Mimic LiveDashboard mechanism in Kanta (#3)
+- Adjust gettext repo for plural messages handling
+- Mainly UI adjusts
+- Small refactoring
+
+### Fixed
+- Github dependency on gettext fork (#6, #1)
+- Plural translations
+- Cached translations in UI (#4)
+- LV redirect loop
+- Paths resolution
