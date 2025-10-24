@@ -2,6 +2,8 @@ defmodule KantaWeb.Api.DomainsController do
   @moduledoc false
   use KantaWeb, :controller
 
+  plug :put_layout, false
+
   alias Kanta.Translations.Domains.Finders.ListDomains
   alias Kanta.Utils.DatabasePopulator
 

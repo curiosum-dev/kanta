@@ -5,13 +5,19 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
 
   use KantaWeb, :live_component
 
+  require Logger
+
   alias Kanta.Translations.{Message, SingularTranslation}
 
   @available_params ~w(page search filter)
-  @params_in_filter ~w(domain_id context_id not_translated)
+  @params_in_filter ~w(domain_id context_id not_translated stale)
 
   def update(socket, assigns) do
     {:ok, assign(assigns, socket)}
+  end
+
+  def message_stale?(message, stale_message_ids) do
+    MapSet.member?(stale_message_ids, message.id)
   end
 
   def handle_event("edit_message", %{"id" => id}, socket) do
@@ -27,6 +33,39 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
              URI.encode_query(query)
          )
      )}
+  end
+
+  def handle_event("delete_stale", %{"message-id" => message_id}, socket) do
+    message_id = String.to_integer(message_id)
+
+    case Kanta.Translations.delete_message(message_id) do
+      {:ok, _stats} ->
+        send(self(), :refresh_messages)
+        {:noreply, socket}
+
+      {:error, reason} ->
+        Logger.error("Failed to delete: #{inspect(reason)}")
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event(
+        "merge_messages",
+        %{"from-id" => from_id, "to-id" => to_id},
+        socket
+      ) do
+    from_message_id = String.to_integer(from_id)
+    to_message_id = String.to_integer(to_id)
+
+    case Kanta.Translations.merge_messages(from_message_id, to_message_id) do
+      {:ok, _target_message} ->
+        notify_parent_refresh()
+        {:noreply, socket}
+
+      {:error, reason} ->
+        Logger.error("Failed to merge messages: #{inspect(reason)}")
+        {:noreply, socket}
+    end
   end
 
   def translated?(%Message{message_type: :singular} = message, locale, source) do
@@ -155,5 +194,9 @@ defmodule KantaWeb.Translations.Components.MessagesTable do
       |> Map.reject(fn {_, value} -> is_nil(value) or value == "" end)
 
     %{"filters" => params}
+  end
+
+  defp notify_parent_refresh do
+    send(self(), :refresh_messages)
   end
 end

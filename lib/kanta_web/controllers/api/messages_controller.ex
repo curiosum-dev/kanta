@@ -2,6 +2,8 @@ defmodule KantaWeb.Api.MessagesController do
   @moduledoc false
   use KantaWeb, :controller
 
+  plug :put_layout, false
+
   alias Kanta.Translations.Messages.Finders.ListMessages
   alias Kanta.Utils.DatabasePopulator
 

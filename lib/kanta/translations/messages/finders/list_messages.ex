@@ -19,6 +19,7 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
     base()
     |> filter_query(query_filters)
     |> not_translated_query(filters)
+    |> stale_query(filters)
     |> search_subquery(filters, params[:search])
     |> distinct(true)
     |> preload_resources(params[:preloads] || [])
@@ -40,6 +41,20 @@ defmodule Kanta.Translations.Messages.Finders.ListMessages do
   end
 
   defp not_translated_query(query, _), do: query
+
+  defp stale_query(query, %{"stale" => "true", "stale_message_ids" => stale_ids})
+       when is_struct(stale_ids, MapSet) do
+    # System-wide stale detection - filter by message IDs that don't exist in ANY locale's PO files
+    if MapSet.size(stale_ids) > 0 do
+      stale_id_list = MapSet.to_list(stale_ids)
+      where(query, [message: m], m.id in ^stale_id_list)
+    else
+      # No stale messages - return empty result
+      where(query, [message: m], false)
+    end
+  end
+
+  defp stale_query(query, _), do: query
 
   defp search_subquery(query, _, nil), do: query
   defp search_subquery(query, _, ""), do: query

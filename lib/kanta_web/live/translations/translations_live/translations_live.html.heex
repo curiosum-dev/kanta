@@ -32,7 +32,7 @@
   </div>
 </div>
 <div class="mt-4">
-  <.live_component module={FiltersBar} filters={@filters} not_translated_default={@not_translated_default} application_sources_empty?={@application_sources_empty?} locale_id={@locale.id} id="filters-bar" />
-  <.live_component module={MessagesTable} messages={@messages} filters={@filters} locale={@locale} application_sources_empty?={@application_sources_empty?} id="messages-table" />
+  <.live_component module={FiltersBar} filters={@filters} not_translated_default={@not_translated_default} stale_default={@stale_default} application_sources_empty?={@application_sources_empty?} locale_id={@locale.id} id="filters-bar" />
+  <.live_component module={MessagesTable} messages={@messages} filters={@filters} locale={@locale} application_sources_empty?={@application_sources_empty?} stale_message_ids={@stale_message_ids} fuzzy_matches={@fuzzy_matches} id="messages-table" />
   <Pagination.render metadata={@messages_metadata} on_page_change="page_changed" />
 </div>

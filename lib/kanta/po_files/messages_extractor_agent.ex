@@ -1,10 +1,11 @@
-defmodule Kanta.POFiles.MessagesExtractorAgent do
+defmodule Kanta.PoFiles.MessagesExtractorAgent do
   @moduledoc """
   GenServer responsible for extracting messages and translations from .po files
   """
 
   use GenServer
-  alias Kanta.POFiles.MessagesExtractor
+  alias Kanta.PoFiles.MessagesExtractor
+  alias Kanta.PoFiles.Services.StaleDetection
 
   def start_link(state) do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
@@ -12,11 +13,47 @@ defmodule Kanta.POFiles.MessagesExtractorAgent do
 
   @impl true
   def init(_) do
-    if message_extractor_available?() do
-      MessagesExtractor.call()
-    end
+    state =
+      if message_extractor_available?() do
+        {:ok, _messages} = MessagesExtractor.call()
 
-    {:ok, %{}}
+        # Detect stale translations system-wide with fuzzy matching
+        {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()
+
+        %{stale_detection_result: result}
+      else
+        %{stale_detection_result: nil}
+      end
+
+    {:ok, state}
+  end
+
+  @doc """
+  Gets system-wide stale message IDs.
+
+  ## Returns
+
+    * `MapSet.t()` - Set of stale message IDs, or empty MapSet
+
+  ## Examples
+
+      iex> MessagesExtractorAgent.get_stale_message_ids()
+      #MapSet<[1, 2, 3]>
+
+  """
+  def get_stale_detection_result(recalculate \\ false) do
+    GenServer.call(__MODULE__, {:get_stale_detection_result, recalculate})
+  end
+
+  @impl true
+  def handle_call({:get_stale_detection_result, false}, _from, state) do
+    {:reply, state.stale_detection_result, state}
+  end
+
+  def handle_call({:get_stale_detection_result, true}, _from, state) do
+    {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()
+
+    {:reply, result, %{state | stale_detection_result: result}}
   end
 
   defp message_extractor_available? do

@@ -46,11 +46,23 @@
       <div class="h-10 flex items-center">
         <.live_component
           form={form}
-          module={Toggle} 
-          id={"not_translated"} 
+          module={Toggle}
+          id={"not_translated"}
           default_value={@not_translated_default}
-          label="Not translated" 
+          label="Not translated"
           field={form["not_translated"]}
+        />
+      </div>
+    </div>
+    <div class="col-span-6 lg:col-span-3 2xl:col-span-2 flex flex-col justify-end">
+      <div class="h-10 flex items-center">
+        <.live_component
+          form={form}
+          module={Toggle}
+          id={"stale"}
+          default_value={@stale_default}
+          label="Stale"
+          field={form["stale"]}
         />
       </div>
     </div>

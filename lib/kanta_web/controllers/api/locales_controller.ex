@@ -2,6 +2,8 @@ defmodule KantaWeb.Api.LocalesController do
   @moduledoc false
   use KantaWeb, :controller
 
+  plug :put_layout, false
+
   alias Kanta.Translations.Locale.Finders.ListLocales
   alias Kanta.Utils.DatabasePopulator
 

@@ -2,6 +2,8 @@ defmodule KantaWeb.Api.ApplicationSourcesController do
   @moduledoc false
   use KantaWeb, :controller
 
+  plug :put_layout, false
+
   alias Kanta.Translations
   alias Kanta.Utils.DatabasePopulator
 

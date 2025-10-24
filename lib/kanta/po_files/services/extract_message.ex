@@ -21,6 +21,9 @@ defmodule Kanta.PoFiles.Services.ExtractMessage do
     end)
   end
 
+  def default_domain, do: @default_domain
+  def default_context, do: @default_context
+
   defp get_or_create_message(attrs, nil, nil) do
     case Translations.get_message(filter: [msgid: attrs[:msgid]]) do
       {:ok, message} -> {:ok, message}

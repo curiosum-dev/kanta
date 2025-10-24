@@ -56,7 +56,7 @@ defmodule KantaWeb do
         alias KantaWeb.Router.Helpers, as: Routes
         unquote(verified_routes())
 
-        plug :put_layout, html: KantaWeb.LayoutView
+        plug :put_layout, html: {KantaWeb.LayoutView, :dashboard}
       end
     end
   end

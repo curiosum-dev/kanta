@@ -41,6 +41,9 @@ defmodule Kanta.Translations do
   defdelegate get_message(params \\ []), to: Messages
   defdelegate get_messages_count(), to: Messages
   defdelegate create_message(attrs, opts \\ []), to: Messages
+  defdelegate delete_message(message_id), to: Messages
+  defdelegate delete_messages(message_ids), to: Messages
+  defdelegate merge_messages(from_message_id, to_message_id), to: Messages
 
   # LOCALES
   defdelegate list_locales(params \\ []), to: Locales

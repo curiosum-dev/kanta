@@ -51,7 +51,7 @@ defmodule Kanta.MixProject do
       {:nebulex, "~> 2.5"},
       {:shards, "~> 1.0"},
       {:scrivener, "~> 2.0"},
-      {:scrivener_ecto, "~> 2.0"},
+      {:scrivener_ecto, "~> 3.0"},
       {:uri_query, "~> 0.2"},
       # DEV
       {:versioce, "~> 2.0.0"},
@@ -59,8 +59,8 @@ defmodule Kanta.MixProject do
       {:esbuild, "~> 0.7", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
-      {:gettext, ">= 0.26.0 and < 1.1.0"},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:gettext, ">= 0.26.0"},
       {:dialyxir, "~> 1.4", only: :dev, runtime: false},
       {:postgrex, "~> 0.16", only: :test}
     ]

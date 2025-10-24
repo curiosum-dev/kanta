@@ -30,13 +30,50 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
                       Type
                     </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-content-light uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-stone-800 divide-y divide-slate-200 dark:divide-accent-dark">
                   <%= for message <- @messages do %>
-                    <tr class="cursor-pointer hover:bg-slate-50 hover:dark:bg-base-dark transition-all" phx-click="edit_message" phx-value-id={message.id} phx-target={@myself}>
-                      <td class="flex px-6 py-4">
-                        <div class="text-md font-medium text-primary-dark dark:text-accent-dark truncate"><%= String.slice(message.msgid, 0..30) %></div>
+                    <tr class={[
+                      if(message_stale?(message, @stale_message_ids), do: "transition-all", else: "cursor-pointer transition-all"),
+                      if(message_stale?(message, @stale_message_ids),
+                        do: "bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 hover:dark:bg-yellow-900/30",
+                        else: "hover:bg-slate-50 hover:dark:bg-base-dark"
+                      )
+                    ]} {if !message_stale?(message, @stale_message_ids), do: [{"phx-click", "edit_message"}, {"phx-value-id", message.id}, {"phx-target", @myself}], else: []}>
+                      <td class="px-6 py-4">
+                        <div class="flex flex-col gap-2">
+                          <div class="flex items-center gap-2">
+                            <div class="text-md font-medium text-primary-dark dark:text-accent-dark truncate"><%= String.slice(message.msgid, 0..30) %></div>
+                            <%= if message_stale?(message, @stale_message_ids) do %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-700" title="This message exists in the database but is no longer present in any locale's PO files">
+                                Stale
+                              </span>
+                            <% end %>
+                            <%= if Map.has_key?(@fuzzy_matches, message.id) do %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 border border-green-300 dark:border-green-700" title="This message can be merged with a similar message that exists in PO files">
+                                Merge
+                              </span>
+                            <% end %>
+                          </div>
+                          <%= if Map.has_key?(@fuzzy_matches, message.id) do %>
+                            <% fuzzy_match = Map.get(@fuzzy_matches, message.id) %>
+                            <% matched_msgid = fuzzy_match.matched_msgid %>
+                            <% score_pct = Float.round(fuzzy_match.similarity_score * 100, 1) %>
+
+                            <div class="text-xs text-slate-600 dark:text-slate-400">
+                              <span class="font-semibold text-green-600 dark:text-green-400">Probably:</span>
+                              <span class="inline-flex items-center px-1.5 py-0.5 ml-1 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
+                                (<%= score_pct %>%)
+                              </span>
+                              <span> changed from</span>
+                              "<span class="italic"><%= String.slice(matched_msgid, 0..40) %></span>"
+                            </div>
+                          <% end %>
+                        </div>
                       </td>
                       <td class="px-6 py-4">
                         <div class={[
@@ -81,6 +118,53 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full uppercase text-xs border border-primary dark:border-accent-dark text-primary-dark dark:text-accent-dark font-bold">
                           <%= message.message_type %>
                         </span>
+                      </td>
+                      <td class="px-6 py-4">
+                        <%= if message_stale?(message, @stale_message_ids) || Map.has_key?(@fuzzy_matches, message.id) do %>
+                          <div class="flex items-center gap-2">
+                            <%= if Map.has_key?(@fuzzy_matches, message.id) do %>
+                              <% fuzzy_match = Map.get(@fuzzy_matches, message.id) %>
+                              <% matched_msgid = fuzzy_match.matched_msgid %>
+                              <% matched_message_id = fuzzy_match.matched_message_id %>
+                              <button
+                                type="button"
+                                phx-click="merge_messages"
+                                phx-value-from-id={message.id}
+                                phx-value-to-id={matched_message_id}
+                                phx-target={@myself}
+                                data-confirm={"⚠️ Merge Message
+
+This will:
+1. Move all translations from '#{message.msgid}' to '#{matched_msgid}'
+2. Overwrite existing translations in '#{matched_msgid}' (unless missing in source)
+3. Delete '#{message.msgid}' from all locales
+
+This action is irreversible. Are you sure?"}
+                                class="inline-flex items-center p-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                                title={"Merge into: '#{matched_msgid}' (affects all locales)"}
+                              >
+                                <%= Icons.replace() %>
+                              </button>
+                            <% end %>
+                            <%= if message_stale?(message, @stale_message_ids) do %>
+                              <button
+                                type="button"
+                                phx-click="delete_stale"
+                                phx-value-message-id={message.id}
+                                phx-target={@myself}
+                                data-confirm={"⚠️ Delete Stale Message
+
+This will permanently delete this message and its translations across ALL locales.
+
+This action is irreversible. Are you sure?"}
+                                class="inline-flex items-center p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                                title="Delete stale message (all locales)"
+                              >
+                                <Icons.trash class="h-5 w-5" />
+                              </button>
+                            <% end %>
+                          </div>
+                        <% end %>
                       </td>
                     </tr>
                   <% end %>
