@@ -1,22 +1,30 @@
+# Kanta Guide
 <div align="center">
   <img src="https://github.com/user-attachments/assets/f0352656-397d-4d90-999a-d3adbae1095f">
 
   <h1>Kanta</h1>
   <p><strong>User-friendly translations manager for Elixir/Phoenix projects</strong></p>
 
-  [![Contact Us](https://img.shields.io/badge/Contact%20Us-%23F36D2E?style=for-the-badge&logo=maildotru&logoColor=white&labelColor=F36D2E)](https://curiosum.com/contact)
-  [![Visit Curiosum](https://img.shields.io/badge/Visit%20Curiosum-%236819E6?style=for-the-badge&logo=elixir&logoColor=white&labelColor=6819E6)](https://curiosum.com/services/elixir-software-development)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-1D0642?style=for-the-badge&logo=open-source-initiative&logoColor=white&labelColor=1D0642)](https://github.com/curiosum-dev/kanta/blob/main/LICENSE.md)
+<p>
+  <a href="https://curiosum.com/contact">
+    <img src="https://img.shields.io/badge/Contact%20Us-%23F36D2E?style=for-the-badge&logo=maildotru&logoColor=white&labelColor=F36D2E" alt="Contact Us">
+  </a>
+  <a href="https://curiosum.com/services/elixir-software-development">
+    <img src="https://img.shields.io/badge/Visit%20Curiosum-%236819E6?style=for-the-badge&logo=elixir&logoColor=white&labelColor=6819E6" alt="Visit Curiosum">
+  </a>
+  <a href="https://github.com/curiosum-dev/kanta/blob/main/LICENSE.md">
+    <img src="https://img.shields.io/badge/License-MIT-1D0642?style=for-the-badge&logo=open-source-initiative&logoColor=white&labelColor=1D0642" alt="License: MIT">
+  </a>
+</p>
 </div>
 
 <br />
 
-# About The Project
-
+## About The Project
 
 <div align="left">
   <a href="https://github.com/curiosum-dev/kanta">
-    <img src="./logo.png" alt="Logo" height="80">
+    <img src="https://github.com/user-attachments/assets/8839cbec-970b-4fd8-a028-2d9de05a2af6" alt="Logo" height="80">
   </a>
   <br />
   <br />
@@ -45,7 +53,7 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
 
 <br/>
 
-# Table of contents
+## Table of contents
 
 <ul style="margin-top: 3rem; margin-bottom: 3rem;">
   <li>
@@ -68,6 +76,7 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
     <ul>
       <li><a href="#extracting-from-po-files">Extracting from PO files</a></li>
       <li><a href="#storing-messages-in-the-database">Storing messages in the database</a></li>
+      <li><a href="#detection-of-stale-messages">Detection of stale messages</a></li>
       <li><a href="#translation-progress">Translation progress</a></li>
     </ul>
   </li>
@@ -104,16 +113,16 @@ _Note: Official documentation for Kanta library is [available on hexdocs][hexdoc
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Getting Started
+## Getting Started
 
-## Prerequisites
+### Prerequisites
 
-- Elixir (tested on 1.18.4)
+- Elixir (tested on 1.19.0)
 - Phoenix (tested on 1.7.x and 1.8.x with LiveView 1.x)
 - Ecto SQL (tested on 3.13)
 - PostgreSQL 15+ or SQLite 3.31.0+
 
-## Installation
+### Installation
 
 The package can be installed
 by adding `kanta` to your list of dependencies in `mix.exs`:
@@ -121,12 +130,12 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.4.2"},
+    {:kanta, "~> 0.5.0"},
   ]
 end
 ```
 
-## Configuration
+### Configuration
 
 Add to `config/config.exs` file:
 
@@ -141,7 +150,7 @@ config :my_app, Kanta,
 
 Ecto repo module is used mostly for translations persistency. We also need endpoint to use VerifiedRoutes and project_root to locate the project's .po files.
 
-## Database migrations
+### Database migrations
 
 Migrations is heavily inspired by the Oban approach. To add to the project tables necessary for the operation of Kanta and responsible for storing translations create migration with:
 
@@ -152,12 +161,12 @@ mix ecto.gen.migration add_kanta_translations_table
 Open the generated migration file and set up `up` and `down` functions.
 
 **Current Migration Versions:**
-- PostgreSQL: **v4** (adds default context support for Gettext 0.26 backend)
-- SQLite: **v3** (adds default context support for Gettext 0.26 backend)
+- PostgreSQL: **v4** (adds default context support for Gettext >= `0.26` backend)
+- SQLite: **v3** (adds default context support for Gettext >= `0.26` backend)
 
 If you're upgrading from an earlier version of Kanta, update your migration version to the latest.
 
-### PostgreSQL
+#### PostgreSQL
 
 ```elixir
 defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
@@ -174,7 +183,7 @@ defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
 end
 ```
 
-### SQLite
+#### SQLite
 
 ```elixir
 defmodule MyApp.Repo.Migrations.AddKantaTranslationsTable do
@@ -197,25 +206,35 @@ After that run:
 mix ecto.migrate
 ```
 
-## Gettext module
+### Gettext module
 
-Configuring Gettext requires just a single change.
-
-Wherever you have:
+Configuring Gettext requires just a single change to use `Kanta.Backend`:
 
 ```elixir
-use Gettext, backend: YourApp.Gettext
+defmodule MyAppWeb.Gettext do
+  use Kanta.Backend, otp_app: :my_app
+end
 ```
 
-replace it with:
+If you're using a Gettext version < `0.26`, refer to the [official documentation](https://github.com/elixir-gettext/gettext) for migration instructions.
+
+### Using Gettext in the application
+
+Using gettext across the app does not differ from the regular `Gettext` usage:
 
 ```elixir
-use Kanta.Gettext, backend: YourApp.Gettext
+defmodule MyAppWeb.CustomComponent do
+  use Gettext, backend: MyAppWeb.Gettext
+
+  def render(assigns) do
+    ~H"""
+    {gettext("Actions")}
+    """
+  end
+end
 ```
 
-If you're using a Gettext version lower than 0.26, refer to the [official documentation](https://github.com/elixir-gettext/gettext) for migration instructions.
-
-## Kanta Supervisor
+### Kanta Supervisor
 
 In the `application.ex` file of our project, we add Kanta and its configuration to the list of processes.
 
@@ -230,7 +249,7 @@ In the `application.ex` file of our project, we add Kanta and its configuration 
   end
 ```
 
-## Kanta UI
+### Kanta UI
 
 Inside your `router.ex` file we need to connect the Kanta panel using the kanta_dashboard macro.
 
@@ -246,37 +265,52 @@ end
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Features
+## Features
 
-## Extracting from PO files
+### Extracting from PO files
 
-<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./messages.png" alt="messages">
+![Messages](assets/images/readme/messages.png)
 
 Kanta is based on the Phoenix Framework's default localization tool, GNU gettext. The process, which runs at application startup, analyzes .po files with messages and converts them to a format for convenient use with Ecto and Kanta itself.
 
-## Storing messages in the database
+### Storing messages in the database
 
-<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./singular.png" alt="singular">
+
+![Singular translation edit](assets/images/readme/singular.png)
 
 Messages and translations from .po files are stored in tables created by the Kanta.Migration module. This allows easy viewing and modification of messages from the Kanta UI or directly from database tools.
 
-With Gettext 0.26+, Kanta uses a custom backend adapter system (`Kanta.Backend.Adapter.CachedDB`) that fetches translations from the database/cache at runtime instead of compiled PO files. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
+With Gettext version >= `0.26`, Kanta uses a custom backend adapter system (`Kanta.Backend.Adapter.CachedDB`) that fetches translations from the database/cache at runtime instead of compiled PO files. The caching mechanism prevents constant requests to the database when downloading translations, so you don't have to worry about a delay in application performance.
 
-## Translation progress
+### Detection of stale messages
 
-<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./dashboard.png" alt="dashboard">
+![Stale Dashboard Tiles](assets/images/readme/stale-dashboard.png)
+
+Kanta automatically detects **stale** messages and will help you out with managing them - either `deleting` or `merging` into existing ones.
+
+`Stale messages` are the translations that exist in your database but are no longer present in any locale's PO files. This typically happens during code refactoring when translation keys in the codebase are removed or renamed.
+
+Using fuzzy matching, Kanta identifies stale but **"mergeable"** messages where stale translations closely resemble active messages.
+
+![Stale messages in Locales view](assets/images/readme/stale-one-by-one.png)
+
+You can take action one by one for every message (delete and/or merge) or you can perform it in bulk (from the Dashboard).
+
+### Translation progress
+
+![Translation progress](assets/images/readme/dashboard.png)
 
 Kanta tracks the progress of your application's translation into other languages and reports it in the user's dashboard. In the dashboard you can filter your messages by domain or context, or use a search engine. It is also possible to display only the messages that need translation to better see how much work remains to be done.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Plugins
+## Plugins
 
-## DeepL
+### DeepL
 
 Not all of us are polyglots, and sometimes we need the help of machine translation tools. For this reason, we have provided plug-ins for communication with external services that will allow you to translate texts into another language without knowing it. As a first step, we introduced integration with DeepL API offering 500,000 characters/month for free and more in paid plans. To use DeepL API add `{:kanta_deep_l_plugin, "~> 0.1.1"}` to your `deps` and append `Kanta.DeepL.Plugin` to the list of plugins along with the API key from your account at DeepL. New features will then be added to the Kanta UI that will allow you to translate using this tool.
 
-<img style="margin-top: 1rem; margin-bottom: 1rem;" src="./plural.png" alt="plural">
+![Plural](assets/images/readme/plural.png)
 
 ```elixir
 # mix.exs
@@ -295,7 +329,7 @@ config :kanta,
   ]
 ```
 
-## KantaSync
+### KantaSync
 
 The [KantaSync plugin](https://github.com/curiosum-dev/kanta_sync_plugin) allows you to synchronize translations between your production and staging/dev environments. It ensures that any changes made to translations in one are reflected in the others, helping you maintain consistency across different stages of development.
 
@@ -318,13 +352,13 @@ scope "/" do
 end
 ```
 
-### Authorization
+#### Authorization
 
 Set `KANTA_SECRET_TOKEN` environment variable for restricting API access. It should be generated with `mix phx.gen.secret 256` and both environments must have the same `KANTA_SECRET_TOKEN` environment variables.
 
 You can also disable default authorization mechanism and use your own, by passing `disable_api_authorization: true` option into Kanta's config.
 
-## PO Writer
+### PO Writer
 
 Kanta was created to allow easy management of static text translations in the application, however, for various reasons like wanting a backup or parallel use of other tools like TMS etc. you may want to overwrite .po files with translations entered in Kanta. To install it append `{:kanta_po_writer_plugin, git: "https://github.com/curiosum-dev/kanta_po_writer_plugin"}` to your `deps` list. Currently, it's not on Hex because it's in a pre-release version. Then add `Kanta.Plugins.POWriter` to the list of plugins, and new functions will appear in the Kanta UI to allow writing to .po files.
 
@@ -347,7 +381,7 @@ config :kanta,
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Roadmap
+### Roadmap
 
 - [ ] Typespecs, tests, better docs
 - [ ] CI/CD
@@ -361,17 +395,17 @@ See the [open issues](https://github.com/curiosum-dev/kanta/issues) for a full l
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Development
+## Development
 
-## Running Tests
+### Running Tests
 
 If you're contributing to Kanta development, you'll need to run the test suite. The tests require a PostgreSQL database.
 
-### Prerequisites for Development
+#### Prerequisites for Development
 - PostgreSQL 15+ (for running tests)
 - All prerequisites listed in [Getting Started](#prerequisites)
 
-### Test Setup
+#### Test Setup
 
 First-time setup (or if tests are failing due to database issues):
 
@@ -382,7 +416,7 @@ MIX_ENV=test mix ecto.drop && MIX_ENV=test mix ecto.create && MIX_ENV=test mix e
 
 <!-- CONTRIBUTING -->
 
-## Contributing
+### Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -399,14 +433,14 @@ Don't forget to give the project a star! Thanks again!
 
 <!-- LICENSE -->
 
-## Community
+### Community
 
 - **Slack channel**: [Elixir Slack / #kanta](https://elixir-lang.slack.com/archives/C099BMEN5BP)
 - **Issues**: [GitHub Issues](https://github.com/curiosum-dev/kanta/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/curiosum-dev/kanta/discussions)
 - **Blog**: [Curiosum Blog](https://curiosum.com/blog?search=kanta)
 
-## License
+### License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
@@ -414,7 +448,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 
-## Contact
+### Contact
 
 [Curiosum](https://curiosum.com)
 
