@@ -89,9 +89,12 @@ defmodule Kanta.MixProject do
 
   defp docs do
     [
-      extras: ["CHANGELOG.md", "README.md", "docs/how-to-write-plugins.md"],
+      extras: ["README.md", "docs/how-to-write-plugins.md", "CHANGELOG.md"],
+      groups_for_extras: [
+        "Kanta Guide": ~r/README|how-to-write-plugins/
+      ],
       assets: %{"docs/assets" => "assets", "assets/images/readme" => "assets/images/readme"},
-      main: "Kanta",
+      main: "readme",
       logo: "logo.png"
     ]
   end
