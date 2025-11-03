@@ -64,6 +64,7 @@ If you're working on an Elixir/Phoenix project and need to manage translations, 
     <ul>
       <li><a href="#prerequisites">Prerequisites</a></li>
       <li><a href="#installation">Installation</a></li>
+      <li><a href="#upgrading-from-kanta-04">Upgrading from Kanta 0.4</a></li>
       <li><a href="#configuration">Configuration</a></li>
       <li><a href="#database-migrations">Database Migrations</a></li>
       <li><a href="#gettext-module">Gettext Module</a></li>
