@@ -135,6 +135,37 @@ def deps do
 end
 ```
 
+### Upgrading from Kanta 0.4
+
+Thankfully we are getting rid of the prior solution revolving around a custom Gettext fork and right now Kanta is fully compatible with Gettext 0.26 and 1.x.
+
+If you're upgrading from Kanta 0.4 to 0.5, you need to update your Gettext module definition to use the new backend adapter system. You must define `use Kanta.Backend` in your Gettext module and configure the adapter.
+
+```elixir
+defmodule MyAppWeb.Gettext do
+  # Kanta >= 0.5
+  use Kanta.Backend, otp_app: :my_app
+
+  # Kanta <= 0.4 or vanilla Gettext
+  use Gettext, otp_app: :my_app
+end
+```
+
+Inside your `[my_app]_web.ex` file:
+```elixir
+defmodule MyAppWeb do
+  defp html_helpers do
+    quote do
+      # Kanta >= 0.5 or vanilla Gettext
+      use Gettext, backend: MyAppWeb.Gettext
+
+      # Kanta <= 0.4
+      import MyAppWeb.Gettext
+    end
+  end
+end
+```
+
 ### Configuration
 
 Add to `config/config.exs` file:

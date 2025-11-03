@@ -12,6 +12,14 @@ All notable changes to this project will be documented in this file.
 - Stale messages detection and merging (#120)
 - Updated Tailwind to v3.4.17 (#130)
 
+### Changed (Dependencies)
+- Gettext supported versions updated to 0.26 and 1.x
+- Phoenix relaxed to ~> 1.7 (allowing minor version bumps)
+- Phoenix LiveView relaxed to >= 0.20.0 (allowing for 1.x versions)
+- `shards` dependency dropped
+- `expo` relaxed to >= 0.3.0
+- `scrivener_ecto` upgraded to ~> 3.0
+
 ## [0.4.2] - 2025-08-25
 ### Fixed
 - Dialyzer errors related to Phoenix version detection (#122)
