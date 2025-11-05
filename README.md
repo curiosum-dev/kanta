@@ -148,7 +148,7 @@ defmodule MyAppWeb.Gettext do
   use Kanta.Backend, otp_app: :my_app
 
   # Kanta <= 0.4 or vanilla Gettext
-  use Gettext, otp_app: :my_app
+  use Gettext, otp_app: :my_app, repo: MyApp.Repo
 end
 ```
 
