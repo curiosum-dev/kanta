@@ -6,7 +6,7 @@ defmodule Kanta.MixProject do
       app: :kanta,
       description: "User-friendly translations manager for Elixir/Phoenix projects.",
       package: package(),
-      version: "0.5.0",
+      version: "0.5.1",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       elixirc_options: [
