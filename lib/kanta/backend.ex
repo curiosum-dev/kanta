@@ -108,6 +108,8 @@ defmodule Kanta.Backend do
         end
       end
 
+      defoverridable handle_missing_translation: 5, handle_missing_plural_translation: 7
+
       defp fallback_backend() do
         Module.concat(__MODULE__, GettextFallbackBackend)
       end
