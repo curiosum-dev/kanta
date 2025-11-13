@@ -97,7 +97,7 @@ defmodule Kanta.Backend.Adapter.CachedDB do
            ),
          {:ok, plurals_options} <- Expo.PluralForms.parse(plurals_header),
          nplural_index <- Expo.PluralForms.index(plurals_options, n),
-         {:ok, %PluralTranslation{translated_text: text}} <-
+         {:ok, %PluralTranslation{translated_text: text}} when not is_nil(text) <-
            Translations.get_plural_translation(
              filter: [
                locale_id: locale_id,
