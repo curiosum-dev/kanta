@@ -153,7 +153,9 @@ defmodule Kanta.PoFiles.Services.StaleDetection do
   # Converts a message struct to its unique key tuple {msgid, domain, context}
   defp message_to_key(%Message{} = message) do
     %Message{msgid: msgid, domain: domain, context: context} = message
-    {msgid, domain.name, context.name}
+    domain_name = domain && domain.name
+    context_name = context && context.name
+    {msgid, domain_name, context_name}
   end
 
   # Extracts message IDs from stale messages into a MapSet

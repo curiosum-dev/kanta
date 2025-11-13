@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.0]
+## [0.5.1] - 2025-11-12
+### Fixed
+- Fix bug when context is nil in PO file (#134)
+
+## [0.5.0] - 2025-11-03
 
 ### Breaking Changes
 - **Gettext 1.0.0 Migration**: This version requires updating your Gettext module definition to use the new backend adapter system. You must define `use Kanta.Gettext.Backend` in your Gettext module and configure the adapter.

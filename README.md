@@ -131,7 +131,7 @@ by adding `kanta` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:kanta, "~> 0.5.0"},
+    {:kanta, "~> 0.5.1"},
   ]
 end
 ```
