@@ -21,15 +21,13 @@ defmodule KantaWeb.Translations.TranslationsLive do
     socket =
       case get_locale(locale_id) do
         {:ok, locale} ->
-          # Get system-wide stale detection with fuzzy matching
-          {:ok, stale_result} =
-            Kanta.PoFiles.Services.StaleDetection.call()
+          {stale_message_ids, fuzzy_matches} = stale_detection_assigns()
 
           socket
           |> assign(:locale, locale)
           |> assign(:application_sources_empty?, Translations.application_sources_empty?())
-          |> assign(:stale_message_ids, stale_result.stale_message_ids)
-          |> assign(:fuzzy_matches, stale_result.fuzzy_matches_map)
+          |> assign(:stale_message_ids, stale_message_ids)
+          |> assign(:fuzzy_matches, fuzzy_matches)
           |> assign(get_assigns_from_params(params))
 
         _ ->
@@ -38,6 +36,17 @@ defmodule KantaWeb.Translations.TranslationsLive do
       end
 
     {:ok, socket}
+  end
+
+  defp stale_detection_assigns do
+    if Kanta.config().disable_stale_detection do
+      {MapSet.new(), %{}}
+    else
+      case MessagesExtractorAgent.get_stale_detection_result() do
+        nil -> {MapSet.new(), %{}}
+        %Result{stale_message_ids: ids, fuzzy_matches_map: fuzzy} -> {ids, fuzzy}
+      end
+    end
   end
 
   def handle_params(%{"locale_id" => locale_id} = params, _location, socket) do
@@ -118,9 +127,15 @@ defmodule KantaWeb.Translations.TranslationsLive do
   def handle_info(:refresh_messages, socket) do
     locale_id = socket.assigns.locale.id
 
-    # Re-detect system-wide stale messages with fuzzy matching
-    %Result{stale_message_ids: stale_message_ids, fuzzy_matches_map: fuzzy_matches_map} =
-      MessagesExtractorAgent.get_stale_detection_result(true)
+    {stale_message_ids, fuzzy_matches_map} =
+      if Kanta.config().disable_stale_detection do
+        {socket.assigns.stale_message_ids, socket.assigns.fuzzy_matches}
+      else
+        case MessagesExtractorAgent.get_stale_detection_result(true) do
+          nil -> {MapSet.new(), %{}}
+          %Result{stale_message_ids: ids, fuzzy_matches_map: fuzzy} -> {ids, fuzzy}
+        end
+      end
 
     # Re-fetch messages with current filters
     preload_filters = %{"locale_id" => locale_id}

@@ -12,20 +12,25 @@ defmodule Kanta.PoFiles.MessagesExtractorAgent do
   end
 
   @impl true
-  def init(_) do
-    state =
-      if message_extractor_available?() do
-        {:ok, _messages} = MessagesExtractor.call()
+  def init(conf: %Kanta.Config{disable_stale_detection: true}) do
+    {:ok, %{stale_detection_result: nil}}
+  end
 
-        # Detect stale translations system-wide with fuzzy matching
-        {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()
+  def init(_opts) do
+    {:ok, init_stale_detection()}
+  end
 
-        %{stale_detection_result: result}
-      else
-        %{stale_detection_result: nil}
-      end
+  defp init_stale_detection do
+    if message_extractor_available?() do
+      {:ok, _messages} = MessagesExtractor.call()
 
-    {:ok, state}
+      # Detect stale translations system-wide with fuzzy matching
+      {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()
+
+      %{stale_detection_result: result}
+    else
+      %{stale_detection_result: nil}
+    end
   end
 
   @doc """
@@ -51,9 +56,12 @@ defmodule Kanta.PoFiles.MessagesExtractorAgent do
   end
 
   def handle_call({:get_stale_detection_result, true}, _from, state) do
-    {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()
-
-    {:reply, result, %{state | stale_detection_result: result}}
+    if Kanta.config().disable_stale_detection do
+      {:reply, state.stale_detection_result, state}
+    else
+      {:ok, %StaleDetection.Result{} = result} = StaleDetection.call()
+      {:reply, result, %{state | stale_detection_result: result}}
+    end
   end
 
   defp message_extractor_available? do
