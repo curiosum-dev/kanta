@@ -16,7 +16,7 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
 
     with {:error, _, :not_cached} <- find_in_cache(cache_key),
          {:ok, %Message{} = message} <- find_in_database(params) do
-      Cache.put(cache_key, message)
+      Cache.put!(cache_key, message)
 
       {:ok, message}
     else
@@ -26,7 +26,7 @@ defmodule Kanta.Translations.Messages.Finders.GetMessage do
   end
 
   defp find_in_cache(cache_key) do
-    case Cache.get(cache_key) do
+    case Cache.get!(cache_key) do
       nil ->
         {:error, :message, :not_cached}
 

@@ -34,7 +34,7 @@ defmodule Kanta.Translations.SingularTranslations do
             ]
           )
 
-        Cache.put(cache_key, singular_translation)
+        Cache.put!(cache_key, singular_translation)
         {:ok, singular_translation}
 
       error ->
@@ -55,7 +55,7 @@ defmodule Kanta.Translations.SingularTranslations do
             ]
           )
 
-        Cache.put(cache_key, translation)
+        Cache.put!(cache_key, translation)
 
         {:ok, translation}
 
