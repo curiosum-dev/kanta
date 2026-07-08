@@ -15,7 +15,7 @@ defmodule Kanta.Translations.Contexts.Finders.GetContext do
 
     with {:error, _, :not_cached} <- find_in_cache(cache_key),
          {:ok, %Context{} = context} <- find_in_database(params) do
-      Cache.put(cache_key, context)
+      Cache.put!(cache_key, context)
 
       {:ok, context}
     else
@@ -25,7 +25,7 @@ defmodule Kanta.Translations.Contexts.Finders.GetContext do
   end
 
   defp find_in_cache(cache_key) do
-    case Cache.get(cache_key) do
+    case Cache.get!(cache_key) do
       nil ->
         {:error, :context, :not_cached}
 

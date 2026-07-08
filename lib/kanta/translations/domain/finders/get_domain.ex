@@ -15,7 +15,7 @@ defmodule Kanta.Translations.Domains.Finders.GetDomain do
 
     with {:error, _, :not_cached} <- find_in_cache(cache_key),
          {:ok, %Domain{} = domain} <- find_in_database(params) do
-      Cache.put(cache_key, domain)
+      Cache.put!(cache_key, domain)
 
       {:ok, domain}
     else
@@ -25,7 +25,7 @@ defmodule Kanta.Translations.Domains.Finders.GetDomain do
   end
 
   defp find_in_cache(cache_key) do
-    case Cache.get(cache_key) do
+    case Cache.get!(cache_key) do
       nil ->
         {:error, :domain, :not_cached}
 

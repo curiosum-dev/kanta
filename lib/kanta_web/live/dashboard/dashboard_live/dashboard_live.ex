@@ -23,15 +23,15 @@ defmodule KantaWeb.Dashboard.DashboardLive do
       |> assign(:languages, locales)
       |> assign(:contexts, contexts)
       |> assign(:domains, domains)
-      |> assign(:cache_count, Cache.count_all())
+      |> assign(:cache_count, Cache.count_all!())
 
     {:ok, socket}
   end
 
   def handle_event("clear-cache", _, socket) do
-    Cache.delete_all()
+    Cache.delete_all!()
 
-    {:noreply, assign(socket, :cache_count, Cache.count_all())}
+    {:noreply, assign(socket, :cache_count, Cache.count_all!())}
   end
 
   def handle_event("delete-stale", _, socket) do
