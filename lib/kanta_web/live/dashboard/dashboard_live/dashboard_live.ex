@@ -35,33 +35,41 @@ defmodule KantaWeb.Dashboard.DashboardLive do
   end
 
   def handle_event("delete-stale", _, socket) do
-    %Result{stale_message_ids: stale_message_ids} =
-      MessagesExtractorAgent.get_stale_detection_result()
+    if Kanta.config().disable_stale_detection do
+      {:noreply, socket}
+    else
+      %Result{stale_message_ids: stale_message_ids} =
+        MessagesExtractorAgent.get_stale_detection_result()
 
-    Translations.delete_messages(MapSet.to_list(stale_message_ids))
+      Translations.delete_messages(MapSet.to_list(stale_message_ids))
 
-    stale_messages_count =
-      MessagesExtractorAgent.get_stale_detection_result(true).stale_count
+      stale_messages_count =
+        MessagesExtractorAgent.get_stale_detection_result(true).stale_count
 
-    {:noreply, assign(socket, :stale_messages_count, stale_messages_count)}
+      {:noreply, assign(socket, :stale_messages_count, stale_messages_count)}
+    end
   end
 
   # Merge all the orphaned messages to selected target messages (that fuzzy mathed).
   def handle_event("restore-mergeable", _, socket) do
-    %Result{fuzzy_matches_map: fuzzy_matches_map} =
-      MessagesExtractorAgent.get_stale_detection_result()
+    if Kanta.config().disable_stale_detection do
+      {:noreply, socket}
+    else
+      %Result{fuzzy_matches_map: fuzzy_matches_map} =
+        MessagesExtractorAgent.get_stale_detection_result()
 
-    # Merge all messages with fuzzy matches
-    Enum.each(fuzzy_matches_map, fn {_stale_id, fuzzy_match} ->
-      Translations.merge_messages(fuzzy_match.stale_message_id, fuzzy_match.matched_message_id)
-    end)
+      # Merge all messages with fuzzy matches
+      Enum.each(fuzzy_matches_map, fn {_stale_id, fuzzy_match} ->
+        Translations.merge_messages(fuzzy_match.stale_message_id, fuzzy_match.matched_message_id)
+      end)
 
-    result = MessagesExtractorAgent.get_stale_detection_result(true)
+      result = MessagesExtractorAgent.get_stale_detection_result(true)
 
-    {:noreply,
-     socket
-     |> assign(:mergeable_messages_count, result.mergeable_count)
-     |> assign(:stale_messages_count, result.stale_count)}
+      {:noreply,
+       socket
+       |> assign(:mergeable_messages_count, result.mergeable_count)
+       |> assign(:stale_messages_count, result.stale_count)}
+    end
   end
 
   def translation_progress(language) do
@@ -69,16 +77,24 @@ defmodule KantaWeb.Dashboard.DashboardLive do
   end
 
   defp get_stale_messages_count do
-    %Result{stale_count: stale_count} =
-      MessagesExtractorAgent.get_stale_detection_result()
-
-    stale_count
+    if Kanta.config().disable_stale_detection do
+      0
+    else
+      case MessagesExtractorAgent.get_stale_detection_result() do
+        nil -> 0
+        %Result{stale_count: stale_count} -> stale_count
+      end
+    end
   end
 
   defp get_mergeable_messages_count do
-    %Result{mergeable_count: mergeable_count} =
-      MessagesExtractorAgent.get_stale_detection_result()
-
-    mergeable_count
+    if Kanta.config().disable_stale_detection do
+      0
+    else
+      case MessagesExtractorAgent.get_stale_detection_result() do
+        nil -> 0
+        %Result{mergeable_count: mergeable_count} -> mergeable_count
+      end
+    end
   end
 end
