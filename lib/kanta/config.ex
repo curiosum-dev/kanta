@@ -9,6 +9,7 @@ defmodule Kanta.Config do
           endpoint: module(),
           plugins: false | [module() | {module() | Keyword.t()}],
           disable_api_authorization: boolean(),
+          disable_stale_detection: boolean(),
           id_parse_function: mfa() | (term() -> {:ok, term()} | term())
         }
 
@@ -18,6 +19,7 @@ defmodule Kanta.Config do
             endpoint: nil,
             plugins: [],
             disable_api_authorization: false,
+            disable_stale_detection: false,
             id_parse_function: {Kanta.Utils.ParamParsers, :default_id_parser, 1}
 
   alias Kanta.Validator
@@ -81,6 +83,15 @@ defmodule Kanta.Config do
     else
       {:error,
        "expected :disable_api_authorization to be a boolean, got: #{inspect(disable_api_authorization)}"}
+    end
+  end
+
+  defp validate_opt(_opts, {:disable_stale_detection, disable_stale_detection}) do
+    if is_boolean(disable_stale_detection) do
+      :ok
+    else
+      {:error,
+       "expected :disable_stale_detection to be a boolean, got: #{inspect(disable_stale_detection)}"}
     end
   end
 
