@@ -57,7 +57,10 @@ defmodule Kanta.MixProject do
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:gettext, ">= 0.26.0"},
       {:dialyxir, "~> 1.4", only: :dev, runtime: false},
-      {:postgrex, "~> 0.16", only: :test}
+      {:postgrex, "~> 0.16", only: :test},
+      {:floki, ">= 0.30.0", only: :test},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:phoenix_ecto, "~> 4.5", only: :test}
     ]
   end
 

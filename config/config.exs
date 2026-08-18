@@ -67,4 +67,17 @@ if config_env() == :test do
     port: 5432,
     pool: Ecto.Adapters.SQL.Sandbox,
     pool_size: 10
+
+  # KantaWeb views/live_views read the endpoint via a compile-time
+  # `Application.compile_env(:kanta, :endpoint)` (see lib/kanta_web.ex),
+  # independent of the runtime `Kanta.Config.endpoint` set via `Kanta.start_link/1`.
+  config :kanta, :endpoint, Kanta.Test.Endpoint
+
+  config :kanta, Kanta.Test.Endpoint,
+    url: [host: "localhost"],
+    secret_key_base: String.duplicate("a", 64),
+    live_view: [signing_salt: "kanta_test_signing_salt"],
+    pubsub_server: Kanta.Test.PubSub,
+    server: false,
+    debug_errors: true
 end
