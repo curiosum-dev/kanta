@@ -7,12 +7,14 @@ defmodule KantaWeb.Api.MessagesController do
   alias Kanta.Translations.Messages.Finders.ListMessages
   alias Kanta.Utils.DatabasePopulator
 
+  @preloads [:domain, :context, :singular_translations, :plural_translations]
+
   def index(conn, params) do
     page = params |> Map.get("page", "1") |> String.to_integer()
 
     conn
     |> put_status(200)
-    |> json(ListMessages.find(page: page))
+    |> json(ListMessages.find(page: page, preloads: @preloads))
   end
 
   def update(conn, %{"entries" => entries}) do
