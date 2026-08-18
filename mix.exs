@@ -42,6 +42,7 @@ defmodule Kanta.MixProject do
       {:phoenix_live_view, ">= 0.20.0"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_html_helpers, "~> 1.0"},
+      {:phoenix_ecto, "~> 4.5"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:jason, "~> 1.0"},
       {:nebulex, "~> 2.5"},
